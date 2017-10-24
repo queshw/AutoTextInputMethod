@@ -1,0 +1,54 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/input_textview_autotextitem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:padding="@dimen/padding"
+            android:singleLine="true"
+            android:text="@string/autotextitem"
+            android:textSize="@dimen/textsize" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/padding"
+            android:src="@drawable/right_arrow" />
+
+        <TextView
+            android:id="@+id/autotext_textview_autotextitem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:padding="@dimen/padding"
+            android:singleLine="true"
+            android:text="@string/autotextitem"
+            android:textSize="@dimen/textsize" />
+    </LinearLayout>
+
+    <ImageView 
+        android:id="@+id/delete_imageview_autotextitem"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical|right"
+        android:src="@drawable/delete"
+        android:background="@color/lightred"
+        android:visibility="gone"
+        android:padding="5dp"
+	    />
+</FrameLayout>

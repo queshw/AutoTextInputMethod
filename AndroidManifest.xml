@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.queshw.autotextinputmethod"
+    android:versionCode="55"
+    android:versionName="3.951" >
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_lanucher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:uiOptions="splitActionBarWhenNarrow">
+        <activity
+            android:name="cn.queshw.autotextsetting.MethodsListActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="cn.queshw.autotextsetting.AutotextActivity" >
+        </activity>
+        <activity android:name="cn.queshw.autotextsetting.FilePickerActivity" >
+        </activity>
+
+        <service
+            android:name="AutotextInputMethod"
+            android:permission="android.permission.BIND_INPUT_METHOD" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+        </service>
+        <activity android:name="cn.queshw.autotextsetting.HelpActivity"></activity>
+        <activity android:name="cn.queshw.autotextsetting.ImportDefaultActivity" android:theme="@android:style/Theme.Holo.Dialog.MinWidth"></activity>
+        <activity android:name="ExtractActivity" android:theme="@android:style/Theme.Holo.Dialog.MinWidth"></activity>
+    </application>
+
+</manifest>

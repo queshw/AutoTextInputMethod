@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding"
+    android:stretchColumns="1" >
+
+    <TableRow>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="end"
+            android:padding="@dimen/padding"
+            android:text="@string/input"
+            android:textSize="@dimen/textsize" />
+
+        <EditText
+            android:id="@+id/input_add_or_edit_autotext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:maxWidth="140dp"
+            android:padding="@dimen/padding"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            android:textSize="@dimen/textsize" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/padding"
+            android:text="@string/autotext"
+            android:textSize="@dimen/textsize" />
+
+        <EditText
+            android:id="@+id/autotext_add_or_edit_autotext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:maxWidth="140dp"
+            android:padding="@dimen/padding"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            android:textSize="@dimen/textsize" />
+    </TableRow>
+
+</TableLayout>
