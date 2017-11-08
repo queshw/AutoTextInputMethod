@@ -26,25 +26,26 @@ public class ConstantList {
 	static final int EDIT_COPY = KeyEvent.KEYCODE_C;
 	static final int EDIT_PASTE = KeyEvent.KEYCODE_V;
 	static final int EDIT_CUT = KeyEvent.KEYCODE_X;
-
-	static final int EDIT_SELECTALL = KeyEvent.KEYCODE_A;
-	static final int EDIT_SELETETOHOME = KeyEvent.KEYCODE_Y;
-	static final int EDIT_SELETEBACK = KeyEvent.KEYCODE_U;
-	static final int EDIT_SELETEFORWARD = KeyEvent.KEYCODE_I;
-	static final int EDIT_SELETETOEND = KeyEvent.KEYCODE_O;
-
-	static final int EDIT_MOVETOHOME = KeyEvent.KEYCODE_H;
-	static final int EDIT_MOVEBACK = KeyEvent.KEYCODE_J;
-	static final int EDIT_MOVEFORWARD = KeyEvent.KEYCODE_K;
-	static final int EDIT_MOVETOEND = KeyEvent.KEYCODE_L;
-
-	static final int EDIT_DELETEALL = KeyEvent.KEYCODE_D;
-	static final int EDIT_DELETETOHOME = KeyEvent.KEYCODE_B;
-	static final int EDIT_DELETEFORWARD = KeyEvent.KEYCODE_N;
-	static final int EDIT_DELETETOEND = KeyEvent.KEYCODE_M;
-	//static final int EDIT_DELETETWORD = KeyEvent.KEYCODE_W;
-
 	static final int EDIT_UNDO = KeyEvent.KEYCODE_Z;
+	
+	static final int EDIT_SELECTMODEL = KeyEvent.KEYCODE_S;
+	static final int EDIT_SELECTALL = KeyEvent.KEYCODE_A;
+	static final int EDIT_SELECTLINE = KeyEvent.KEYCODE_H;
+	
+	static final int EDIT_UP = KeyEvent.KEYCODE_I;
+    static final int EDIT_DOWN = KeyEvent.KEYCODE_K;
+    static final int EDIT_BACK = KeyEvent.KEYCODE_J;
+    static final int EDIT_FORWARD = KeyEvent.KEYCODE_L;    
+
+    static final int EDIT_TOLINESTART = KeyEvent.KEYCODE_U;
+    static final int EDIT_TOLINEEND = KeyEvent.KEYCODE_O;    
+    static final int EDIT_TOSTART = KeyEvent.KEYCODE_Y;
+    static final int EDIT_TOEND = KeyEvent.KEYCODE_P;
+	
+	static final int EDIT_DELETEALL = KeyEvent.KEYCODE_D;
+	static final int EDIT_DELETEFORWARD = KeyEvent.KEYCODE_N;
+	static final int EDIT_DELETELINE = KeyEvent.KEYCODE_M;
+    	
 	//static final int EDIT_REDO = KeyEvent.KEYCODE_R;
 
 	static final int SWITCH_INPUTMETHOD = KeyEvent.KEYCODE_ENTER;// 与ＡＬt键搭配用于切换输入法

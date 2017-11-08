@@ -75,28 +75,12 @@ public class AutotextInputMethod extends InputMethodService {
 		dboper = new DBOperations(this);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////
-	// 直接返回true，这样的话，不管是否有物理键盘，inputview都会显示
-	@Override
-	public boolean onEvaluateInputViewShown() {
-		// //Log.d("Here", "onEvaluateInputViewShown()");
-		return true;
-	}
-
-	// //////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
 	// 不进入全屏模式
 	@Override
 	public boolean onEvaluateFullscreenMode() {
 		// TODO Auto-generated method stub
 		return switchToFullScreen;
-	}
-
-	// //////////////////////////////////////////////////////////////////////////
-	// 创建inputview
-	@Override
-	public View onCreateInputView() {
-		// //Log.d("Here", "onCreateInputView()");
-		return null;
 	}
 
 	// ///////////////////////////////////////////////////////////////////////////
@@ -185,29 +169,10 @@ public class AutotextInputMethod extends InputMethodService {
 		//mConnection.beginBatchEdit();
 		mConnection.endBatchEdit();// 必须加上这个语句，要不然EditText可能会进入到BatchEdit模式，不会及时调用onSelectionupdate函数来更新光标信息，从而出错
 
-		// Log.d("Here",
-		// "onKeyDown()" + "|Type=" +
-		// String.valueOf(event.getKeyCharacterMap().getKeyboardType()) +
-		// "|Mode="
-		// + String.valueOf(event.getKeyCharacterMap().getModifierBehavior()) +
-		// "|keycode=" + KeyEvent.keyCodeToString(keyCode)
-		// + "|metastate=" +
-		// String.valueOf(Integer.toBinaryString(event.getMetaState())) +
-		// "|repeatcount="
-		// + String.valueOf(event.getRepeatCount()) + "|flag=" +
-		// String.valueOf(Integer.toBinaryString(event.getFlags())));
 
-		// 处理各种功能键事件
-		// //Log.d("Here", "EventMetaState=" +
-		// Integer.toBinaryString(event.getMetaState()));
-		// //Log.d("Here", "state=" + Long.toBinaryString(state));
 		state = HandleMetaKey.handleKeyDown(state, keyCode, event);
-		//Log.d("Here", "downhandl=" + Long.toBinaryString(state));
 		mMetaState = event.getMetaState() | HandleMetaKey.getMetaState(state);
 		setMetaKeyStatus(mMetaState);
-		//Log.d("Here", "ListenerMetaState=" +
-		//		Integer.toBinaryString(HandleMetaKey.getMetaState(state)));
-		//Log.d("Here", "FinalState=" + Integer.toBinaryString(mMetaState));
 		if (keyCode != KeyEvent.KEYCODE_SHIFT_LEFT && keyCode != KeyEvent.KEYCODE_SHIFT_RIGHT && keyCode != KeyEvent.KEYCODE_ALT_LEFT
 				&& keyCode != KeyEvent.KEYCODE_ALT_RIGHT && keyCode != KeyEvent.KEYCODE_SYM) {
 			state = HandleMetaKey.adjustMetaAfterKeypress(state);
@@ -701,7 +666,7 @@ public class AutotextInputMethod extends InputMethodService {
 	enum CurrentStatusIcon {
 		NORMAL(R.drawable.status_normal), CAP_ON(R.drawable.status_cap), CAP_LOCK(R.drawable.status_cap_lock), ALT_ON(R.drawable.status_alt), ALT_LOCK(
 				R.drawable.status_alt_lock), SYM_ON(R.drawable.status_sym), SYM_LOCK(R.drawable.status_sym_lock), NEWSIM_ON(R.drawable.status_ctrl), NEWSIM_LOCK(
-				R.drawable.status_ctrl_lock);
+				R.drawable.status_ctrl_lock), NONE(-1);
 
 		private int iconId;
 
