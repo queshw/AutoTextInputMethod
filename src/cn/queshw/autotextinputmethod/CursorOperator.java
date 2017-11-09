@@ -42,21 +42,23 @@ public class CursorOperator {
 	// 获取本行光标前字串
 	public CharSequence getToLineStart(int mFromWhichEnd) {
 		CharSequence result = "";
+		CharSequence selectedCs = "";
 		if (mFromWhichEnd == FROMEND) {// 如果从结束的光标算起
-			result = mConnection.getSelectedText(0);
-			if (result.equals(""))
-				result = "";// 如果什么都没有取到，则把结果置为空字串
+			selectedCs = mConnection.getSelectedText(0);
+			if (selectedCs == null)
+				selectedCs = "";// 如果什么都没有取到，则把结果置为空字串
 		}
-		int len = result.length();
+		int len = selectedCs.length();
 		int len2 = 0;
 		for (int i = 1; true; i++) {
 			if (i <= len) {// 如果循环的次数还小于已经选择的字符个数，则先在这个字串中取字符
-				result = result.subSequence(len - i, len);
+				result = selectedCs.subSequence(len - i, len);
 			} else {// 要在光标前取新的字符了
-				result = mConnection.getTextBeforeCursor(i - len, 0).toString() + result.toString();
+				result = mConnection.getTextBeforeCursor(i - len, 0).toString() + selectedCs.toString();
 			}
 			// 接下来是退出条件
 			len2 = result.length();// 再次计算长度，因为 result的值可能已经变了
+			if(len2 == 0) return "";
 			if (len2 < i)
 				break;// 表示已经取到头了
 			if (result.charAt(0) == '\n') {// 表示已经取到上一行的换行符了，则去掉最头上的这个换行符就是结果
@@ -64,68 +66,33 @@ public class CursorOperator {
 				break;
 			}
 		}
-
-		// if (mFromWhichEnd == FROMSTART) {// 如果从开始的光标算起
-		// for (int i = 1; true; i++) {
-		// result = mConnection.getTextBeforeCursor(i, 0);
-		// if (result.equals(""))
-		// return "";// 如果一个字符都取不到，说明光标的最头上，直接返回空字串
-		// // 接下来是退出条件
-		// int len = result.length();
-		// if (len < i)
-		// break;// 已经取到头，还没有取到一个换行符，说明光标就在第一行上
-		// if (result.charAt(0) == '\n') {// 如果取到了换行符，说明已经取到上一行的尾巴
-		// result = result.subSequence(1, len);
-		// break;
-		// }
-		// }
-		// } else if (mFromWhichEnd == FROMEND) {// 如果从结束的光标算起
-		// result = mConnection.getSelectedText(0);
-		// if (result.equals(""))
-		// result = "";// 如果什么都没有取到，则把结果置为空字串
-		// int len = result.length();
-		// for (int i = 1; true; i++) {
-		// if (i <= len) {// 如果循环的次数还小于已经选择的字符个数，则先在这个字串中取字符
-		// result = result.subSequence(len - i, len);
-		// } else {// 要在光标前取新的字符了
-		// result = mConnection.getTextBeforeCursor(i - len, 0).toString() +
-		// result.toString();
-		// }
-		// // 接下来是退出条件
-		// len = result.length();// 再次计算长度，因为 result的值可能已经变了
-		// if (len < i)
-		// break;// 表示已经取到头了
-		// if (result.charAt(0) == '\n') {// 表示已经取到上一行的换行符了，则去掉最头上的这个换行符就是结果
-		// result = result.subSequence(1, len);
-		// break;
-		// }
-		// }
-		// }
 		return result;
 	}
 
 	// 获取本行光标后字串
 	public CharSequence getToLineEnd(int mFromWhichEnd) {
 		CharSequence result = "";
+		CharSequence selectedCs = "";
 		if (mFromWhichEnd == FROMSTART) {// 如果从结束的光标算起
-			result = mConnection.getSelectedText(0);
-			if (result.equals(""))
-				result = "";// 如果什么都没有取到，则把结果置为空字串
+			selectedCs = mConnection.getSelectedText(0);
+			if (selectedCs == null)
+				selectedCs = "";// 如果什么都没有取到，则把结果置为空字串
 		}
-		int len = result.length();
+		int len = selectedCs.length();
 		int len2 = 0;
 		for (int i = 1; true; i++) {
 			if (i <= len) {// 如果循环的次数还小于已经选择的字符个数，则先在这个字串中取字符
-				result = result.subSequence(0, i);
+				result = selectedCs.subSequence(0, i);
 			} else {// 要在光标前取新的字符了
-				result = result.toString() + mConnection.getTextAfterCursor(i - len, 0).toString();
+				result = selectedCs.toString() + mConnection.getTextAfterCursor(i - len, 0).toString();
 			}
 			// 接下来是退出条件
 			len2 = result.length();// 再次计算长度，因为 result的值可能已经变了
+			if(len2 == 0) return "";
 			if (len2 < i)
 				break;// 表示已经取到头了
-			if (result.charAt(0) == '\n') {// 表示已经取到上一行的换行符了，则去掉最头上的这个换行符就是结果
-				result = result.subSequence(0, len2 - 1);
+			if (result.charAt(len2 - 1) == '\n') {// 表示已经取到上一行的换行符了，则去掉最头上的这个换行符就是结果
+				result = result.subSequence(0, len2);
 				break;
 			}
 		}
@@ -135,27 +102,30 @@ public class CursorOperator {
 	// 获取光标前一行的字串
 	CharSequence getPreLine(int mFromWhichEnd) {
 		CharSequence result = "";
+		CharSequence selectedCs = "";
 		int lineBreaks = 0;// 用于记录取到换行符的个数
 
 		if (mFromWhichEnd == FROMEND) {// 如果从结束的光标算起
-			result = mConnection.getSelectedText(0);
-			if (result.equals(""))
-				result = "";// 如果什么都没有取到，则把结果置为空字串
+			selectedCs = mConnection.getSelectedText(0);
+			if (selectedCs == null)
+				selectedCs = "";// 如果什么都没有取到，则把结果置为空字串
 		}
 
-		int len = result.length();
+		int len = selectedCs.length();
 		int len2 = 0;
 		for (int i = 1; true; i++) {
 			if (i <= len) {// 如果循环的次数还小于已经选择的字符个数，则先在这个字串中取字符
-				result = result.subSequence(len - i, len);
+				result = selectedCs.subSequence(len - i, len);
 			} else {// 要在光标前取新的字符了
-				result = mConnection.getTextBeforeCursor(i - len, 0).toString() + result.toString();
+				result = mConnection.getTextBeforeCursor(i - len, 0).toString() + selectedCs.toString();
 			}
 
+			len2 = result.length();// 再次计算长度，因为 result的值可能已经变了
+			if(len2 == 0) return "";
 			if (result.charAt(0) == '\n') // 表示已经取到上一行的换行符了，则去掉最头上的这个换行符就是结果
 				lineBreaks++;
-			// 接下来是退出条件
-			len2 = result.length();// 再次计算长度，因为 result的值可能已经变了
+			
+			// 接下来是退出条件			
 			if (len2 < i) {// 表示已经取到头了
 				if (lineBreaks == 0) {//已经了到头，但是没有一个换行符，表示光标就在第一行上，则上一行不存在
 					return "";
@@ -174,24 +144,26 @@ public class CursorOperator {
 	// 获取光标下一行的字串
 	CharSequence getNextLine(int mFromWhichEnd) {
 		CharSequence result = "";
+		CharSequence selectedCs = "";
 		int lineBreaks = 0;// 用于记录取到换行符的个数
 
 		if (mFromWhichEnd == FROMSTART) {// 如果从结束的光标算起
-			result = mConnection.getSelectedText(0);
-			if (result.equals(""))
-				result = "";// 如果什么都没有取到，则把结果置为空字串
+			selectedCs = mConnection.getSelectedText(0);
+			if (selectedCs == null)
+				selectedCs = "";// 如果什么都没有取到，则把结果置为空字串
 		}
 
-		int len = result.length();
+		int len = selectedCs.length();
 		int len2 = 0;
 		for (int i = 1; true; i++) {
 			if (i <= len) {// 如果循环的次数还小于已经选择的字符个数，则先在这个字串中取字符
-				result = result.subSequence(0, i);
+				result = selectedCs.subSequence(0, i);
 			} else {// 要在光标前取新的字符了
-				result = result.toString() + mConnection.getTextAfterCursor(i - len, 0).toString();
+				result = selectedCs.toString() + mConnection.getTextAfterCursor(i - len, 0).toString();
 			}
 
 			len2 = result.length();// 再次计算长度，因为 result的值可能已经变了
+			if(len2 == 0) return "";
 			if (result.charAt(len2 -1) == '\n') // 表示已经取到上一行的换行符了，则去掉最头上的这个换行符就是结果
 				lineBreaks++;
 			// 接下来是退出条件			
@@ -203,7 +175,7 @@ public class CursorOperator {
 					break;
 				}
 			} else if (lineBreaks == 2) {//如果取到了两个换行符，说明光标后面有两行以上
-				result = result.subSequence(getToLineEnd(mFromWhichEnd).length(), len2 - 1);
+				result = result.subSequence(getToLineEnd(mFromWhichEnd).length(), len2);
 				break;
 			}
 		}

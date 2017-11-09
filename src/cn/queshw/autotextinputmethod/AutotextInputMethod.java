@@ -497,19 +497,19 @@ public class AutotextInputMethod extends InputMethodService {
 		else if (isCtrlPressed && keyCode == ConstantList.EDIT_UP) {
 			//向上
 			isSelectModel = false;
-			Log.d("Here", "LINE START FROM START = " + curOper.getToLineStart(FROMSTART));
-			Log.d("Here", "LINE START FROM END= " + curOper.getToLineStart(FROMEND));
-			Log.d("Here", "UP FROMSTART = " + curOper.getPreLine(FROMSTART));
-			Log.d("Here", "UP FROMEND = " + curOper.getPreLine(FROMEND));			
+			Log.d("Here", "LINE START FROM START = " + "|" + curOper.getToLineStart(FROMSTART) + "|");
+			Log.d("Here", "LINE START FROM END= " + "|" + curOper.getToLineStart(FROMEND) + "|");
+			Log.d("Here", "UP FROMSTART = " + "|" + curOper.getPreLine(FROMSTART) + "|");
+			Log.d("Here", "UP FROMEND = " + "|" + curOper.getPreLine(FROMEND) + "|");			
 			return true;
 		}
 		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DOWN) {
 			//向下
 			isSelectModel = false;
-			Log.d("Here", "LINE END FROM START = " + curOper.getToLineStart(FROMSTART));
-			Log.d("Here", "LINE END FROM END= " + curOper.getToLineStart(FROMEND));
-			Log.d("Here", "DOWN FROMSTART = " + curOper.getNextLine(FROMSTART));
-			Log.d("Here", "DOWN FROMEND = " + curOper.getNextLine(FROMEND));	
+			Log.d("Here", "LINE END FROM START = " + "|" + curOper.getToLineEnd(FROMSTART) + "|");
+			Log.d("Here", "LINE END FROM END= " + "|" + curOper.getToLineEnd(FROMEND) + "|");
+			Log.d("Here", "DOWN FROMSTART = " + "|" + curOper.getNextLine(FROMSTART) + "|");
+			Log.d("Here", "DOWN FROMEND = " + "|" + curOper.getNextLine(FROMEND) + "|");	
 			return true;
 		}
 		else if (isCtrlPressed && keyCode == ConstantList.EDIT_BACK) {
