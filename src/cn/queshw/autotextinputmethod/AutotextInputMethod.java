@@ -28,6 +28,8 @@ import cn.queshw.autotextsetting.MethodItem;
 
 @SuppressLint("SimpleDateFormat")
 public class AutotextInputMethod extends InputMethodService {
+	private int FROMEND = 1;
+	private int FROMSTART = 0;
 	private int TOASTDURATION = 50;
 	private InputConnection mConnection;
 	private EditorInfo mEditInfo;
@@ -40,13 +42,13 @@ public class AutotextInputMethod extends InputMethodService {
 	private long state = 0; // for metakeylistener
 	private String mBeforeSubString;// 替换前的文本
 	private StringBuilder mAfterSubString;// 替换后的文本
-	private String mUndoSubString;//删除的文本，用于undo功能
+	private String mUndoSubString;// 删除的文本，用于undo功能
 	private int mEnd;// 用于保存某个光标位置
 	private int mStart;// 用于保存某个光标位置
-	private int mMoveWhichEnd = 1;//用于标记，选择光标移动是应该移动头（0）还是尾（1）
-	//private int mPreEnd;// 保存光标位置，用于undo
-	//private int mPreStart;//保存光标位置，用于undo
-	ClipboardManager clipboard; //用于复制，粘贴，undo等功能
+	private int mFromWhichEnd = this.FROMEND;// 用于标记，选择光标移动是应该移动头（0）还是尾（1）
+	// private int mPreEnd;// 保存光标位置，用于undo
+	// private int mPreStart;//保存光标位置，用于undo
+	ClipboardManager clipboard; // 用于复制，粘贴，undo等功能
 
 	private Autotext autotext;// 用于记录替换信息
 	private CursorOperator curOper;
@@ -66,6 +68,8 @@ public class AutotextInputMethod extends InputMethodService {
 	private boolean isCapPressed;
 	private boolean isSymPressed;
 	private boolean switchToFullScreen = false;// 是否切换到全屏模式
+	private boolean isInputStarted = false;
+	private boolean isSelectModel = false;
 
 	// /////////////////////////////////////////////////////////////////////////
 	@Override
@@ -73,9 +77,10 @@ public class AutotextInputMethod extends InputMethodService {
 		// //Log.d("Here", "onCreate()");
 		super.onCreate();
 		dboper = new DBOperations(this);
+		clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);// 获得系统剪贴板
 	}
 
-    // //////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	// 不进入全屏模式
 	@Override
 	public boolean onEvaluateFullscreenMode() {
@@ -85,40 +90,38 @@ public class AutotextInputMethod extends InputMethodService {
 
 	// ///////////////////////////////////////////////////////////////////////////
 	@Override
-	public void onStartInput(EditorInfo attribute, boolean restarting) {
+	public void onStartInput(EditorInfo info, boolean restarting) {
 		// //Log.d("Here", "onStartInput()");
-		super.onStartInput(attribute, restarting);
+		super.onStartInput(info, restarting);
+		// 初始化光标的位置，也可据此知道当前编辑器光标前已经有多少个字符了。
+		mEditInfo = info;		
+	}
 
+	@Override
+	public boolean onShowInputRequested(int flags, boolean configChange) {
+		// TODO Auto-generated method stub
+        if (this.isInputStarted) {
+            return true;
+        }
+        isInputStarted = true;
 		mConnection = this.getCurrentInputConnection();
-		// //Log.d("Here", String.valueOf(mConnection));
 		autotext = new Autotext();
 		curOper = new CursorOperator(mConnection);
 		state = 0L;
-	}
+		curStatusIcon = CurrentStatusIcon.NONE;
 
-	// //////////////////////////////////////////////////////////////////////////
-	@Override
-	public void onStartInputView(EditorInfo info, boolean restarting) {
-		// //Log.d("Here", "onStartInputView()");
-		super.onStartInputView(info, restarting);
 		
-		clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);//获得系统剪贴板
-
-		// 初始化光标的位置，也可据此知道当前编辑器光标前已经有多少个字符了。
-		mEditInfo = this.getCurrentInputEditorInfo();
-		//处理EditorInfo的匹配				
-		if(mEditInfo.inputType == InputType.TYPE_CLASS_NUMBER || mEditInfo.inputType == InputType.TYPE_CLASS_PHONE || mEditInfo.inputType == InputType.TYPE_CLASS_DATETIME){
+		// 处理EditorInfo的匹配
+		if (mEditInfo.inputType == InputType.TYPE_CLASS_NUMBER || mEditInfo.inputType == InputType.TYPE_CLASS_PHONE
+				|| mEditInfo.inputType == InputType.TYPE_CLASS_DATETIME) {
 			state |= HandleMetaKey.META_ALT_LOCKED;
-			handleStatusIcon(HandleMetaKey.getMetaState(state));
-		}else if(mEditInfo.inputType == InputType.TYPE_CLASS_TEXT && (mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0){
+			//handleStatusIcon(HandleMetaKey.getMetaState(state));
+		} else if (mEditInfo.inputType == InputType.TYPE_CLASS_TEXT && (mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0) {
 			state |= HandleMetaKey.META_CAP_LOCKED;
-			handleStatusIcon(HandleMetaKey.getMetaState(state));
-		}else{
-			// 显示输入法的图标
-			this.showStatusIcon(R.drawable.status_normal);// 显示图标
-			curStatusIcon = CurrentStatusIcon.NORMAL;
-		}
-		
+			//handleStatusIcon(HandleMetaKey.getMetaState(state));
+		} 
+		handleStatusIcon(HandleMetaKey.getMetaState(this.state));
+
 		mStart = mEditInfo.initialSelStart;
 		mEnd = mEditInfo.initialSelEnd;
 		if (mStart == -1 || mEnd == -1) {// 如果没有取到值，则设为默认的０
@@ -128,14 +131,12 @@ public class AutotextInputMethod extends InputMethodService {
 		// //Log.d("Here", "inimStart=" + String.valueOf(mStart) + "|inimEnd=" +
 		// String.valueOf(mEnd));
 
-		
-
 		// 获取默认的输入词库
 		methodItemList = dboper.loadMethodsData();
 		// 如果还没有词库，则提醒导入
 		if (methodItemList.size() == 0) {
 			Toast.makeText(this, this.getString(R.string.msg6), TOASTDURATION).show();
-			return;
+			return super.onShowInputRequested(flags, configChange);
 		}
 
 		for (int i = 0; i < methodItemList.size(); i++) {
@@ -145,30 +146,33 @@ public class AutotextInputMethod extends InputMethodService {
 		}
 		defaultMethodId = methodItemList.get(selectedMethodPostion).getId();
 		Toast.makeText(this, methodItemList.get(selectedMethodPostion).getName(), TOASTDURATION).show();
-
 		maxInputLength = dboper.getMaxInputLength(defaultMethodId);
-
+		return super.onShowInputRequested(flags, configChange);
 	}
 
-	// ///////////////////////////////////////////////////////////////////
+	/* (non-Javadoc)
+	 * @see android.inputmethodservice.InputMethodService#onFinishInput()
+	 */
 	@Override
-	public void onFinishInputView(boolean finishingInput) {
-		// //Log.d("Here", "onFinishInputView()");
-		this.hideStatusIcon();
-		// 恢复初始值，这样在下一个编辑框内才可以取得正确的EditorInfo的初始光标位置　
-		currentCursorEnd = -1;
-		currentCursorStart = -1;
+	public void onFinishInput() {
+		// TODO Auto-generated method stub
+		super.onFinishInput();		this.hideStatusIcon();
+		this.currentCursorEnd = -1;
+		this.currentCursorStart = -1;
+		this.isInputStarted = false;
+		this.isSelectModel = false;
 
-		super.onFinishInputView(finishingInput);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		mConnection.finishComposingText();
-		//mConnection.beginBatchEdit();
+        if (!this.isInputStarted) {
+            return super.onKeyDown(selectedMethodPostion, event);
+        }
+        this.mConnection.finishComposingText();
+        this.mConnection.beginBatchEdit();
 		mConnection.endBatchEdit();// 必须加上这个语句，要不然EditText可能会进入到BatchEdit模式，不会及时调用onSelectionupdate函数来更新光标信息，从而出错
-
 
 		state = HandleMetaKey.handleKeyDown(state, keyCode, event);
 		mMetaState = event.getMetaState() | HandleMetaKey.getMetaState(state);
@@ -182,10 +186,12 @@ public class AutotextInputMethod extends InputMethodService {
 		if (currentCursorStart != -1) {// 说明当前光标的位置不是初始位置，那就使用
 			mStart = currentCursorStart;// 把操作开始时的光标位置保存下来
 			mEnd = currentCursorEnd;// 把操作开始时的光标位置保存下来
-		}		
-		
-		if (keyCode == ConstantList.SUBSTITUTION_TRIGGER) {// 触发正向替换字符	
-			//如果是短按，接下来准备正向替换
+		}
+
+		if (keyCode == ConstantList.SUBSTITUTION_TRIGGER) {// 触发正向替换字符
+			isSelectModel = false;//退出选择模式
+			
+			// 如果是短按，接下来准备正向替换
 			mBeforeSubString = "";// 替换前的文本
 			mAfterSubString = new StringBuilder();// 替换后的文本
 
@@ -216,9 +222,8 @@ public class AutotextInputMethod extends InputMethodService {
 			}
 			char c;
 			for (offsetBefore = 1; offsetBefore <= candidateInput.length(); offsetBefore++) {// 从当前位置开始往前找
-				c = candidateInput.charAt(candidateInput.length() - offsetBefore);
-				// //Log.d("Here", "c=" + c);
-				if (c == ConstantList.SUBSTITUTION_SEPERRATOR) {// 如果找到了替换分隔符
+				c = candidateInput.charAt(candidateInput.length() - offsetBefore);				
+				if (c == ConstantList.SUBSTITUTION_SEPERRATOR || c == '\n') {// 如果找到了替换分隔符
 					break;
 				}
 			}
@@ -229,9 +234,10 @@ public class AutotextInputMethod extends InputMethodService {
 			String rawAutotext = dboper.searchAutotext("autotext" + defaultMethodId, candidateInput.toString());// 在库中查找替换项
 			if (rawAutotext == null) {// 如果没有找到替换项
 				mConnection.commitText(" ", 1);
-				//如果没有找到替换项，手机提示一下
-				//Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE); 
-				//vibrator.vibrate(50);				
+				// 如果没有找到替换项，手机提示一下
+				// Vibrator vibrator = (Vibrator)
+				// getSystemService(VIBRATOR_SERVICE);
+				// vibrator.vibrate(50);
 				return true;
 			} else {// 如果找到了替换项
 				// 开始扫描替换项
@@ -242,7 +248,7 @@ public class AutotextInputMethod extends InputMethodService {
 					if (c == ConstantList.MACRO_ESCAPECHARACTER) {
 						c = (i + 1 < rawAutotext.length()) ? rawAutotext.charAt(i + 1) : ConstantList.MACRO_ESCAPECHARACTER;// '%'不能是最后一个字符，否则就当作是普通字符
 						switch (c) {
-						case ConstantList.MACRO_DELETEBACK://在前面删除一个字符
+						case ConstantList.MACRO_DELETEBACK:// 在前面删除一个字符
 							if (mAfterSubString.length() != 0) {
 								mAfterSubString.deleteCharAt(mAfterSubString.length() - 1);
 							} else {
@@ -252,11 +258,12 @@ public class AutotextInputMethod extends InputMethodService {
 						case ConstantList.MACRO_DELETEWORD:// 删除刚替换的单词
 							offsetBefore += autotext.end - autotext.start;
 							break;
-						case ConstantList.MACRO_DELETEFORWARD://在后面删除一个字符
+						case ConstantList.MACRO_DELETEFORWARD:// 在后面删除一个字符
 							macroBnumber++;
-							//一般有宏%B的时候，都表示有重码，手机震动一下
-							//Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE); 
-							//vibrator.vibrate(50);							
+							// 一般有宏%B的时候，都表示有重码，手机震动一下
+							// Vibrator vibrator = (Vibrator)
+							// getSystemService(VIBRATOR_SERVICE);
+							// vibrator.vibrate(50);
 							break;
 						case ConstantList.MACRO_DATE:// date
 							String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
@@ -290,6 +297,18 @@ public class AutotextInputMethod extends InputMethodService {
 				offsetBefore = mConnection.getTextBeforeCursor(offsetBefore, 0).length();
 				mBeforeSubString = mConnection.getTextBeforeCursor(offsetBefore, 0).toString()
 						+ mConnection.getTextAfterCursor(offsetAfter, 0).toString();
+				
+				//处理以换行符作为分隔的情况，相当于是换行符就是最开头 
+	            final int length = mBeforeSubString.length();
+	            //Log.d("Here", "before = |" + this.mBeforeSubString + "|");
+	            for (int j = 0; j < length; ++j) {
+	                if (mBeforeSubString.charAt(length - 1 - j) == '\n') {
+	                    mBeforeSubString = mBeforeSubString.substring(length - j);
+	                    //Log.d("Here", "after = |" + mBeforeSubString + "|");
+	                    offsetBefore = mBeforeSubString.length();
+	                    break;
+	                }
+	            }
 
 				// 第二，记录替换块的信息，不能放到后面记录，因为mAfterSubString会变，可能需要加上空格
 				autotext.start = mStart - offsetBefore;
@@ -311,7 +330,7 @@ public class AutotextInputMethod extends InputMethodService {
 			// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		} else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符
 			// //Log.d("Here", "SUBTRIGGER");
-
+			isSelectModel = false;
 			if (mStart != mEnd) {// 处于选择模式
 				mConnection.setSelection(mStart, mStart);
 				mUndoSubString = mConnection.getTextAfterCursor(Math.abs(mEnd - mStart), 0).toString();
@@ -328,9 +347,9 @@ public class AutotextInputMethod extends InputMethodService {
 			if (TextUtils.isEmpty(autotext.afterString) || TextUtils.isEmpty(autotext.beforeString)) {
 				mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
 				mConnection.deleteSurroundingText(1, 0);
-				//mStart = mStart - 1 < 0 ? 0 : mStart - 1;
-				//mEnd = mStart;
-				//mConnection.setSelection(mStart, mStart);
+				// mStart = mStart - 1 < 0 ? 0 : mStart - 1;
+				// mEnd = mStart;
+				// mConnection.setSelection(mStart, mStart);
 				return true;
 			}
 			// //Log.d("Here", "condition1");
@@ -340,9 +359,9 @@ public class AutotextInputMethod extends InputMethodService {
 			if (mEnd != autotext.end || !rawInput.equals(autotext.afterString)) {
 				mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
 				mConnection.deleteSurroundingText(1, 0);
-				//mStart = mStart - 1 < 0 ? 0 : mStart - 1;
-				//mEnd = mStart;
-				//mConnection.setSelection(mStart, mStart);
+				// mStart = mStart - 1 < 0 ? 0 : mStart - 1;
+				// mEnd = mStart;
+				// mConnection.setSelection(mStart, mStart);
 				return true;
 			}
 			// //Log.d("Here", "condition2");
@@ -361,108 +380,219 @@ public class AutotextInputMethod extends InputMethodService {
 			// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTALL) {
 			// 全选
-			mMoveWhichEnd = 1;
-			mConnection.setSelection(0, mEnd + curOper.getAfterLength());			
-			//mConnection.performContextMenuAction(android.R.id.selectAll);
+			isSelectModel = true;			
+			mConnection.setSelection(0, mEnd + curOper.getAfterLength());
+			if (this.mConnection.getSelectedText(0) == null) {
+                this.isSelectModel = false;
+            }
+			mFromWhichEnd = FROMEND;
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELETETOHOME) {
-			// 选到头
-			//mConnection.setSelection(0, mEnd);
-			mConnection.setSelection(0, mEnd);
-			mMoveWhichEnd = 0;//如果是往前选到头，接下来移动光标当然应该是移动开始位
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTLINE) {
+			// 选一行
+			isSelectModel = true;
+            int toLineStart = this.curOper.getToLineStart(this.FROMSTART).length();
+            CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
+            this.mConnection.setSelection(mStart - toLineStart, mEnd + getToLineEnd.length() - curOper.getInvisibleCharsNumber(getToLineEnd));
+            if (this.mConnection.getSelectedText(0) == null) {
+                this.isSelectModel = false;
+            }
+            mFromWhichEnd = FROMEND;
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELETETOEND) {
-			// 选到尾			
-			mConnection.setSelection(mStart, mEnd + curOper.getAfterLength());
-			mMoveWhichEnd = 1;//如果是往前选到头，接下来移动光标当然应该是移动结束位
+		} else if(isCtrlPressed && keyCode == ConstantList.EDIT_SELECTMODEL){
+			//切换选择模式
+			if (isSelectModel) {//退出选择模式
+                isSelectModel = false;
+                if (mFromWhichEnd == FROMSTART) {
+                    mConnection.setSelection(mEnd, mEnd);
+                }
+                else {
+                    mConnection.setSelection(mStart, mStart);
+                }
+            }//接下来是进入选择模式
+			else if (this.mStart != this.mEnd) {//如果已经处于选择状态
+                this.mFromWhichEnd = this.FROMEND;
+                this.isSelectModel = true;
+            }
+            else if (this.mStart == 0 && this.curOper.getAfterLength() == 0) {//如果当前内容为空，则不进入选择状态
+                this.isSelectModel = false;
+            }
+            else if (this.curOper.getAfterLength() == 0) {//如果 有内容，同时后面已经没有内容了，则往前选一格标志进入选择状态
+                this.mConnection.setSelection(this.mEnd - 1, this.mEnd);
+                this.mFromWhichEnd = this.FROMSTART;
+                this.isSelectModel = true;
+            }
+            else {//如果有内容，并且 光标不在最后
+                this.mConnection.setSelection(this.mStart, this.mStart + 1);
+                this.mFromWhichEnd = this.FROMEND;
+                this.isSelectModel = true;
+            }
+            return true;
+		}
+		//////选择模式////////////////
+		else if(!isCtrlPressed && isSelectModel){
+			if (keyCode == ConstantList.EDIT_SELECTALL) {
+				//全选
+				
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_SELECTLINE) {
+				//选行
+				
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_UP) {
+				//选上一行
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_DOWN) {
+				//选下一行
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_BACK) {
+				// // 往左选
+				if (mStart != mEnd && mFromWhichEnd == 1) {// 如果光标处于选择状态，并且标记位表明应该移动结束位
+					mEnd = (mEnd - 1) < 0 ? 0 : mEnd - 1;
+				} else {
+					mStart = (mStart - 1) < 0 ? 0 : mStart - 1;
+					mFromWhichEnd = 0;
+				}
+				mConnection.setSelection(mStart, mEnd);
+				return true;
+			} else if (keyCode == ConstantList.EDIT_FORWARD) {
+				// // 往右选
+				int totalLength = curOper.getAfterLength();
+				if (mStart != mEnd && mFromWhichEnd == 0) {// 如果光标处于选择状态，并且标记位表明应该移动开始位
+					mStart = (mStart + 1) > mEnd + totalLength ? mEnd + totalLength : currentCursorStart + 1;
+				} else {
+					mEnd = (mEnd + 1) > mEnd + totalLength ? mEnd + totalLength : currentCursorEnd + 1;
+					mFromWhichEnd = 1;
+				}
+				mConnection.setSelection(mStart, mEnd);
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_TOLINESTART) {
+				//选到行头
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_TOLINEEND) {
+				//选到行尾
+				return true;
+			}
+			else if (keyCode == ConstantList.EDIT_TOSTART) {
+				// 选到头
+				// mConnection.setSelection(0, mEnd);
+				mConnection.setSelection(0, mEnd);
+				mFromWhichEnd = 0;// 如果是往前选到头，接下来移动光标当然应该是移动开始位
+				return true;
+			} else if (keyCode == ConstantList.EDIT_TOEND) {
+				// 选到尾
+				mConnection.setSelection(mStart, mEnd + curOper.getAfterLength());
+				mFromWhichEnd = 1;// 如果是往前选到头，接下来移动光标当然应该是移动结束位
+				return true;
+			} 
+		}
+		//////////选择模式结束//////////////////
+		
+		//////////移动快捷键///////////////////
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_UP) {
+			//向上
+			isSelectModel = false;
+			Log.d("Here", "LINE START FROM START = " + curOper.getToLineStart(FROMSTART));
+			Log.d("Here", "LINE START FROM END= " + curOper.getToLineStart(FROMEND));
+			Log.d("Here", "UP FROMSTART = " + curOper.getPreLine(FROMSTART));
+			Log.d("Here", "UP FROMEND = " + curOper.getPreLine(FROMEND));			
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELETEBACK) {
-			// // 往前选
-			if(mStart != mEnd && mMoveWhichEnd == 1){//如果光标处于选择状态，并且标记位表明应该移动结束位
-				mEnd = (mEnd - 1) < 0 ? 0 : mEnd - 1;
-			}else{
-				mStart = (mStart - 1) < 0 ? 0 : mStart - 1;
-				mMoveWhichEnd = 0;
-			}			
-			mConnection.setSelection(mStart, mEnd);
+		}
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DOWN) {
+			//向下
+			isSelectModel = false;
+			Log.d("Here", "LINE END FROM START = " + curOper.getToLineStart(FROMSTART));
+			Log.d("Here", "LINE END FROM END= " + curOper.getToLineStart(FROMEND));
+			Log.d("Here", "DOWN FROMSTART = " + curOper.getNextLine(FROMSTART));
+			Log.d("Here", "DOWN FROMEND = " + curOper.getNextLine(FROMEND));	
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELETEFORWARD) {
-			// // 往后选
-			int totalLength = curOper.getAfterLength();
-			if(mStart != mEnd && mMoveWhichEnd == 0){//如果光标处于选择状态，并且标记位表明应该移动开始位
-				mStart = (mStart + 1) > mEnd + totalLength ? mEnd + totalLength : currentCursorStart + 1;
-			}else{
-				mEnd = (mEnd + 1) > mEnd + totalLength ? mEnd + totalLength : currentCursorEnd + 1;
-				mMoveWhichEnd = 1;
-			}			
-			mConnection.setSelection(mStart, mEnd);
-			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_MOVETOHOME) {
-			// 光标移到头上OKKKKKKKKKKKKKKKKK
-			//curOper.moveCursorTo(0, mStart, mEnd);
-			mConnection.setSelection(0, 0);
-			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_MOVETOEND) {
-			// 光标移到尾上OKKKKKKKKKKKKKKKKK
-			int totalLength = mEnd + curOper.getAfterLength();
-			//curOper.moveCursorTo(totalLength, mStart, mEnd);
-			mConnection.setSelection(totalLength, totalLength);
-			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_MOVEBACK) {
-			// 往前移一个字符OKKKKKKKKKKKKKKKKK
+		}
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_BACK) {
+			// 向左移
+			isSelectModel = false;
 			int pos = mStart != mEnd ? mStart : mStart - 1;
 			pos = pos < 0 ? 0 : pos;
 			// Log.d("Here", "mStart=" + String.valueOf(mStart) + "|mEnd=" +
 			// String.valueOf(mEnd));
-			//curOper.moveCursorTo(pos, mStart, mEnd);
+			// curOper.moveCursorTo(pos, mStart, mEnd);
 			mConnection.setSelection(pos, pos);
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_MOVEFORWARD) {
-			// 往后移一个字符OKKKKKKKKKKKKKKKKKK
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_FORWARD) {
+			// 往右移
+			isSelectModel = false;
 			int totalLength = mEnd + curOper.getAfterLength();
 			int pos = mStart != mEnd ? mEnd : mEnd + 1;
 			pos = pos > totalLength ? totalLength : pos;
-			//curOper.moveCursorTo(pos, mStart, mEnd);
+			// curOper.moveCursorTo(pos, mStart, mEnd);
 			mConnection.setSelection(pos, pos);
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEALL) {
-			// // 删除全部内容OKKKKKKKKKKKKKK
-			mConnection.setSelection(mStart, mStart);//这样可以确保光标不会处于选择状态
-			int afterLength = curOper.getAfterLength();						
-			mUndoSubString = mConnection.getTextBeforeCursor(mStart+1, 0).toString() + mConnection.getTextAfterCursor(afterLength, 0).toString();
-			mConnection.deleteSurroundingText(mStart + 1, afterLength);
-			mConnection.setSelection(0, 0);
+		}		
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINESTART) {
+			//移到行头
+			isSelectModel = false;
 			return true;
 		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETETOHOME) {
-			// 删除到头OKKKKKKKKKKKKKKKKK
-			mUndoSubString = mConnection.getTextBeforeCursor(mStart, 0).toString();
-			mConnection.deleteSurroundingText(mStart, 0);
-			mConnection.setSelection(0, 0);
-			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETETOEND) {
-			// 删除到尾OKKKKKKKKKKKKKKKKKKKK
-			int afterLength = curOper.getAfterLength();
-			mUndoSubString = mConnection.getTextAfterCursor(afterLength, 0).toString();
-			mConnection.deleteSurroundingText(0, afterLength);
-			mConnection.setSelection(mEnd, mEnd);
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINEEND) {
+			//移到行尾
+			isSelectModel = false;
 			return true;
 		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEFORWARD) {
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOSTART) {
+			// 移到头
+			isSelectModel = false;
+			// curOper.moveCursorTo(0, mStart, mEnd);
+			mConnection.setSelection(0, 0);
+			return true;
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOEND) {
+			//移到尾
+			isSelectModel = false;
+			int totalLength = mEnd + curOper.getAfterLength();
+			// curOper.moveCursorTo(totalLength, mStart, mEnd);
+			mConnection.setSelection(totalLength, totalLength);
+			return true;
+		} 
+		///////////移动快捷键结束///////////////
+		
+		//////////删除快捷键开始////////////////
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEALL) {
+				// // 删除全部内容OKKKKKKKKKKKKKK
+			isSelectModel = false;
+				mConnection.setSelection(mStart, mStart);// 这样可以确保光标不会处于选择状态
+				int afterLength = curOper.getAfterLength();
+				mUndoSubString = mConnection.getTextBeforeCursor(mStart + 1, 0).toString() + mConnection.getTextAfterCursor(afterLength, 0).toString();
+				mConnection.deleteSurroundingText(mStart + 1, afterLength);
+				mConnection.setSelection(0, 0);
+				return true;			 
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETELINE) {
+			// 删除行
+			isSelectModel = false;
+			return true;
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEFORWARD) {
 			// 删除后面一个字符
+			isSelectModel = false;
 			mUndoSubString = mConnection.getTextAfterCursor(1, 0).toString();
 			mConnection.deleteSurroundingText(0, 1);
 			return true;
-		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_UNDO) {
+		} 
+		///////////删除快捷键结束/////////////////
+		
+		//////////其他快捷键开始//////////////////
+		else if (isCtrlPressed && keyCode == ConstantList.EDIT_UNDO) {
 			// undo功能
-			if(!mUndoSubString.isEmpty()){
+			isSelectModel = false;
+			if (!mUndoSubString.isEmpty()) {
 				mConnection.commitText(mUndoSubString, 1);
 				mUndoSubString = "";
-			}			
+			}
 			return true;
-		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_COPY) {
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_COPY) {
 			// 复制OKKKKKKKKKKKKKKKKK
+			isSelectModel = false;
 			if (mStart != mEnd) {
 				clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);
 				ClipData clip = ClipData.newPlainText("AutotextInputMethod", mConnection.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES));
@@ -474,6 +604,7 @@ public class AutotextInputMethod extends InputMethodService {
 			return true;
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_PASTE || isCtrlPressed && keyCode == ConstantList.EDIT_UNDO) {
 			// 粘贴功能
+			isSelectModel = false;
 			clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);
 			CharSequence pasteText = "";
 			if (clipboard.hasPrimaryClip()) {// 如果剪贴板里有内容
@@ -481,15 +612,18 @@ public class AutotextInputMethod extends InputMethodService {
 				pasteText = item.getText();
 				mConnection.commitText(pasteText, 1);
 			}
-			//mConnection.performContextMenuAction(android.R.id.paste);
+			// mConnection.performContextMenuAction(android.R.id.paste);
 			return true;
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_CUT) {
 			// 剪切OKKKKKKKKKKKKKKKKKK
+			isSelectModel = false;
 			if (mStart != mEnd) {
-				//ClipboardManager clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);
-				//ClipData clip = ClipData.newPlainText("AutotextInputMethod", mConnection.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES));
-				//clipboard.setPrimaryClip(clip);
-				//mConnection.commitText("", 1);
+				// ClipboardManager clipboard = (ClipboardManager)
+				// this.getSystemService(CLIPBOARD_SERVICE);
+				// ClipData clip = ClipData.newPlainText("AutotextInputMethod",
+				// mConnection.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES));
+				// clipboard.setPrimaryClip(clip);
+				// mConnection.commitText("", 1);
 				int mUndoStart = mStart;
 				int mUndoEnd = mEnd;
 				mConnection.setSelection(mStart, mStart);
@@ -500,53 +634,69 @@ public class AutotextInputMethod extends InputMethodService {
 			return true;
 		} else if (isAltPressed && keyCode == ConstantList.SWITCH_INPUTMETHOD) {
 			// 切换输入法的快捷键
-//			InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-//			List<InputMethodInfo> inputMethodList = imm.getInputMethodList();//获得系统所有输入法列表
-//			String curInputMethodId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);//获得当前输入法的id
-//			int listId = inputMethodList.indexOf(curInputMethodId);//计算当前输入法在列表中是第几项
-//			Log.d("Here", curInputMethodId + " is " +String.valueOf(listId));
-//			
-//			//如果当前输入法是本输入法，id为 cn.queshw.autotextinputmethod/.AutotextInputMethod，并且不是最后一个词库了
-//			if(curInputMethodId == ConstantList.METHODID && selectedMethodPostion != methodItemList.size()){
-//				selectedMethodPostion++;
-//				defaultMethodId = methodItemList.get(selectedMethodPostion).getId();
-//				dboper.addOrSaveMethodItem(methodItemList.get(selectedMethodPostion).getName(), MethodItem.DEFAULT, defaultMethodId);
-//				Toast.makeText(this, "AutoText:" + methodItemList.get(selectedMethodPostion).getName(), TOASTDURATION).show();
-//			}else{//如果是其他输入法，则往下一个输入法切换
-//				listId = listId + 1 > inputMethodList.size()? 0: listId + 1;
-//				this.switchInputMethod(inputMethodList.get(listId).getId());
-//				Toast.makeText(this, inputMethodList.get(listId).getServiceName() , TOASTDURATION).show();
-//			}
-			
+			// InputMethodManager imm = (InputMethodManager)
+			// this.getSystemService(Context.INPUT_METHOD_SERVICE);
+			// List<InputMethodInfo> inputMethodList =
+			// imm.getInputMethodList();//获得系统所有输入法列表
+			// String curInputMethodId =
+			// Settings.Secure.getString(this.getContentResolver(),
+			// Settings.Secure.DEFAULT_INPUT_METHOD);//获得当前输入法的id
+			// int listId =
+			// inputMethodList.indexOf(curInputMethodId);//计算当前输入法在列表中是第几项
+			// Log.d("Here", curInputMethodId + " is " +String.valueOf(listId));
+			//
+			// //如果当前输入法是本输入法，id为
+			// cn.queshw.autotextinputmethod/.AutotextInputMethod，并且不是最后一个词库了
+			// if(curInputMethodId == ConstantList.METHODID &&
+			// selectedMethodPostion != methodItemList.size()){
+			// selectedMethodPostion++;
+			// defaultMethodId =
+			// methodItemList.get(selectedMethodPostion).getId();
+			// dboper.addOrSaveMethodItem(methodItemList.get(selectedMethodPostion).getName(),
+			// MethodItem.DEFAULT, defaultMethodId);
+			// Toast.makeText(this, "AutoText:" +
+			// methodItemList.get(selectedMethodPostion).getName(),
+			// TOASTDURATION).show();
+			// }else{//如果是其他输入法，则往下一个输入法切换
+			// listId = listId + 1 > inputMethodList.size()? 0: listId + 1;
+			// this.switchInputMethod(inputMethodList.get(listId).getId());
+			// Toast.makeText(this, inputMethodList.get(listId).getServiceName()
+			// , TOASTDURATION).show();
+			// }
+
 			selectedMethodPostion = selectedMethodPostion + 1 < methodItemList.size() ? selectedMethodPostion + 1 : 0;
 			defaultMethodId = methodItemList.get(selectedMethodPostion).getId();
 			dboper.addOrSaveMethodItem(methodItemList.get(selectedMethodPostion).getName(), MethodItem.DEFAULT, defaultMethodId);
 			Toast.makeText(this, methodItemList.get(selectedMethodPostion).getName(), TOASTDURATION).show();
 			return true;
-		}else if(isSymPressed){//暂时什么都不做！！
-			//Log.d("Here", "sym pressed there");
-			//return false;
-		}else if(keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER){//如果输入回车健
-			mConnection.performEditorAction(mEditInfo.imeOptions&EditorInfo.IME_MASK_ACTION);
-		}
-		else {
+		} 
+        //////////其他快捷键结束//////////////////
+		else if (isSymPressed) {// 暂时什么都不做！！
+			// Log.d("Here", "sym pressed there");
+			// return false;
+			isSelectModel = false;
+		} else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
+			isSelectModel = false;
+			mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
+		} else {
+			isSelectModel = false;
 			KeyCharacterMap kcm = event.getKeyCharacterMap();
 			// //Log.d("Here", String.valueOf(kcm.getModifierBehavior()));
 			if (kcm.isPrintingKey(keyCode)) {
 
 				if (isCtrlPressed)// 说明正处于快捷命令模式中
 					return true;
-				
-				char c;		
-				if (event.getRepeatCount() == 0) {//短按
+
+				char c;
+				if (event.getRepeatCount() == 0) {// 短按
 					c = (char) kcm.get(keyCode, mMetaState);
 				} else if (event.getRepeatCount() == 1) {// 长按大写
 					c = (char) kcm.get(keyCode, KeyEvent.META_CAPS_LOCK_ON);
 					mConnection.deleteSurroundingText(1, 0);
-				}  else {
+				} else {
 					return true;
 				}
-				
+
 				mConnection.commitText(String.valueOf(c), 1);
 				return true;
 			}
@@ -554,8 +704,6 @@ public class AutotextInputMethod extends InputMethodService {
 
 		return super.onKeyDown(keyCode, event);
 	}
-
-	
 
 	// /////////////////////////////////////////////////////////////////////////
 	@Override
@@ -622,10 +770,10 @@ public class AutotextInputMethod extends InputMethodService {
 			isCapPressed = false;
 		}
 		if ((mMetaState & KeyEvent.META_SYM_ON) != 0) {// 按了sym键
-			//Log.d("Here", "sym true");
+			// Log.d("Here", "sym true");
 			isSymPressed = true;
 		} else {
-			//Log.d("Here", "sym false");
+			// Log.d("Here", "sym false");
 			isSymPressed = false;
 		}
 	}
