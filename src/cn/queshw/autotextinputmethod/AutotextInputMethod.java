@@ -94,15 +94,18 @@ public class AutotextInputMethod extends InputMethodService {
 		// //Log.d("Here", "onStartInput()");
 		super.onStartInput(info, restarting);
 		// 初始化光标的位置，也可据此知道当前编辑器光标前已经有多少个字符了。
-		mEditInfo = info;		
+		mEditInfo = info;
 	}
+	
+	
 
+	/* (non-Javadoc)
+	 * @see android.inputmethodservice.InputMethodService#onStartInputView(android.view.inputmethod.EditorInfo, boolean)
+	 */
 	@Override
-	public boolean onShowInputRequested(int flags, boolean configChange) {
+	public void onStartInputView(EditorInfo info, boolean restarting) {
 		// TODO Auto-generated method stub
-        if (this.isInputStarted) {
-            return true;
-        }
+		//super.onStartInputView(info, restarting);
         isInputStarted = true;
 		mConnection = this.getCurrentInputConnection();
 		autotext = new Autotext();
@@ -136,7 +139,7 @@ public class AutotextInputMethod extends InputMethodService {
 		// 如果还没有词库，则提醒导入
 		if (methodItemList.size() == 0) {
 			Toast.makeText(this, this.getString(R.string.msg6), TOASTDURATION).show();
-			return super.onShowInputRequested(flags, configChange);
+			return;
 		}
 
 		for (int i = 0; i < methodItemList.size(); i++) {
@@ -147,7 +150,32 @@ public class AutotextInputMethod extends InputMethodService {
 		defaultMethodId = methodItemList.get(selectedMethodPostion).getId();
 		Toast.makeText(this, methodItemList.get(selectedMethodPostion).getName(), TOASTDURATION).show();
 		maxInputLength = dboper.getMaxInputLength(defaultMethodId);
-		return super.onShowInputRequested(flags, configChange);
+		return;
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see android.inputmethodservice.InputMethodService#onEvaluateInputViewShown()
+	 */
+	@Override
+	public boolean onEvaluateInputViewShown() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.inputmethodservice.InputMethodService#onFinishInputView(boolean)
+	 */
+	@Override
+	public void onFinishInputView(boolean finishingInput) {
+		// TODO Auto-generated method stub
+		super.onFinishInputView(finishingInput);
+		this.hideStatusIcon();
+		this.currentCursorEnd = -1;
+		this.currentCursorStart = -1;
+		this.isInputStarted = false;
+		this.isSelectModel = false;
 	}
 
 	/* (non-Javadoc)
@@ -156,7 +184,8 @@ public class AutotextInputMethod extends InputMethodService {
 	@Override
 	public void onFinishInput() {
 		// TODO Auto-generated method stub
-		super.onFinishInput();		this.hideStatusIcon();
+		super.onFinishInput();
+		this.hideStatusIcon();
 		this.currentCursorEnd = -1;
 		this.currentCursorStart = -1;
 		this.isInputStarted = false;
