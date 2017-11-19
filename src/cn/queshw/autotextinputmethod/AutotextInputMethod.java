@@ -851,7 +851,7 @@ public class AutotextInputMethod extends InputMethodService {
 			// return false;
 			isSelectModel = false;
 			GenAutotext ga = new GenAutotext();
-			HashMap<String, String> map = ga.gen("text,#COMMA#,#SHARP#,63263135,one,tow,three,four,five,six,seven,eight,nine");
+			HashMap<String, String> map = ga.gen("text,#C#,#S#,63263135,one,tow,three,four,five,six,seven,eight,nine");
 			for(Entry<String,String> entry: map.entrySet()){
 				Log.d("Here", entry.getKey() + ": " + entry.getValue());
 			}

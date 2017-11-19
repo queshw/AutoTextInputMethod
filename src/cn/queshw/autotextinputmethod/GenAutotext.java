@@ -3,276 +3,293 @@ package cn.queshw.autotextinputmethod;
 import java.util.HashMap;
 
 public class GenAutotext {
-	public final char CHINESE_QUOTATION_LEFT = '¡¾';
-    public final char CHINESE_QUOTATION_RIGHT = '¡¿';
-    
-    private HashMap<String, String> result = new HashMap<String, String>();
-    
+	public final char CHINESE_QUOTATION_LEFT = 'ã€';
+	public final char CHINESE_QUOTATION_RIGHT = 'ã€‘';
+
+	private HashMap<String, String> result = new HashMap<String, String>();
+
 	public GenAutotext() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	//°ÑÒ»¸ö×Ö´®×ª»¯ÎªautotextµÄÌõÄ¿
-	HashMap<String, String> gen(String line){
+
+	// æŠŠä¸€ä¸ªå­—ä¸²è½¬åŒ–ä¸ºautotextçš„æ¡ç›®
+	HashMap<String, String> gen(String line) {
 		result.clear();
 		line = line.trim();
-        if (line.isEmpty()) {//Èç¹û´«ÈëÁËÒ»¸ö¿Õ×Ö´®
-            return null;
-        }
-        
-        //È¥µô¿ÕµÄÏî
-        line = this.escape(line);
-        final String[] tempitem = line.split("[,]");
-        int realItemNumber = 0;
-        for (int i = 0; i < tempitem.length; ++i) {
-            tempitem[i] = tempitem[i].trim();
-            if (!tempitem[i].isEmpty()) {
-                ++realItemNumber;
-            }
-        }
-        
-        //°ÑÊı×éÖØĞÂÅÅÁĞ
-        final String[] item = new String[realItemNumber];
-        realItemNumber = 0;
-        for (int j = 0; j < tempitem.length; ++j) {
-            tempitem[j] = tempitem[j].trim();
-            if (!tempitem[j].isEmpty()) {
-                item[realItemNumber] = tempitem[j];
-                ++realItemNumber;
-            }
-        }
-        if(realItemNumber <= 1) return null;//Èç¹û²»ÊÇÒ»¸öÍêÕûµÄautotextÌõÄ¿
-        
-        //¼ÆËãÌæ»»ÏîÓĞ¼¸Ò³
-        final int candiWordNumber = item.length - 1;
-        int candiPageNumber;      
-        if (candiWordNumber % 9 > 0) {
-            candiPageNumber = candiWordNumber / 9 + 1;
-        }
-        else {
-            candiPageNumber = candiWordNumber / 9;
-        }
-        
-        //¹¹Ôì°´Ò³·ÖµÄÊı×é£¬ÔÚÃ¿Ò»¸öÏîÇ°±êÉÏÊı×Ö
-        final String[] pages = new String[candiPageNumber + 1];
-        pages[0] = item[0];//µÚÒ»ÏîÎª±àÂë
-        int itemIndex = 1;
-        for (int k = 1; k <= candiPageNumber; ++k) {
-            final StringBuilder candiPage = new StringBuilder();
-            for (int i = 0; i < 9 && itemIndex <= candiWordNumber; ++itemIndex, ++i) {
-                if (itemIndex == candiWordNumber && i == 0) {
-                    candiPage.append(item[itemIndex]);//Èç¹ûÖ»ÓĞÒ»Ïî
-                }
-                else {
-                    candiPage.append(String.valueOf(String.valueOf(i + 1)) + item[itemIndex]);//ÔÚÃ¿¸öÏîÄ¿Ç°¼ÓÉÏÊı×Ö
-                }
-            }
-            pages[k] = candiPage.toString();
-        }//µ½´ËÎªÖ¹£¬ÒÑ¾­ÓĞÒ»¸ö°´Ò³¹¹ÔìºÃµÄÊı×é£¬Èç¹ûÓĞ¶à¸öÌæ»»Ïî£¬Ã¿¸öÏîÖ®Ç°ÒÑ¾­±êºÃÊı×Ö
-        
-        //½ÓÏÂÀ´£¬×¼±¸Éú³ÉautotextÌõÄ¿
-        if (candiPageNumber > 1) {//Èç¹û³¬¹ıÒ»Ò³£¬ÔòÔÚ¿ªÍ·ºó½áÎ²¼ÓÉÏÖĞÎÄµÄÖĞÀ¨ºÅ
-            pages[1] = String.valueOf(CHINESE_QUOTATION_LEFT) + pages[1];
-            pages[pages.length - 1] = pages[pages.length - 1] + CHINESE_QUOTATION_RIGHT;
-        }
-        
-        if (candiPageNumber == 1) {//Èç¹ûÖ»ÓĞÒ»Ò³
-            final String[] nextitem = pages[1].split("[1-9]");//°ÑÌæ»»ÏîÓÃÊı×Ö·Ö¿ª
-            if (nextitem.length == 1) {//ËµÃ÷Ö»ÓĞÒ»¸öÌæ»»Ïî
-            	result.put(this.recover(pages[0]), pages[1]);
-            }
-            else {//Èç¹ûÓĞ¶à¸öÌæ»»Ïî
-            	result.put(this.recover(pages[0]), pages[1]);
-            	result.put(this.recover(pages[1]) + "a", "%b");
-                this.writeEntries(pages[1]);
-            }
-        }
-        else {//Èç¹û²»Ö¹Ò»Ò³
-            for (int k = 0; k < pages.length; ++k) {
-            	//´¦Àí¶àÒ³µÄÍùºó·­
-            	if (k == pages.length - 1) result.put(recover(pages[k]), recover(pages[1]) + "%B");    //Èç¹ûÎª×îºóÒ»Ò³£¬Ôò·­»ØµÚÒ»Ò³   
-            	else result.put(recover(pages[k]), recover(pages[k + 1]) + "%B");//·ñÔòÍùºó·­
-                
-            	//½ÓÏÂÀ´´¦ÀíÍùÇ°·­
-            	if(k == 1) result.put(recover(pages[1]) + "0", recover(pages[1]) + "%B");
-            	else if(k > 1) result.put(pages[k] + "0", recover(pages[k - 1]) + "%B");
-            	
-            	//½ÓÏÂÀ´´¦ÀíÉ¾³ı
-            	if(k != 0) result.put(recover(pages[k]) + "a", "%b");//page[0]ÊÇ±àÂë
-            	
-            	//½ÓÏÂÀ´´¦Àí¸÷Ò³ÖĞµÄÌæ»»Ïî
-            	this.writeEntries(pages[k]);   	
-            }
-        }
+		if (line.isEmpty()) {// å¦‚æœä¼ å…¥äº†ä¸€ä¸ªç©ºå­—ä¸²
+			return null;
+		}
+
+		// å»æ‰ç©ºçš„é¡¹
+		line = this.escape(line);
+		final String[] tempitem = line.split("[,]");
+		int realItemNumber = 0;
+		for (int i = 0; i < tempitem.length; ++i) {
+			tempitem[i] = tempitem[i].trim();
+			if (!tempitem[i].isEmpty()) {
+				++realItemNumber;
+			}
+		}
+
+		// æŠŠæ•°ç»„é‡æ–°æ’åˆ—
+		final String[] item = new String[realItemNumber];
+		realItemNumber = 0;
+		for (int j = 0; j < tempitem.length; ++j) {
+			tempitem[j] = tempitem[j].trim();
+			if (!tempitem[j].isEmpty()) {
+				item[realItemNumber] = tempitem[j];
+				++realItemNumber;
+			}
+		}
+		if (realItemNumber <= 1)
+			return null;// å¦‚æœä¸æ˜¯ä¸€ä¸ªå®Œæ•´çš„autotextæ¡ç›®
+
+		// è®¡ç®—æ›¿æ¢é¡¹æœ‰å‡ é¡µ
+		final int candiWordNumber = item.length - 1;
+		int candiPageNumber;
+		if (candiWordNumber % 9 > 0) {
+			candiPageNumber = candiWordNumber / 9 + 1;
+		} else {
+			candiPageNumber = candiWordNumber / 9;
+		}
+
+		// æ„é€ æŒ‰é¡µåˆ†çš„æ•°ç»„ï¼Œåœ¨æ¯ä¸€ä¸ªé¡¹å‰æ ‡ä¸Šæ•°å­—
+		final String[] pages = new String[candiPageNumber + 1];
+		pages[0] = item[0];// ç¬¬ä¸€é¡¹ä¸ºç¼–ç 
+		int itemIndex = 1;
+		for (int k = 1; k <= candiPageNumber; ++k) {
+			final StringBuilder candiPage = new StringBuilder();
+			for (int i = 0; i < 9 && itemIndex <= candiWordNumber; ++itemIndex, ++i) {
+				if (itemIndex == candiWordNumber && i == 0) {
+					candiPage.append(item[itemIndex]);// å¦‚æœåªæœ‰ä¸€é¡¹
+				} else {
+					candiPage.append(getNumber(i + 1) + item[itemIndex]);// åœ¨æ¯ä¸ªé¡¹ç›®å‰åŠ ä¸Šæ•°å­—
+				}
+			}
+			pages[k] = candiPage.toString();
+		}// åˆ°æ­¤ä¸ºæ­¢ï¼Œå·²ç»æœ‰ä¸€ä¸ªæŒ‰é¡µæ„é€ å¥½çš„æ•°ç»„ï¼Œå¦‚æœæœ‰å¤šä¸ªæ›¿æ¢é¡¹ï¼Œæ¯ä¸ªé¡¹ä¹‹å‰å·²ç»æ ‡å¥½æ•°å­—
+
+		// æ¥ä¸‹æ¥ï¼Œå‡†å¤‡ç”Ÿæˆautotextæ¡ç›®
+		if (candiPageNumber > 1) {// å¦‚æœè¶…è¿‡ä¸€é¡µï¼Œåˆ™åœ¨å¼€å¤´åç»“å°¾åŠ ä¸Šä¸­æ–‡çš„ä¸­æ‹¬å·
+			pages[1] = String.valueOf(CHINESE_QUOTATION_LEFT) + pages[1];
+			pages[pages.length - 1] = pages[pages.length - 1] + CHINESE_QUOTATION_RIGHT;
+		}
+
+		if (candiPageNumber == 1) {// å¦‚æœåªæœ‰ä¸€é¡µ
+			final String[] nextitem = pages[1].split("[âŠâ‹âŒâââââ‘â’]");// æŠŠæ›¿æ¢é¡¹ç”¨æ•°å­—åˆ†å¼€
+			if (nextitem.length == 1) {// è¯´æ˜åªæœ‰ä¸€ä¸ªæ›¿æ¢é¡¹
+				result.put(this.recover(pages[0]), pages[1]);
+			} else {// å¦‚æœæœ‰å¤šä¸ªæ›¿æ¢é¡¹
+				result.put(this.recover(pages[0]), pages[1]);
+				result.put(this.recover(pages[1]) + "a", "%b");
+				this.writeEntries(pages[1], true);
+			}
+		} else {// å¦‚æœä¸æ­¢ä¸€é¡µ
+			for (int k = 0; k < pages.length; ++k) {
+				// å¤„ç†å¤šé¡µçš„å¾€åç¿»
+				if (k == pages.length - 1)
+					result.put(recover(pages[k]), recover(pages[1]) + "%B"); // å¦‚æœä¸ºæœ€åä¸€é¡µï¼Œåˆ™ç¿»å›ç¬¬ä¸€é¡µ
+				else
+					result.put(recover(pages[k]), recover(pages[k + 1]) + "%B");// å¦åˆ™å¾€åç¿»
+
+				// æ¥ä¸‹æ¥å¤„ç†å¾€å‰ç¿»
+				if (k == 1)
+					result.put(recover(pages[1]) + "0", recover(pages[1]) + "%B");
+				else if (k > 1)
+					result.put(pages[k] + "0", recover(pages[k - 1]) + "%B");
+
+				// æ¥ä¸‹æ¥å¤„ç†åˆ é™¤
+				if (k != 0)
+					result.put(recover(pages[k]) + "a", "%b");// page[0]æ˜¯ç¼–ç 
+
+				// æ¥ä¸‹æ¥å¤„ç†å„é¡µä¸­çš„æ›¿æ¢é¡¹
+				this.writeEntries(pages[k], false);
+			}
+		}
 		return result;
 	}
 	
-	
-	private void writeEntries(final String s) {
+	private String getNumber(int i) {
 		// TODO Auto-generated method stub
-        final String[] item = s.split("[1-9]");
-            for (int i = 1; i < item.length; ++i) {//Ö®ËùÒÔ´Ó1¿ªÊ¼£¬ÊÇÒòÎªµÚÒ»ÏîÒªÃ´Îª¿Õ£¬ÒªÃ´ÎªÖĞÀ¨ºÅ¡¾
-            	if (item[i].charAt(item[i].length() - 1) == CHINESE_QUOTATION_RIGHT) {//Èç¹û×îºóÒ»¸ö×Ö·ûÊÇÓÒÖĞÀ¨ºÅ£¬ËµÃ÷ÊÇÕâÊÇ¶àÒ³ÖĞµÄ×îºóÒ»Ò³
-            			result.put(this.recover(s) + getchar(i), "%b" + item[i].substring(0, item[i].length() - 1));
-                 }else{//Èç¹ûÊÇ¶àÒ³ÖĞµÄÆäËûÒ³
-                    	result.put(this.recover(s) + getchar(i), "%b" + item[i]);
-                 }
-            }
+		String c = "";
+		switch (i) {
+		case 1: {
+			c = "âŠ";
+			break;
+		}
+		case 2: {
+			c = "â‹";
+			break;
+		}
+		case 3: {
+			c = "âŒ";
+			break;
+		}
+		case 4: {
+			c = "â";
+			break;
+		}
+		case 5: {
+			c = "â";
+			break;
+		}
+		case 6: {
+			c = "â";
+			break;
+		}
+		case 7: {
+			c = "â";
+			break;
+		}
+		case 8: {
+			c = "â‘";
+			break;
+		}
+		case 9: {
+			c = "â’";
+			break;
+		}
+		}
+		return c;
 	}
 
-	//¶àÑ¡×ÖÊ±£¬ÓëÊı×Ö¶ÔÓ¦µÄ×ÖÄ¸ÊÇÊ²Ã´
-    String getchar(final int i) {
-        String c = "";
-        switch (i) {
-            case 0: {
-                c = "0";
-                break;
-            }
-          case 1: {
-                c = "";
-                break;
-            }
-            case 2: {
-                c = "e";
-                break;
-            }
-            case 3: {
-                c = "r";
-                break;
-            }
-            case 4: {
-                c = "s";
-                break;
-            }
-            case 5: {
-                c = "d";
-                break;
-            }
-            case 6: {
-                c = "f";
-                break;
-            }
-            case 7: {
-                c = "z";
-                break;
-            }
-            case 8: {
-                c = "x";
-                break;
-            }
-            case 9: {
-                c = "c";
-                break;
-            }
-        }
-        return c;
-    }
-	//°Ñ×ªÒå×Ö·û»Ö¸´³ÉÔ­×´
+	private void writeEntries(final String s, boolean singlePage) {
+		// TODO Auto-generated method stub
+		final String[] item = s.split("[âŠâ‹âŒâââââ‘â’]");
+		for (int i = 1; i < item.length; ++i) {// ä¹‹æ‰€ä»¥ä»1å¼€å§‹ï¼Œæ˜¯å› ä¸ºç¬¬ä¸€é¡¹è¦ä¹ˆä¸ºç©ºï¼Œè¦ä¹ˆä¸ºä¸­æ‹¬å·ã€
+			// å¦‚æœæ˜¯å•é¡µ
+			if (singlePage && i == 1)
+				result.put(this.recover(s), "%b" + recover(item[i]));
+			else if (singlePage)
+				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i]));
+
+			// å¦‚æœæ˜¯å¤šé¡µ
+			if (!singlePage && item[i].charAt(item[i].length() - 1) == CHINESE_QUOTATION_RIGHT) // å¦‚æœæœ€åä¸€ä¸ªå­—ç¬¦æ˜¯å³ä¸­æ‹¬å·ï¼Œè¯´æ˜æ˜¯è¿™æ˜¯å¤šé¡µä¸­çš„æœ€åä¸€é¡µ
+				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i].substring(0, item[i].length() - 1)));
+			else if (!singlePage)
+				// å¦‚æœæ˜¯å¤šé¡µä¸­çš„å…¶ä»–é¡µ
+				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i]));
+		}
+	}
+
+	// å¤šé€‰å­—æ—¶ï¼Œä¸æ•°å­—å¯¹åº”çš„å­—æ¯æ˜¯ä»€ä¹ˆ
+	String getchar(final int i) {
+		String c = "";
+		switch (i) {
+		case 1: {
+			c = "w";
+			break;
+		}
+		case 2: {
+			c = "e";
+			break;
+		}
+		case 3: {
+			c = "r";
+			break;
+		}
+		case 4: {
+			c = "s";
+			break;
+		}
+		case 5: {
+			c = "d";
+			break;
+		}
+		case 6: {
+			c = "f";
+			break;
+		}
+		case 7: {
+			c = "z";
+			break;
+		}
+		case 8: {
+			c = "x";
+			break;
+		}
+		case 9: {
+			c = "c";
+			break;
+		}
+		}
+		return c;
+	}
+	
+	// æŠŠè½¬ä¹‰å­—ç¬¦æ¢å¤æˆåŸçŠ¶
 	private String recover(final String str) {
-        final StringBuilder s = new StringBuilder();
-        final String[] item = str.split("#");
-        for (int i = 0; i < item.length; ++i) {
-            if (item[i].equals("NUMBER_ZERO")) {
-                s.append("0");
-            }
-            else if (item[i].equals("NUMBER_ONE")) {
-                s.append("1");
-            }
-            else if (item[i].equals("NUMBER_TWO")) {
-                s.append("2");
-            }
-            else if (item[i].equals("NUMBER_THREE")) {
-                s.append("3");
-            }
-            else if (item[i].equals("NUMBER_FOUR")) {
-                s.append("4");
-            }
-            else if (item[i].equals("NUMBER_FIVE")) {
-                s.append("5");
-            }
-            else if (item[i].equals("NUMBER_SIX")) {
-                s.append("6");
-            }
-            else if (item[i].equals("NUMBER_SEVEN")) {
-                s.append("7");
-            }
-            else if (item[i].equals("NUMBER_EIGHT")) {
-                s.append("8");
-            }
-            else if (item[i].equals("NUMBER_NINE")) {
-                s.append("9");
-            }
-            else if (item[i].equals("CHINESE_QUOTATION_LEFT")) {
-                s.append(CHINESE_QUOTATION_LEFT);
-            }
-            else if (item[i].equals("CHINESE_QUOTATION_RIGHT")) {
-                s.append(CHINESE_QUOTATION_RIGHT);
-            }
-            else if (item[i].equals("SINGLE_QUOTATION")) {
-                s.append("#SINGLE_QUOTATION#");
-            }
-            else if (item[i].equals("SHARP")) {
-                s.append("#SHARP#");
-            }
-            else if (item[i].equals("COMMA")) {
-                s.append("#COMMA#");
-            }
-            else {
-                s.append(item[i]);
-            }
-        }
-        return s.toString();
-    }
-    
-	//°ÑÏà¹Ø×Ö·û»»³É×ªÒå×Ö·û
-    private String escape(final String str) {
-        final StringBuilder s = new StringBuilder();
-        for (int i = 0; i < str.length(); ++i) {
-            final char c = str.charAt(i);
-            if (c == '0') {
-                s.append("#NUMBER_ZERO#");
-            }
-            else if (c == '1') {
-                s.append("#NUMBER_ONE#");
-            }
-            else if (c == '2') {
-                s.append("#NUMBER_TWO#");
-            }
-            else if (c == '3') {
-                s.append("#NUMBER_THREE#");
-            }
-            else if (c == '4') {
-                s.append("#NUMBER_FOUR#");
-            }
-            else if (c == '5') {
-                s.append("#NUMBER_FIVE#");
-            }
-            else if (c == '6') {
-                s.append("#NUMBER_SIX#");
-            }
-            else if (c == '7') {
-                s.append("#NUMBER_SEVEN#");
-            }
-            else if (c == '8') {
-                s.append("#NUMBER_EIGHT#");
-            }
-            else if (c == '9') {
-                s.append("#NUMBER_NINE#");
-            }
-            else if (c == CHINESE_QUOTATION_LEFT) {
-                s.append("#CHINESE_QUOTATION_LEFT#");
-            }
-            else if (c == CHINESE_QUOTATION_RIGHT) {
-                s.append("#CHINESE_QUOTATION_RIGHT#");
-            }
-            else if (c == '\'') {
-                s.append("#SINGLE_QUOTATION#");
-            }
-            else {
-                s.append(c);
-            }
-        }
-        return s.toString();
-    }
+		final StringBuilder s = new StringBuilder();
+		final String[] item = str.split("#");
+		for (int i = 0; i < item.length; ++i) {
+			if (item[i].equals("NUMBER_ONE")) {
+				s.append("âŠ");
+			} else if (item[i].equals("NUMBER_TWO")) {
+				s.append("â‹");
+			} else if (item[i].equals("NUMBER_THREE")) {
+				s.append("âŒ");
+			} else if (item[i].equals("NUMBER_FOUR")) {
+				s.append("â");
+			} else if (item[i].equals("NUMBER_FIVE")) {
+				s.append("â");
+			} else if (item[i].equals("NUMBER_SIX")) {
+				s.append("â");
+			} else if (item[i].equals("NUMBER_SEVEN")) {
+				s.append("â");
+			} else if (item[i].equals("NUMBER_EIGHT")) {
+				s.append("â‘");
+			} else if (item[i].equals("NUMBER_NINE")) {
+				s.append("â’");
+			} else if (item[i].equals("CHINESE_QUOTATION_LEFT")) {
+				s.append(CHINESE_QUOTATION_LEFT);
+			} else if (item[i].equals("CHINESE_QUOTATION_RIGHT")) {
+				s.append(CHINESE_QUOTATION_RIGHT);
+			} else if (item[i].equals("SINGLE_QUOTATION")) {
+				s.append("#SINGLE_QUOTATION#");
+			} else if (item[i].equals("S") || item[i].equals("s")) {
+				s.append("#S#");
+			} else if (item[i].equals("C") || item[i].equals("c")) {
+				s.append("#C#");
+			} else {
+				s.append(item[i]);
+			}
+		}
+		return s.toString();
+	}
+
+	// æŠŠç›¸å…³å­—ç¬¦æ¢æˆè½¬ä¹‰å­—ç¬¦
+	private String escape(final String str) {
+		final StringBuilder s = new StringBuilder();
+		for (int i = 0; i < str.length(); ++i) {
+			final char c = str.charAt(i);
+			if (c == 'âŠ') {
+				s.append("#NUMBER_ONE#");
+			} else if (c == 'â‹') {
+				s.append("#NUMBER_TWO#");
+			} else if (c == 'âŒ') {
+				s.append("#NUMBER_THREE#");
+			} else if (c == 'â') {
+				s.append("#NUMBER_FOUR#");
+			} else if (c == 'â') {
+				s.append("#NUMBER_FIVE#");
+			} else if (c == 'â') {
+				s.append("#NUMBER_SIX#");
+			} else if (c == 'â') {
+				s.append("#NUMBER_SEVEN#");
+			} else if (c == 'â‘') {
+				s.append("#NUMBER_EIGHT#");
+			} else if (c == 'â’') {
+				s.append("#NUMBER_NINE#");
+			} else if (c == CHINESE_QUOTATION_LEFT) {
+				s.append("#CHINESE_QUOTATION_LEFT#");
+			} else if (c == CHINESE_QUOTATION_RIGHT) {
+				s.append("#CHINESE_QUOTATION_RIGHT#");
+			} else if (c == '\'') {
+				s.append("#SINGLE_QUOTATION#");
+			} else {
+				s.append(c);
+			}
+		}
+		return s.toString();
+	}
 
 }
