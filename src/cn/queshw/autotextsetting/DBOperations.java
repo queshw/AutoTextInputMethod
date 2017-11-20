@@ -1,6 +1,8 @@
 package cn.queshw.autotextsetting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import cn.queshw.autotextinputmethod.ConstantList;
 
@@ -10,6 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class DBOperations {
 	public static final int NOOFFSET = -1;// 如果是提取全部数据
@@ -42,8 +45,7 @@ public class DBOperations {
 
 	// 根据id提取记录，构造MethodItem
 	public MethodItem getMethodItem(int id) {
-		Cursor cursor = db.rawQuery("select * from methods where id = ?",
-				new String[] { String.valueOf(id) });
+		Cursor cursor = db.rawQuery("select * from methods where id = ?", new String[] { String.valueOf(id) });
 		cursor.moveToNext();
 		MethodItem item = constructMethodItem(cursor);
 		cursor.close();
@@ -67,40 +69,33 @@ public class DBOperations {
 	// 添加一条记录，返回id号
 	public int addOrSaveMethodItem(String name, int isDefault, int id) {
 		name = ConstantList.escape(name);
-		//Log.d("Here", "name=" + name);
+		// Log.d("Here", "name=" + name);
 		ContentValues values = new ContentValues();
 		values.put("name", name);
 		values.put("isDefault", isDefault);
 
 		if (!TextUtils.isEmpty(name)) {// 如果不为空
-			Cursor cursor = db.rawQuery(
-					"select isDefault from methods where id = ?",
-					new String[] { String.valueOf(id) });
+			Cursor cursor = db.rawQuery("select isDefault from methods where id = ?", new String[] { String.valueOf(id) });
 
 			if (cursor.getCount() == 0) {// 如果原来没有此条记录，则新增记录
 				if (isDefault == MethodItem.DEFAULT) {
-					db.execSQL("update methods set isDefault = ?",
-							new String[] { String
-									.valueOf(MethodItem.NOTDEFAULT) });
+					db.execSQL("update methods set isDefault = ?", new String[] { String.valueOf(MethodItem.NOTDEFAULT) });
 				}
 				id = (int) db.insert("methods", null, values);
 
 				// 创建与新增输入法的相连的词库表
 				String tableName = "autotext" + String.valueOf(id);
-				String sql = "create table " + tableName
-						+ "(id integer primary key autoincrement,"
-						+ "input text not null," + "autotext text not null)";
-				//Log.d("Here", sql);
+				String sql = "create table " + tableName + "(id integer primary key autoincrement," + "input text not null,"
+						+ "autotext text not null)";
+				// Log.d("Here", sql);
 				db.execSQL(sql);
-			} else {// 如果原来已经有这条记录，则修改记录		
-				if (isDefault == MethodItem.DEFAULT) {//先把原有默认输入法的设置清空
-					db.execSQL("update methods set isDefault = ?",
-							new String[] { String
-									.valueOf(MethodItem.NOTDEFAULT) });
+			} else {// 如果原来已经有这条记录，则修改记录
+				if (isDefault == MethodItem.DEFAULT) {// 先把原有默认输入法的设置清空
+					db.execSQL("update methods set isDefault = ?", new String[] { String.valueOf(MethodItem.NOTDEFAULT) });
 				}
 				db.update("methods", values, "id = ?", new String[] { String.valueOf(id) });
 			}
-			cursor.close();	
+			cursor.close();
 			return id;
 		}
 		return -1;
@@ -109,9 +104,7 @@ public class DBOperations {
 	// 删除一条记录
 	public void deleteMethodItem(String table, int id) {// ??
 		// TODO Auto-generated method stub
-		Cursor cursor = db.rawQuery(
-				"select isDefault from methods where id = ?",
-				new String[] { String.valueOf(id) });
+		Cursor cursor = db.rawQuery("select isDefault from methods where id = ?", new String[] { String.valueOf(id) });
 		cursor.moveToNext();
 		// int isDefault = cursor.getInt(cursor.getColumnIndex("isDefault"));//
 		// 看看要删除的记录是否是默认的输入法
@@ -136,14 +129,12 @@ public class DBOperations {
 	// //////////////////////////////////////////////////////////////////
 	// 操作autotext的系列表
 	// 根据相关参数提取记录
-	public ArrayList<AutotextItem> searchAutotextItems(String table,
-			String searchText, int limit, int offset) {
-		//searchText.toLowerCase();
+	public ArrayList<AutotextItem> searchAutotextItems(String table, String searchText, int limit, int offset) {
+		// searchText.toLowerCase();
 		searchText = ConstantList.escape(searchText);
 		ArrayList<AutotextItem> data = new ArrayList<AutotextItem>();
-		String sql = "select * from " + table + " where input like '"
-				+ searchText + "%' order by input limit " + String.valueOf(limit)
-				+ " offset " + String.valueOf(offset);
+		String sql = "select * from " + table + " where input like '" + searchText + "%' order by input limit " + String.valueOf(limit) + " offset "
+				+ String.valueOf(offset);
 		// Log.d("Here", sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		while (cursor.moveToNext()) {
@@ -158,8 +149,7 @@ public class DBOperations {
 	// 根据id提取单条记录
 	public AutotextItem getAutotextItem(String table, int id) {
 		AutotextItem item;
-		String sql = "select * from " + table + " where id = "
-				+ String.valueOf(id);
+		String sql = "select * from " + table + " where id = " + String.valueOf(id);
 		// Log.d("Here", sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		cursor.moveToNext();
@@ -179,26 +169,21 @@ public class DBOperations {
 	}
 
 	// 添加或者修改单条数据
-	public void addOrSaveAutotextItem(String table, String input,
-			String autotext, int id) {
+	public void addOrSaveAutotextItem(String table, String input, String autotext, int id) {
 		input = ConstantList.escape(input);
 		autotext = ConstantList.escape(autotext);
-		
+
 		if (!TextUtils.isEmpty(input) && !TextUtils.isEmpty(autotext)) {// 如果有一个为空，则什么都不干
 			// 先判断相应id号的记录是否存在，以此来确定是新增记录还是修改记录
-			String sql = "select id from " + table + " where id = "
-					+ String.valueOf(id);
+			String sql = "select id from " + table + " where id = " + String.valueOf(id);
 			Cursor cursor = db.rawQuery(sql, null);
 
 			if (cursor.getCount() == 0) {// 说明为新增记录
-				sql = "insert into " + table + " values(null, '" + input
-						+ "', '" + autotext + "')";
+				sql = "insert into " + table + " values(null, '" + input + "', '" + autotext + "')";
 			} else {// 说明为修改原有记录
-				sql = "update " + table + " set input = '" + input
-						+ "', autotext='" + autotext + "' where id = "
-						+ String.valueOf(id);
+				sql = "update " + table + " set input = '" + input + "', autotext='" + autotext + "' where id = " + String.valueOf(id);
 			}
-			//Log.d("Here", sql);
+			// Log.d("Here", sql);
 			db.execSQL(sql);
 			cursor.close();
 		}
@@ -221,7 +206,7 @@ public class DBOperations {
 		String sql = "insert into " + table + " values(null, ?, ?)";
 		SQLiteStatement statement = db.compileStatement(sql);
 		db.beginTransaction();
-		for (String[] item : data) {			
+		for (String[] item : data) {
 			statement.bindString(1, item[0]);
 			statement.bindString(2, item[1]);
 			statement.executeInsert();
@@ -233,34 +218,32 @@ public class DBOperations {
 	// 删除一条数据
 	public void deleteAutotextItem(String table, int id) {
 		// TODO Auto-generated method stub
-		String sql = "delete from " + table + " where id = "
-				+ String.valueOf(id);
+		String sql = "delete from " + table + " where id = " + String.valueOf(id);
 		db.execSQL(sql);
 	}
 
-	//////////////////////////////////////////////////////////////////////////////
-	//用于输入法中的查询与替换
-	public String searchAutotext(String table,
-			String input) {
-		//input.toLowerCase();
+	// ////////////////////////////////////////////////////////////////////////////
+	// 用于输入法中的查询与替换
+	public String searchAutotext(String table, String input) {
+		// input.toLowerCase();
 		input = ConstantList.escape(input);
 		String result;
 		String sql = "select autotext from " + table + " where input = '" + input + "' order by id limit 1";
-		//Log.d("Here", sql + "|");
+		// Log.d("Here", sql + "|");
 		Cursor cursor = db.rawQuery(sql, null);
-		if(cursor.getCount() == 0){//如果没有找到，则返回一个空的SpannableStringBuilder对象
+		if (cursor.getCount() == 0) {// 如果没有找到，则返回一个空的SpannableStringBuilder对象
 			result = null;
-		}else{//如果找到了，那么就返回对应的autotext的SpannableStringBuilder对象
+		} else {// 如果找到了，那么就返回对应的autotext的SpannableStringBuilder对象
 			cursor.moveToNext();
 			result = ConstantList.recover(cursor.getString(cursor.getColumnIndex("autotext")));
-		}		
+		}
 		cursor.close();
 		return result;
 	}
-	
-	///////////////////////////////////////////////////////////////////////////////
-	//用于取得最长的input列的长度
-	public int getMaxInputLength(int methodId){
+
+	// /////////////////////////////////////////////////////////////////////////////
+	// 用于取得最长的input列的长度
+	public int getMaxInputLength(int methodId) {
 		String sql = "select max(length(input)) from autotext" + String.valueOf(methodId);
 		Cursor cursor = db.rawQuery(sql, null);
 		cursor.moveToNext();

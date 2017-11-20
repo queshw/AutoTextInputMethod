@@ -26,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import cn.queshw.autotextsetting.DBOperations;
+import cn.queshw.autotextsetting.GenAutotext;
 import cn.queshw.autotextsetting.MethodItem;
 
 @SuppressLint("SimpleDateFormat")
@@ -850,11 +851,12 @@ public class AutotextInputMethod extends InputMethodService {
 			// Log.d("Here", "sym pressed there");
 			// return false;
 			isSelectModel = false;
-			GenAutotext ga = new GenAutotext();
-			HashMap<String, String> map = ga.gen("text,#C#,#S#,63263135,one,tow,three,four,five,six,seven,eight,nine");
-			for(Entry<String,String> entry: map.entrySet()){
-				Log.d("Here", entry.getKey() + ": " + entry.getValue());
-			}
+//			GenAutotext ga = new GenAutotext();
+//			String s = "ji$,几";
+//			HashMap<String, String> map = ga.gen(s);
+//			for(Entry<String, String> entry : map.entrySet()){
+//				Log.d("Here", entry.getKey() + "," + entry.getValue());
+//			}
 			return true;
 		} else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
 			isSelectModel = false;

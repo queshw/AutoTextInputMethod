@@ -1,6 +1,8 @@
-package cn.queshw.autotextinputmethod;
+package cn.queshw.autotextsetting;
 
 import java.util.HashMap;
+
+import android.util.Log;
 
 public class GenAutotext {
 	public final char CHINESE_QUOTATION_LEFT = '【';
@@ -13,7 +15,7 @@ public class GenAutotext {
 	}
 
 	// 把一个字串转化为autotext的条目
-	HashMap<String, String> gen(String line) {
+	public HashMap<String, String> gen(String line) {
 		result.clear();
 		line = line.trim();
 		if (line.isEmpty()) {// 如果传入了一个空字串
@@ -78,9 +80,9 @@ public class GenAutotext {
 		if (candiPageNumber == 1) {// 如果只有一页
 			final String[] nextitem = pages[1].split("[➊➋➌➍➎➏➐➑➒]");// 把替换项用数字分开
 			if (nextitem.length == 1) {// 说明只有一个替换项
-				result.put(this.recover(pages[0]), pages[1]);
+				result.put(this.recover(pages[0]), "%b" + pages[1]);
 			} else {// 如果有多个替换项
-				result.put(this.recover(pages[0]), pages[1]);
+				result.put(this.recover(pages[0]), pages[1] + "%B");
 				result.put(this.recover(pages[1]) + "a", "%b");
 				this.writeEntries(pages[1], true);
 			}
@@ -99,16 +101,16 @@ public class GenAutotext {
 					result.put(pages[k] + "0", recover(pages[k - 1]) + "%B");
 
 				// 接下来处理删除
-				if (k != 0)
+				if (k != 0) {
 					result.put(recover(pages[k]) + "a", "%b");// page[0]是编码
-
-				// 接下来处理各页中的替换项
-				this.writeEntries(pages[k], false);
+					// 接下来处理各页中的替换项
+					this.writeEntries(pages[k], false);
+				}
 			}
 		}
 		return result;
 	}
-	
+
 	private String getNumber(int i) {
 		// TODO Auto-generated method stub
 		String c = "";
@@ -156,15 +158,20 @@ public class GenAutotext {
 	private void writeEntries(final String s, boolean singlePage) {
 		// TODO Auto-generated method stub
 		final String[] item = s.split("[➊➋➌➍➎➏➐➑➒]");
-		for (int i = 1; i < item.length; ++i) {// 之所以从1开始，是因为第一项要么为空，要么为中括号【
+		if(item.length == 1 && !singlePage) {
+			result.put(this.recover(s) + getchar(1), "%b" + recover(item[0].substring(0, item[0].length() - 1)));
+			return;
+		}
+		for (int i = 1; i < item.length; ++i) {// 第一项可能为空，也可能中括号【
 			// 如果是单页
+			//if(item[i].isEmpty() || item[i].equals(String.valueOf(CHINESE_QUOTATION_LEFT))) continue;// 第一项可能为空，也可能中括号【。如果本页只有一项的时候，则是多页中最后一页只有一项
 			if (singlePage && i == 1)
 				result.put(this.recover(s), "%b" + recover(item[i]));
 			else if (singlePage)
 				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i]));
 
-			// 如果是多页
-			if (!singlePage && item[i].charAt(item[i].length() - 1) == CHINESE_QUOTATION_RIGHT) // 如果最后一个字符是右中括号，说明是这是多页中的最后一页
+			// 如果是多页			
+			if (!singlePage && item[i].substring(item[i].length() - 1).equals(String.valueOf(CHINESE_QUOTATION_RIGHT))) // 如果最后一个字符是右中括号，说明是这是多页中的最后一页
 				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i].substring(0, item[i].length() - 1)));
 			else if (!singlePage)
 				// 如果是多页中的其他页
@@ -215,7 +222,7 @@ public class GenAutotext {
 		}
 		return c;
 	}
-	
+
 	// 把转义字符恢复成原状
 	private String recover(final String str) {
 		final StringBuilder s = new StringBuilder();
