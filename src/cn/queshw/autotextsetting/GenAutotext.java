@@ -1,25 +1,39 @@
 package cn.queshw.autotextsetting;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.os.Bundle;
 import android.util.Log;
 
 public class GenAutotext {
 	public final char CHINESE_QUOTATION_LEFT = '【';
 	public final char CHINESE_QUOTATION_RIGHT = '】';
 
-	private HashMap<String, String> result = new HashMap<String, String>();
+	// private HashMap<String, String> result = new HashMap<String, String>();
+	private ArrayList<String> input = new ArrayList<String>();// 用于存放autotext条目的input
+	private ArrayList<String> autotext = new ArrayList<String>();// 用于存放autotext条目的autotext
 
+	
 	public GenAutotext() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public ArrayList<String> getInputList(){
+		return input;
+	}
+	
+	public ArrayList<String> getAutotextList(){
+		return autotext;
+	}
 
 	// 把一个字串转化为autotext的条目
-	public HashMap<String, String> gen(String line) {
-		result.clear();
+	public void gen(String line) {
+		input.clear();
+		autotext.clear();
 		line = line.trim();
 		if (line.isEmpty()) {// 如果传入了一个空字串
-			return null;
+			return;
 		}
 
 		// 去掉空的项
@@ -44,7 +58,7 @@ public class GenAutotext {
 			}
 		}
 		if (realItemNumber <= 1)
-			return null;// 如果不是一个完整的autotext条目
+			return;// 如果不是一个完整的autotext条目
 
 		// 计算替换项有几页
 		final int candiWordNumber = item.length - 1;
@@ -80,35 +94,44 @@ public class GenAutotext {
 		if (candiPageNumber == 1) {// 如果只有一页
 			final String[] nextitem = pages[1].split("[➊➋➌➍➎➏➐➑➒]");// 把替换项用数字分开
 			if (nextitem.length == 1) {// 说明只有一个替换项
-				result.put(this.recover(pages[0]), "%b" + pages[1]);
+				input.add(recover(pages[0]));
+				autotext.add("%b" + recover(pages[1]));
 			} else {// 如果有多个替换项
-				result.put(this.recover(pages[0]), pages[1] + "%B");
-				result.put(this.recover(pages[1]) + "a", "%b");
+				input.add(recover(pages[0]));
+				autotext.add(recover(pages[1]) + "%B");
+
+				input.add(recover(pages[1]) + "a");
+				autotext.add("%b");
+
 				this.writeEntries(pages[1], true);
 			}
 		} else {// 如果不止一页
 			for (int k = 0; k < pages.length; ++k) {
 				// 处理多页的往后翻
-				if (k == pages.length - 1)
-					result.put(recover(pages[k]), recover(pages[1]) + "%B"); // 如果为最后一页，则翻回第一页
-				else
-					result.put(recover(pages[k]), recover(pages[k + 1]) + "%B");// 否则往后翻
-
+				if (k == pages.length - 1) {
+					input.add(recover(pages[k]));
+					autotext.add(recover(pages[1]) + "%B");// 如果为最后一页，则翻回第一页
+				} else {
+					input.add(recover(pages[k]));
+					autotext.add(recover(pages[k + 1]) + "%B");// 否则往后翻
+				}
 				// 接下来处理往前翻
-				if (k == 1)
-					result.put(recover(pages[1]) + "0", recover(pages[1]) + "%B");
-				else if (k > 1)
-					result.put(pages[k] + "0", recover(pages[k - 1]) + "%B");
-
+				if (k == 1) {
+					input.add(recover(pages[1]) + "0");
+					autotext.add(recover(pages[1]) + "%B");
+				} else if (k > 1) {
+					input.add(pages[k] + "0");
+					autotext.add(recover(pages[k - 1]) + "%B");
+				}
 				// 接下来处理删除
 				if (k != 0) {
-					result.put(recover(pages[k]) + "a", "%b");// page[0]是编码
+					input.add(recover(pages[k]) + "a");
+					autotext.add("%b");// page[0]是编码
 					// 接下来处理各页中的替换项
 					this.writeEntries(pages[k], false);
 				}
 			}
 		}
-		return result;
 	}
 
 	private String getNumber(int i) {
@@ -158,29 +181,37 @@ public class GenAutotext {
 	private void writeEntries(final String s, boolean singlePage) {
 		// TODO Auto-generated method stub
 		final String[] item = s.split("[➊➋➌➍➎➏➐➑➒]");
-		if(item.length == 1 && !singlePage) {
-			result.put(this.recover(s) + getchar(1), "%b" + recover(item[0].substring(0, item[0].length() - 1)));
+		if (item.length == 1 && !singlePage) {
+			input.add(recover(s) + getchar(1));
+			autotext.add("%b" + recover(item[0].substring(0, item[0].length() - 1)));
 			return;
 		}
 		for (int i = 1; i < item.length; ++i) {// 第一项可能为空，也可能中括号【
 			// 如果是单页
-			//if(item[i].isEmpty() || item[i].equals(String.valueOf(CHINESE_QUOTATION_LEFT))) continue;// 第一项可能为空，也可能中括号【。如果本页只有一项的时候，则是多页中最后一页只有一项
-			if (singlePage && i == 1)
-				result.put(this.recover(s), "%b" + recover(item[i]));
-			else if (singlePage)
-				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i]));
-
-			// 如果是多页			
-			if (!singlePage && item[i].substring(item[i].length() - 1).equals(String.valueOf(CHINESE_QUOTATION_RIGHT))) // 如果最后一个字符是右中括号，说明是这是多页中的最后一页
-				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i].substring(0, item[i].length() - 1)));
-			else if (!singlePage)
+			// if(item[i].isEmpty() ||
+			// item[i].equals(String.valueOf(CHINESE_QUOTATION_LEFT)))
+			// continue;// 第一项可能为空，也可能中括号【。如果本页只有一项的时候，则是多页中最后一页只有一项
+			if (singlePage && i == 1) {
+				input.add(recover(s));
+				autotext.add("%b" + recover(item[i]));
+			} else if (singlePage) {
+				input.add(recover(s) + getchar(i));
+				autotext.add("%b" + recover(item[i]));
+			}
+			// 如果是多页
+			if (!singlePage && item[i].substring(item[i].length() - 1).equals(String.valueOf(CHINESE_QUOTATION_RIGHT))) { // 如果最后一个字符是右中括号，说明是这是多页中的最后一页
+				input.add(recover(s) + getchar(i));
+				autotext.add("%b" + recover(item[i].substring(0, item[i].length() - 1)));
+			} else if (!singlePage) {
 				// 如果是多页中的其他页
-				result.put(this.recover(s) + getchar(i), "%b" + recover(item[i]));
+				input.add(recover(s) + getchar(i));
+				autotext.add("%b" + recover(item[i]));
+			}
 		}
 	}
 
 	// 多选字时，与数字对应的字母是什么
-	String getchar(final int i) {
+	private String getchar(final int i) {
 		String c = "";
 		switch (i) {
 		case 1: {
@@ -223,6 +254,42 @@ public class GenAutotext {
 		return c;
 	}
 
+	// 把相关字符换成转义字符
+	private String escape(final String str) {
+		final StringBuilder s = new StringBuilder();
+		for (int i = 0; i < str.length(); ++i) {
+			final char c = str.charAt(i);
+			if (c == '➊') {
+				s.append("#NUMBER_ONE#");
+			} else if (c == '➋') {
+				s.append("#NUMBER_TWO#");
+			} else if (c == '➌') {
+				s.append("#NUMBER_THREE#");
+			} else if (c == '➍') {
+				s.append("#NUMBER_FOUR#");
+			} else if (c == '➎') {
+				s.append("#NUMBER_FIVE#");
+			} else if (c == '➏') {
+				s.append("#NUMBER_SIX#");
+			} else if (c == '➐') {
+				s.append("#NUMBER_SEVEN#");
+			} else if (c == '➑') {
+				s.append("#NUMBER_EIGHT#");
+			} else if (c == '➒') {
+				s.append("#NUMBER_NINE#");
+			} else if (c == CHINESE_QUOTATION_LEFT) {
+				s.append("#CHINESE_QUOTATION_LEFT#");
+			} else if (c == CHINESE_QUOTATION_RIGHT) {
+				s.append("#CHINESE_QUOTATION_RIGHT#");
+			} else if (c == '\'') {
+				s.append("#SINGLE_QUOTATION#");
+			} else {
+				s.append(c);
+			}
+		}
+		return s.toString();
+	}
+
 	// 把转义字符恢复成原状
 	private String recover(final String str) {
 		final StringBuilder s = new StringBuilder();
@@ -258,42 +325,6 @@ public class GenAutotext {
 				s.append("#C#");
 			} else {
 				s.append(item[i]);
-			}
-		}
-		return s.toString();
-	}
-
-	// 把相关字符换成转义字符
-	private String escape(final String str) {
-		final StringBuilder s = new StringBuilder();
-		for (int i = 0; i < str.length(); ++i) {
-			final char c = str.charAt(i);
-			if (c == '➊') {
-				s.append("#NUMBER_ONE#");
-			} else if (c == '➋') {
-				s.append("#NUMBER_TWO#");
-			} else if (c == '➌') {
-				s.append("#NUMBER_THREE#");
-			} else if (c == '➍') {
-				s.append("#NUMBER_FOUR#");
-			} else if (c == '➎') {
-				s.append("#NUMBER_FIVE#");
-			} else if (c == '➏') {
-				s.append("#NUMBER_SIX#");
-			} else if (c == '➐') {
-				s.append("#NUMBER_SEVEN#");
-			} else if (c == '➑') {
-				s.append("#NUMBER_EIGHT#");
-			} else if (c == '➒') {
-				s.append("#NUMBER_NINE#");
-			} else if (c == CHINESE_QUOTATION_LEFT) {
-				s.append("#CHINESE_QUOTATION_LEFT#");
-			} else if (c == CHINESE_QUOTATION_RIGHT) {
-				s.append("#CHINESE_QUOTATION_RIGHT#");
-			} else if (c == '\'') {
-				s.append("#SINGLE_QUOTATION#");
-			} else {
-				s.append(c);
 			}
 		}
 		return s.toString();

@@ -8,7 +8,7 @@
     android:focusableInTouchMode="true" >
 
     <TextView
-        android:id="@+id/status_textview_layout_autotextactivity"
+        android:id="@+id/status_textview_layout_rawactivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -16,7 +16,7 @@
         />
 	
     <EditText 
-        android:id="@+id/search_edittext_layout_autotextactivity"
+        android:id="@+id/search_edittext_layout_rawactivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding"
@@ -25,7 +25,7 @@
         android:hint="@string/search"
         />
     <ListView 
-        android:id="@+id/autotexts_listview_layout_autotextactivity"
+        android:id="@+id/raws_listview_layout_rawactivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/padding"

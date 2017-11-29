@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -38,18 +39,20 @@ public class DBHelper extends SQLiteOpenHelper {
 			Cursor cursor = db.rawQuery("select id from methods order by id", null);
 			while (cursor.moveToNext()) {
 				methodIdList.add(cursor.getInt(0));
-				Log.d("Here", "methodid = " + String.valueOf(cursor.getInt(0)));
+				//Log.d("Here", "methodid = " + String.valueOf(cursor.getInt(0)));
 			}
 			// 第二步，根据method的id号，建立raw系列的表，并且从autotext表中生成raw表的条目
 			for (int i : methodIdList) {
+				String rawTableName = "raw" + String.valueOf(i);
+				String autotextTableName = "autotext" + String.valueOf(i);
 				// 1、创建raw表
-				String sql = "create table raw" + String.valueOf(i) + "(" + "id integer primary key autoincrement," + "code text not null,"
-						+ "candidate text not null," + "twolevel int default 0" + ")";
-				Log.d("Here", "create raw sql = " + sql);
+				String sql = "create table " + rawTableName + "(" + "id integer primary key autoincrement," + "code text not null,"
+						+ "candidate text not null," + "twolevel int default 0)";
+				// Log.d("Here", "create raw sql = " + sql);
 				db.execSQL(sql);
 
-				//2，从autotext表中生成raw表的条目
-				cursor = db.rawQuery("select * from autotext" + String.valueOf(i) + " order by id", null);
+				// 2，从autotext表中生成raw表的条目
+				cursor = db.rawQuery("select * from " + autotextTableName + " order by id", null);
 				HashMap<String, String> autotextMap = new HashMap<String, String>();
 				while (cursor.moveToNext()) {// 把autotext表中的条目都放到一个hashmap中
 					autotextMap.put(cursor.getString(1), cursor.getString(2));
@@ -59,6 +62,10 @@ public class DBHelper extends SQLiteOpenHelper {
 				for (Entry<String, String> autotext : autotextMap.entrySet()) {
 					key = autotext.getKey();
 					value = autotext.getValue();
+					if(value.length()<2){
+						rawList.add(new String[] { key, value });
+						continue;
+					}
 					if (!autotextMap.containsValue(key + "%B") && !autotextMap.containsValue(key.subSequence(0, key.length() - 1) + "%B")) {
 						// 如果key或者key减去最后一个字母可以是别的条目的替换项，则说明当前条目为别的条目产生的重码的条目。如果找不到说明就是重码选择的第一个条目
 						if (value.subSequence(0, 2).equals("%b")) {// 如果头上两位是%b
@@ -66,12 +73,45 @@ public class DBHelper extends SQLiteOpenHelper {
 						} else if (value.subSequence(value.length() - 2, value.length()).equals("%B")) {// 如果最后两位是%B
 							value = (String) value.subSequence(0, value.length() - 2);
 							value = getCandidate(value, value, autotextMap);
-							if(value.subSequence(0, 1).equals(",")) value = value.substring(1);
+							if (value.subSequence(0, 1).equals(","))
+								value = value.substring(1);
 						}
-						//Log.d("Here", key + "," + value);
-						rawList.add(new String[]{key, value});
+						// Log.d("Here", key + "," + value);
+						rawList.add(new String[] { key, value });// 到此已经生成一个list，内容为所有的raw数据
 					}
 				}
+				// 3、升级autotext表的结构
+				db.execSQL("drop table " + autotextTableName);
+				sql = "create table " + autotextTableName + "(id integer primary key autoincrement," 
+						+ "input text not null,"
+						+ "autotext text not null," 
+						+ "rawid integer default 0)";
+				db.execSQL(sql);
+				// 4、接下来是把所有raw的数据写入raw表中
+				sql = "insert into " + rawTableName + " values(null, ?, ?, null)";
+				SQLiteStatement statement = db.compileStatement(sql);
+				db.beginTransaction();
+				for (String[] raw : rawList) {
+					statement.bindString(1, raw[0]);
+					statement.bindString(2, raw[1]);
+					statement.executeInsert();
+				}
+				db.setTransactionSuccessful();
+				db.endTransaction();
+				//5、根据raw表，生成autotext数据
+				GenAutotext ga = new GenAutotext();
+				HashMap<String, String> autotext = new HashMap<String, String>();
+				cursor = db.rawQuery("select id,code,candidate from " + rawTableName, null);
+				while (cursor.moveToNext()) {					
+//					autotext = ga.gen(cursor.getString(1) + "," + cursor.getString(2));
+//					for(Entry<String,String> entry : autotext.entrySet()){
+//						sql = "insert into " + autotextTableName + " values(null,'" + entry.getKey() + "','" + entry.getValue()  + "',"+ cursor.getInt(0) +")";
+//						//db.execSQL("insert into ? values(?,?,?,?)", new String[]{autotextTableName, null, entry.getKey(), entry.getValue(), String.valueOf(cursor.getInt(0))});
+//						db.execSQL(sql);
+//					}
+					autotext.clear();
+				}
+				cursor.close();
 			}
 		default:
 		}

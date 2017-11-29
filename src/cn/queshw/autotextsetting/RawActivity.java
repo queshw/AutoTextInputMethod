@@ -45,7 +45,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AutotextActivity extends Activity {
+public class RawActivity extends Activity {
 	public static final int LIMIT = 50;// 一次提取5０条记录
 	private final int LOADED = -1;// 下一个50条的数据已经加载
 	private final int NOTLOAD = -2;// 下一个50条的数据没有加载
@@ -58,9 +58,9 @@ public class AutotextActivity extends Activity {
 	private int offset = 0;// sql操作的初始偏移量
 	private int methodId;// 传过来的method的id
 
-	private ArrayList<AutotextItem> listdata;// 用于产生listview的数据
-	private AutotextAdapter adapter;// listview 用的适配器
-	private ListView autotextListview;// listview用于放置autotext条目的
+	private ArrayList<RawItem> listdata;// 用于产生listview的数据
+	private RawAdapter adapter;// listview 用的适配器
+	private ListView rawListview;// listview用于放置autotext条目的
 	private int totalItems = 0;// 列表的数据中总共有几条数据，用于异步数据加载
 
 	private EditText searchEditText;// EditText
@@ -88,7 +88,7 @@ public class AutotextActivity extends Activity {
 
 	// 给别人用的启动本activity的方法
 	public static void actionStart(Context context, int methodId) {
-		Intent intent = new Intent(context, AutotextActivity.class);
+		Intent intent = new Intent(context, RawActivity.class);
 		intent.putExtra("methodId", methodId);
 		context.startActivity(intent);
 	}
@@ -97,21 +97,22 @@ public class AutotextActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_autotextactivity);
+		setContentView(R.layout.layout_rawactivity);
 
 		// 从Intent中获得methodId，并构建要操作的表的名称
 		Intent intent = getIntent();
 		methodId = intent.getIntExtra("methodId", -1);
-		table = "autotext" + String.valueOf(methodId);
+		//table = "autotext" + String.valueOf(methodId);
+		table = "raw" + String.valueOf(methodId);
 		animation = AnimationUtils.loadAnimation(this, R.anim.push_out);
 
 		// 从表中提取记录，为listview做准备，一次提取３０条记录，然后显示出来
 		dboper = new DBOperations(this);
-		listdata = dboper.searchAutotextItems(table, "", LIMIT, offset);
-		adapter = new AutotextAdapter(this, R.layout.autotextitem, listdata);
-		autotextListview = (ListView) findViewById(R.id.autotexts_listview_layout_autotextactivity);
-		autotextListview.setAdapter(adapter);
-		autotextListview.setOnItemClickListener(new OnItemClickListener() {
+		listdata = dboper.searchRawItems(table, "", LIMIT, offset);
+		adapter = new RawAdapter(this, R.layout.rawitem, listdata);
+		rawListview = (ListView) findViewById(R.id.raws_listview_layout_rawactivity);
+		rawListview.setAdapter(adapter);
+		rawListview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
@@ -121,12 +122,12 @@ public class AutotextActivity extends Activity {
 
 		});
 		// 为listview设置触摸监听器，向左划出现删除图标，点击后删除相应的条目
-		autotextListview.setOnTouchListener(new OnTouchListener() {
+		rawListview.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				// 看看点击的是哪个条目
-				position = autotextListview.pointToPosition((int) event.getX(),
+				position = rawListview.pointToPosition((int) event.getX(),
 						(int) event.getY());
 				if (position == AdapterView.INVALID_POSITION) {// 如果是无效位置
 					if (deleteIcon != null) {// 如果已经显示了删除图标
@@ -135,10 +136,10 @@ public class AutotextActivity extends Activity {
 					return false;
 				}
 				// 如果是有效的位置，那么就获得相应的条目的View，并过一步获得删除图标，用于后面设置点击监听器
-				view = autotextListview.getChildAt(position
-						- autotextListview.getFirstVisiblePosition());
+				view = rawListview.getChildAt(position
+						- rawListview.getFirstVisiblePosition());
 				ImageView tempDeleteIcon = (ImageView) view
-						.findViewById(R.id.delete_imageview_autotextitem);
+						.findViewById(R.id.delete_imageview_rawitem);
 				// 处理触摸事件
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
@@ -168,11 +169,10 @@ public class AutotextActivity extends Activity {
 															// TODO
 															// Auto-generated
 															// method stub
-															dboper.deleteAutotextItem(
-																	table,
+															dboper.deleteRawItem(
+																	methodId,
 																	listdata.get(
-																			position)
-																			.getId());
+																			position));
 															refreshListView();
 															deleteIcon
 																	.setVisibility(View.GONE);
@@ -221,14 +221,14 @@ public class AutotextActivity extends Activity {
 					break;
 				case IMPORTED:
 					refreshListView();
-					Toast.makeText(AutotextActivity.this,
-							AutotextActivity.this.getString(R.string.imported),
+					Toast.makeText(RawActivity.this,
+							RawActivity.this.getString(R.string.imported),
 							Toast.LENGTH_LONG).show();
 					statusTextView.setVisibility(View.GONE);
 					break;
 				case EXPORTED:
-					Toast.makeText(AutotextActivity.this,
-							AutotextActivity.this.getString(R.string.exported),
+					Toast.makeText(RawActivity.this,
+							RawActivity.this.getString(R.string.exported),
 							Toast.LENGTH_LONG).show();
 					statusTextView.setVisibility(View.GONE);
 					break;
@@ -244,7 +244,7 @@ public class AutotextActivity extends Activity {
 				}
 			}
 		};
-		autotextListview.setOnScrollListener(new OnScrollListener() {
+		rawListview.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScroll(AbsListView listview, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
@@ -261,10 +261,10 @@ public class AutotextActivity extends Activity {
 						@Override
 						public synchronized void run() {
 							// TODO Auto-generated method stub
-							ArrayList<AutotextItem> data = dboper
-									.searchAutotextItems(table, searchText,
+							ArrayList<RawItem> data = dboper
+									.searchRawItems(table, searchText,
 											LIMIT, totalItems);
-							for (AutotextItem item : data) {
+							for (RawItem item : data) {
 								listdata.add(item);
 							}
 
@@ -287,7 +287,7 @@ public class AutotextActivity extends Activity {
 		});
 
 		// 给输入框设置按键监听器
-		searchEditText = (EditText) findViewById(R.id.search_edittext_layout_autotextactivity);		
+		searchEditText = (EditText) findViewById(R.id.search_edittext_layout_rawactivity);		
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -313,19 +313,19 @@ public class AutotextActivity extends Activity {
 		});
 
 		// 获得导入导出状态显示的TextView
-		statusTextView = (TextView) findViewById(R.id.status_textview_layout_autotextactivity);		
+		statusTextView = (TextView) findViewById(R.id.status_textview_layout_rawactivity);		
 	}
 
 	// ////////////////////////////////////////
 	// 刷新列表函数
 	private void refreshListView() {
 		listdata.clear();
-		for (AutotextItem item : dboper.searchAutotextItems(table, searchText,
+		for (RawItem item : dboper.searchRawItems(table, searchText,
 				LIMIT, offset)) {
 			listdata.add(item);
 		}
 		adapter.notifyDataSetChanged();
-		autotextListview.setSelection(0);
+		rawListview.setSelection(0);
 	}
 
 	// ///////////////////////////////////////////
@@ -401,7 +401,7 @@ public class AutotextActivity extends Activity {
 								if(lines % 500 == 0) handler.sendMessage(msg);
 							}
 							br.close();
-							dboper.importData(table, data);
+							dboper.importData(methodId, data);
 
 							// 完成后，通知程序已经完成了
 							Message msg = new Message();
@@ -425,11 +425,11 @@ public class AutotextActivity extends Activity {
 						try {
 							fw = new FileWriter(resultFile, false);
 							BufferedWriter bw = new BufferedWriter(fw);
-							ArrayList<AutotextItem> tempData = dboper
-									.searchAutotextItems(table, "", 100000, 0);
-							for (AutotextItem item : tempData) {
-								bw.write(ConstantList.escape(item.getInput()) + ","
-										+ ConstantList.escape(item.getAutotext()) + "\n");
+							ArrayList<RawItem> tempData = dboper
+									.searchRawItems(table, "", 100000, 0);
+							for (RawItem item : tempData) {
+								bw.write(ConstantList.escape(item.getCode()) + ","
+										+ ConstantList.escape(item.getCandidate()) + "\n");
 								// 通知显示导出进度
 								Message msg = new Message();
 								msg.what = ++lines;
@@ -466,9 +466,9 @@ public class AutotextActivity extends Activity {
 		autotextEditText = (EditText) view
 				.findViewById(R.id.autotext_add_or_edit_autotext);
 		if (autotextItemId != ADD) {// 如果传入的id号不是ADD，表示这是要修改条目，不是新增的
-			AutotextItem item = dboper.getAutotextItem(table, autotextItemId);
-			inputEditText.setText(item.getInput());
-			autotextEditText.setText(item.getAutotext());
+			RawItem item = dboper.getRawItem(table, autotextItemId);
+			inputEditText.setText(item.getCode());
+			autotextEditText.setText(item.getCandidate());
 		}
 
 		// 构建一个AlertDialog，用于用户修改或输入数据
@@ -480,7 +480,7 @@ public class AutotextActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						dboper.addOrSaveAutotextItem(table, inputEditText
+						dboper.addOrSaveRawItem(table, inputEditText
 								.getText().toString(), autotextEditText
 								.getText().toString(), autotextItemId);
 						refreshListView();

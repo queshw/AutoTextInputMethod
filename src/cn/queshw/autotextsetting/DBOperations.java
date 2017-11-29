@@ -20,12 +20,13 @@ public class DBOperations {
 
 	private DBHelper helper;
 	private SQLiteDatabase db;
+	private GenAutotext ga = new GenAutotext();
 
 	// ////////////////////////////////////////////////////
 	// 构造函数
 	public DBOperations(Context context) {
 		// TODO Auto-generated constructor stub
-		helper = new DBHelper(context, "methods.db", null, 1);
+		helper = new DBHelper(context, "methods.db", null, 2);
 		db = helper.getWritableDatabase();
 	}
 
@@ -84,11 +85,26 @@ public class DBOperations {
 				id = (int) db.insert("methods", null, values);
 
 				// 创建与新增输入法的相连的词库表
-				String tableName = "autotext" + String.valueOf(id);
-				String sql = "create table " + tableName + "(id integer primary key autoincrement," + "input text not null,"
-						+ "autotext text not null)";
-				// Log.d("Here", sql);
+				String rawTableName = "raw" + String.valueOf(id);
+				String autotextTableName = "autotext" + String.valueOf(id);
+				// 1、创建raw表
+				String sql = "create table " + rawTableName + "(" + "id integer primary key autoincrement," + "code text not null,"
+						+ "candidate text not null," + "twolevel int default 0)";
+				// Log.d("Here", "create raw sql = " + sql);
 				db.execSQL(sql);
+
+				// 2 ，创建autotext表的结构
+				sql = "create table " + autotextTableName + "(id integer primary key autoincrement," + "input text not null,"
+						+ "autotext text not null," + "rawid integer default 0)";
+				db.execSQL(sql);
+
+				// String tableName = "autotext" + String.valueOf(id);
+				// String sql = "create table " + tableName +
+				// "(id integer primary key autoincrement," +
+				// "input text not null,"
+				// + "autotext text not null)";
+				// Log.d("Here", sql);
+				// db.execSQL(sql);
 			} else {// 如果原来已经有这条记录，则修改记录
 				if (isDefault == MethodItem.DEFAULT) {// 先把原有默认输入法的设置清空
 					db.execSQL("update methods set isDefault = ?", new String[] { String.valueOf(MethodItem.NOTDEFAULT) });
@@ -110,9 +126,13 @@ public class DBOperations {
 		// 看看要删除的记录是否是默认的输入法
 
 		db.delete("methods", "id=?", new String[] { String.valueOf(id) });
-		String tableName = "autotext" + String.valueOf(id);
-		String sql = "drop table if exists " + tableName;
+		String rawTableName = "raw" + String.valueOf(id);
+		String autotextTableName = "autotext" + String.valueOf(id);
+		String sql = "drop table if exists " + rawTableName;
 		// Log.d("Here", sql);
+		db.execSQL(sql);
+
+		sql = "drop table if exists " + autotextTableName;
 		db.execSQL(sql);
 
 		// if(isDefault == MethodItem.DEFAULT){//如果已经把默认输入法删掉了，那就把第一条记录的
@@ -127,19 +147,23 @@ public class DBOperations {
 	}
 
 	// //////////////////////////////////////////////////////////////////
-	// 操作autotext的系列表
+	// 操作raw的系列表
 	// 根据相关参数提取记录
-	public ArrayList<AutotextItem> searchAutotextItems(String table, String searchText, int limit, int offset) {
+	public ArrayList<RawItem> searchRawItems(String table, String searchText, int limit, int offset) {
 		// searchText.toLowerCase();
 		searchText = ConstantList.escape(searchText);
-		ArrayList<AutotextItem> data = new ArrayList<AutotextItem>();
-		String sql = "select * from " + table + " where input like '" + searchText + "%' order by input limit " + String.valueOf(limit) + " offset "
+		ArrayList<RawItem> data = new ArrayList<RawItem>();
+		// String sql = "select * from " + table + " where input like '" +
+		// searchText + "%' order by input limit " + String.valueOf(limit) +
+		// " offset "
+		// + String.valueOf(offset);
+		String sql = "select * from " + table + " where code like '" + searchText + "%' order by code limit " + String.valueOf(limit) + " offset "
 				+ String.valueOf(offset);
 		// Log.d("Here", sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		while (cursor.moveToNext()) {
-			AutotextItem item;
-			item = constructAutotextItem(cursor);
+			RawItem item;
+			item = constructRawItem(cursor);
 			data.add(item);
 		}
 		cursor.close();
@@ -147,41 +171,42 @@ public class DBOperations {
 	}
 
 	// 根据id提取单条记录
-	public AutotextItem getAutotextItem(String table, int id) {
-		AutotextItem item;
+	public RawItem getRawItem(String table, int id) {
+		RawItem item;
 		String sql = "select * from " + table + " where id = " + String.valueOf(id);
 		// Log.d("Here", sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		cursor.moveToNext();
-		item = constructAutotextItem(cursor);
+		item = constructRawItem(cursor);
 		cursor.close();
 		return item;
 	}
 
-	// 构造autotextitem
-	private AutotextItem constructAutotextItem(Cursor cursor) {
+	// 构造rawitem
+	private RawItem constructRawItem(Cursor cursor) {
 		// TODO Auto-generated method stub
-		AutotextItem item = new AutotextItem();
+		RawItem item = new RawItem();
 		item.setId(cursor.getInt(cursor.getColumnIndex("id")));
-		item.setInput(ConstantList.recover(cursor.getString(cursor.getColumnIndex("input"))));
-		item.setAutotext(ConstantList.recover(cursor.getString(cursor.getColumnIndex("autotext"))));
+		item.setCode(ConstantList.recover(cursor.getString(cursor.getColumnIndex("code"))));
+		item.setCandidate(ConstantList.recover(cursor.getString(cursor.getColumnIndex("candidate"))));
+		item.setTwolevel(cursor.getInt(cursor.getColumnIndex("twolevel")));
 		return item;
 	}
 
 	// 添加或者修改单条数据
-	public void addOrSaveAutotextItem(String table, String input, String autotext, int id) {
-		input = ConstantList.escape(input);
-		autotext = ConstantList.escape(autotext);
+	public void addOrSaveRawItem(String table, String code, String candidate, int id) {
+		code = ConstantList.escape(code);
+		candidate = ConstantList.escape(candidate);
 
-		if (!TextUtils.isEmpty(input) && !TextUtils.isEmpty(autotext)) {// 如果有一个为空，则什么都不干
+		if (!TextUtils.isEmpty(code) && !TextUtils.isEmpty(candidate)) {// 如果有一个为空，则什么都不干
 			// 先判断相应id号的记录是否存在，以此来确定是新增记录还是修改记录
 			String sql = "select id from " + table + " where id = " + String.valueOf(id);
 			Cursor cursor = db.rawQuery(sql, null);
 
 			if (cursor.getCount() == 0) {// 说明为新增记录
-				sql = "insert into " + table + " values(null, '" + input + "', '" + autotext + "')";
+				sql = "insert into " + table + " values(null, '" + code + "', '" + candidate + "')";
 			} else {// 说明为修改原有记录
-				sql = "update " + table + " set input = '" + input + "', autotext='" + autotext + "' where id = " + String.valueOf(id);
+				sql = "update " + table + " set code = '" + code + "', candidate='" + candidate + "' where id = " + String.valueOf(id);
 			}
 			// Log.d("Here", sql);
 			db.execSQL(sql);
@@ -189,26 +214,135 @@ public class DBOperations {
 		}
 	}
 
-	// 用于快速批量添加数据
-	// public void importData(String table, ArrayList<String[]> data) {
-	// String sql;
-	// db.beginTransaction();
-	// for(String[] item : data){
-	// sql = "insert into " + table + " values(null, '" + item[0] + "', '"
-	// + item[1] + "')";
-	// db.execSQL(sql);
+	// 用于批量添加数据
+	// public void importData(int methodId, ArrayList<String[]> data) {
+	// // String sql;
+	// String rawTableName = "raw" + String.valueOf(methodId);
+	// boolean isTwolevel = false;
+	// int last_insert_id = 0;
+	// int twolevelid = 0;
+	// ContentValues cv = new ContentValues();
+	// // db.beginTransaction();
+	// for (String[] item : data) {
+	// cv.clear();
+	// if (item[0].equals("[twolevel]") && isTwolevel == false) {// 判断是否是二级替换项目
+	// isTwolevel = true;
+	// twolevelid = last_insert_id;// 获得最后一次插入的id号
+	// cv.put("twolevel", twolevelid);
+	// // 接下来需要把刚插入的raw的一行的twolevel字段值 进行更新
+	// db.update(rawTableName, cv, "id = ? ", new String[] {
+	// String.valueOf(last_insert_id) });
+	// continue;
+	// } else if (item[0].equals("[twolevel]") && isTwolevel == true) {
+	// isTwolevel = false;
+	// twolevelid = 0;
+	// continue;
 	// }
-	// db.setTransactionSuccessful();
-	// db.endTransaction();
+	// cv.put("code", item[0]);
+	// cv.put("candidate", item[1]);
+	// cv.put("twolevel", twolevelid);
+	// last_insert_id = (int) db.insert(rawTableName, null, cv);
+	// // sql = "insert into " + table + " values(null, '" + item[0] +
+	// // "', '" + item[1] + "', "+ String.valueOf(last_insert_id) +")";
+	// // db.execSQL(sql);
+	// // 接下来应该生成对应的autotext条目，并插入对应的表中
+	// //genAutotext(new RawItem(last_insert_id, item[0], item[1], twolevelid),
+	// methodId);
+	//
 	// }
-	// 此版本效率大为提高
-	public void importData(String table, ArrayList<String[]> data) {
-		String sql = "insert into " + table + " values(null, ?, ?)";
+	// // db.setTransactionSuccessful();
+	// // db.endTransaction();
+	// }
+	// 此版本效率大提升
+	public void importData(int methodId, ArrayList<String[]> data) {
+		String rawTableName = "raw" + String.valueOf(methodId);
+		String autotextTableName = "autotext" + String.valueOf(methodId);
+		// 查询raw表中，最小的twolevel值，用于后面计算接下来要用的twolevel值
+		int preTwolevel = 0;
+		Cursor cursor = db.rawQuery("select min(twolevel) from " + rawTableName, null);
+		if (cursor.getCount() != 0) {
+			cursor.moveToNext();
+			preTwolevel = cursor.getInt(0);
+			cursor.close();
+		}
+
+		// Log.d("Here", "importData()");
+		String sql = "insert into " + rawTableName + " values(null, ?, ?, ?)";
 		SQLiteStatement statement = db.compileStatement(sql);
+
 		db.beginTransaction();
 		for (String[] item : data) {
 			statement.bindString(1, item[0]);
 			statement.bindString(2, item[1]);
+			statement.bindLong(3, Integer.parseInt(item[2]) + preTwolevel);
+			statement.executeInsert();
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
+
+		// 接下来处理生成autotext条目的事情
+		// 1、把raw表中的数据都取出来，生成要插入的autotext的数组
+		ArrayList<String> input = new ArrayList<String>();
+		ArrayList<String> autotext = new ArrayList<String>();
+		ArrayList<Integer> rawid = new ArrayList<Integer>();
+
+		ArrayList<String> tempInput = new ArrayList<String>();
+		ArrayList<String> tempAutotext = new ArrayList<String>();
+		cursor = db.rawQuery("select * from " + rawTableName + " order by id", null);
+		while (cursor.moveToNext()) {
+			tempInput.clear();
+			tempAutotext.clear();
+			ga.gen(cursor.getString(cursor.getColumnIndex("code")) + "," + cursor.getString(cursor.getColumnIndex("candidate")));
+			tempInput = ga.getInputList();
+			tempAutotext = ga.getAutotextList();
+			// 处理二级替换项的问题
+			if (cursor.getInt(cursor.getColumnIndex("twolevel")) < 0) {// 如果当前行为二级替换项目
+				// 查看这一组二级替换中，谁是第一行
+				Cursor tempCursor = db.rawQuery("select min(id) from " + rawTableName + " where twolevel=?",
+						new String[] { String.valueOf(cursor.getInt(cursor.getColumnIndex("twolevel"))) });
+				tempCursor.moveToNext();
+
+				if (cursor.getInt(cursor.getColumnIndex("id")) == tempCursor.getInt(0)) {// 当前为此组二级替换的第一行
+					for (int i = 0; i < tempInput.size(); i++) {
+						input.add(tempInput.get(i));
+						autotext.add(tempAutotext.get(i));
+						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
+					}
+				} else {// 当前为此组二级替换的其他行
+					int j = autotext.lastIndexOf("%b" + tempInput.get(0));
+					if (j == -1) {// 如果没有找到
+						input.add(tempInput.get(0));
+						autotext.add(tempAutotext.get(0));
+						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
+					} else {// 如果找到了
+						autotext.set(j, tempAutotext.get(0));
+					}
+					for (int i = 1; i < tempInput.size(); i++) {
+						input.add(tempInput.get(i));
+						autotext.add(tempAutotext.get(i));
+						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
+					}
+				}
+				tempCursor.close();
+			} else {// 此行不是二级替换项目
+				for (int i = 0; i < tempInput.size(); i++) {
+					input.add(tempInput.get(i));
+					autotext.add(tempAutotext.get(i));
+					rawid.add(cursor.getInt(cursor.getColumnIndex("id")));
+				}
+			}
+		}
+		cursor.close();// 至此已经生成用于导入autotext表的数组
+
+		// 2、批量导入autotext表中
+		sql = "insert into " + autotextTableName + " values(null, ?, ?, ?)";
+		statement = db.compileStatement(sql);
+
+		db.beginTransaction();
+		for (int i = 0; i < input.size(); i++) {
+			statement.bindString(1, input.get(i));
+			statement.bindString(2, autotext.get(i));
+			statement.bindLong(3, rawid.get(i));
 			statement.executeInsert();
 		}
 		db.setTransactionSuccessful();
@@ -216,15 +350,105 @@ public class DBOperations {
 	}
 
 	// 删除一条数据
-	public void deleteAutotextItem(String table, int id) {
+	public void deleteRawItem(int methodId, RawItem item) {
 		// TODO Auto-generated method stub
-		String sql = "delete from " + table + " where id = " + String.valueOf(id);
+		String rawTable = "raw" + String.valueOf(methodId);
+		String sql = "delete from " + rawTable + " where id = " + String.valueOf(item.getId());
 		db.execSQL(sql);
+		// 接下来应该删除autotext表中的对应数据
+		if (item.getTwolevel() < 0) {// 是二级替换项目
+			regenAutotext(methodId, item.getTwolevel());
+		} else {// 不是二级替换项目
+			regenAutotext(methodId, item.getId());
+		}
+	}
+
+	private void regenAutotext(int methodId, int id) {
+		//注意如果是二级替换项目，id应该传入raw表中的twolevel号，如果不是则直接入raw表中的id号即可
+		String rawTableName = "raw" + String.valueOf(methodId);
+		String autotextTableName = "autotext" + String.valueOf(methodId);
+		String sql;
+		
+		//先删除现有的对应的项目
+		sql = "delete from " + autotextTableName + " where rawid=" + String.valueOf(id);
+		db.execSQL(sql);
+		
+		//把raw表中对应的数据取出来，生成要插入的autotext的数组
+		ArrayList<String> input = new ArrayList<String>();
+		ArrayList<String> autotext = new ArrayList<String>();
+		ArrayList<Integer> rawid = new ArrayList<Integer>();
+
+		ArrayList<String> tempInput = new ArrayList<String>();
+		ArrayList<String> tempAutotext = new ArrayList<String>();
+		if(id < 0){//需要更新的为二级替换项
+			sql = "select * from " + rawTableName + " where twolevel = " + String.valueOf(id);
+		}else{//需要更新的不是二级替换项
+			sql = "select * from " + rawTableName + " where id = " + String.valueOf(id);
+		}
+		Cursor cursor = db.rawQuery(sql, null);
+		while (cursor.moveToNext()) {
+			tempInput.clear();
+			tempAutotext.clear();
+			ga.gen(cursor.getString(cursor.getColumnIndex("code")) + "," + cursor.getString(cursor.getColumnIndex("candidate")));
+			tempInput = ga.getInputList();
+			tempAutotext = ga.getAutotextList();
+			// 处理二级替换项的问题
+			if (cursor.getInt(cursor.getColumnIndex("twolevel")) < 0) {// 如果当前行为二级替换项目
+				// 查看这一组二级替换中，谁是第一行
+				Cursor tempCursor = db.rawQuery("select min(id) from " + rawTableName + " where twolevel=?",
+						new String[] { String.valueOf(cursor.getInt(cursor.getColumnIndex("twolevel"))) });
+				tempCursor.moveToNext();
+
+				if (cursor.getInt(cursor.getColumnIndex("id")) == tempCursor.getInt(0)) {// 当前为此组二级替换的第一行
+					for (int i = 0; i < tempInput.size(); i++) {
+						input.add(tempInput.get(i));
+						autotext.add(tempAutotext.get(i));
+						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
+					}
+				} else {// 当前为此组二级替换的其他行
+					int j = autotext.lastIndexOf("%b" + tempInput.get(0));
+					if (j == -1) {// 如果没有找到
+						input.add(tempInput.get(0));
+						autotext.add(tempAutotext.get(0));
+						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
+					} else {// 如果找到了
+						autotext.set(j, tempAutotext.get(0));
+					}
+					for (int i = 1; i < tempInput.size(); i++) {
+						input.add(tempInput.get(i));
+						autotext.add(tempAutotext.get(i));
+						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
+					}
+				}
+				tempCursor.close();
+			} else {// 此行不是二级替换项目
+				for (int i = 0; i < tempInput.size(); i++) {
+					input.add(tempInput.get(i));
+					autotext.add(tempAutotext.get(i));
+					rawid.add(cursor.getInt(cursor.getColumnIndex("id")));
+				}
+			}
+		}
+		cursor.close();// 至此已经生成用于导入autotext表的数组
+
+		// 2、批量导入autotext表中
+		sql = "insert into " + autotextTableName + " values(null, ?, ?, ?)";
+		SQLiteStatement statement = db.compileStatement(sql);
+
+		db.beginTransaction();
+		for (int i = 0; i < input.size(); i++) {
+			statement.bindString(1, input.get(i));
+			statement.bindString(2, autotext.get(i));
+			statement.bindLong(3, rawid.get(i));
+			statement.executeInsert();
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////
 	// 用于输入法中的查询与替换
-	public String searchAutotext(String table, String input) {
+	public String searchRaw(String table, String input) {
 		// input.toLowerCase();
 		input = ConstantList.escape(input);
 		String result;
