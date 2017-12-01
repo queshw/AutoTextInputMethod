@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 
@@ -77,8 +78,8 @@ public class RawActivity extends Activity {
 	private String table;// 要操作的表的名称
 
 	// alertdialog中视图的元素，分别用于接收input和autotext数据
-	private EditText inputEditText;
-	private EditText autotextEditText;
+	private EditText codeEditText;
+	private EditText candidateEditText;
 	private final int ADD = -1;// 代替AutotextItem的id，用于表示是新增的条目
 
 	// 用于导入导出数据
@@ -333,7 +334,7 @@ public class RawActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		this.getMenuInflater().inflate(R.menu.menu_autotextactivity, menu);
+		this.getMenuInflater().inflate(R.menu.menu_rawactivity, menu);
 		return true;
 	}
 
@@ -341,15 +342,15 @@ public class RawActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
-		case R.id.add_menu_autotextactivity:
+		case R.id.add_menu_rawactivity:
 			addOrEdit(ADD);
 			break;
-		case R.id.import_menu_autotextactivity:
+		case R.id.import_menu_rawactivity:
 			startFilePickerActivity(
 					String.valueOf(Environment.getExternalStorageDirectory()),
 					FilePickerActivity.IMPORT);
 			break;
-		case R.id.export_menu_autotextactivity:
+		case R.id.export_menu_rawactivity:
 			startFilePickerActivity(
 					String.valueOf(Environment.getExternalStorageDirectory()),
 					FilePickerActivity.EXPORT);
@@ -388,10 +389,33 @@ public class RawActivity extends Activity {
 							fr = new FileReader(resultFile);
 							BufferedReader br = new BufferedReader(fr);
 							String line = "";
-							String[] item = new String[2];
+							
+							int twolevel = 0;//用于标识二级替换的项
+							boolean isTwoLevel = false;//用于标识当前是否处于二级替换块内
+							
 							while ((line = br.readLine()) != null) {
 								line = line.trim();
-								item = line.split(",");
+								
+								if(TextUtils.isEmpty(line)) continue;//如果为空行则跳过
+								if(line.equals("[twolevel]")){
+									//二级替换块开始
+									isTwoLevel = true;
+									twolevel--;
+									continue;
+								}
+								else if(line.equals("[/twolevel]")){
+									//二级替换块结束
+									isTwoLevel = false;
+									continue;
+								}
+								
+								String[] item = new String[3];
+								item[0] = line.substring(0, line.indexOf(','));
+								item[1] = line.substring(line.indexOf(',') + 1);
+								if(isTwoLevel == true) item[2] = String.valueOf(twolevel);
+								else item[2] = String.valueOf(0);
+								if(TextUtils.isEmpty(item[0]) || TextUtils.isEmpty(item[1])) continue;//如果有一个空的，则是非常的替换项，跳过
+								
 								data.add(item);
 								// dboper.importAutotext(table, item[0],
 								// item[1]);
@@ -425,11 +449,24 @@ public class RawActivity extends Activity {
 						try {
 							fw = new FileWriter(resultFile, false);
 							BufferedWriter bw = new BufferedWriter(fw);
-							ArrayList<RawItem> tempData = dboper
-									.searchRawItems(table, "", 100000, 0);
-							for (RawItem item : tempData) {
+							ArrayList<RawItem> tempData = dboper.exportData(methodId);
+							int preTwolevel = 0;
+							int nextTwolevel = 0;
+							RawItem item;
+							for (int i = 0; i < tempData.size(); i++) {
+								preTwolevel = 0;
+								nextTwolevel = 0;
+								if(i != 0) preTwolevel = tempData.get(i - 1).getTwolevel();
+								if(i != tempData.size() - 1) nextTwolevel = tempData.get(i + 1).getTwolevel();
+								item = tempData.get(i);
+								
+								
+								if(item.getTwolevel() < 0 && item.getTwolevel() != preTwolevel) bw.write("[twolevel]\n");
+								
 								bw.write(ConstantList.escape(item.getCode()) + ","
-										+ ConstantList.escape(item.getCandidate()) + "\n");
+										+ ConstantList.escape(item.getCandidate()) + "\n");	
+								
+								if(item.getTwolevel() < 0 && item.getTwolevel() != nextTwolevel) bw.write("[/twolevel]\n");
 								// 通知显示导出进度
 								Message msg = new Message();
 								msg.what = ++lines;
@@ -455,20 +492,20 @@ public class RawActivity extends Activity {
 		}
 	}
 
-	// addOrSave函数，用于处理菜单事件，增加或者修改autotext条目
+	// addOrSave函数，用于处理菜单事件，增加或者修改raw条目
 	@SuppressLint("InflateParams")
-	private void addOrEdit(final int autotextItemId) {
+	private void addOrEdit(final int rawItemId) {
 		// 获取对话框要用的view，然后取得view中元素
 		View view = this.getLayoutInflater().inflate(
-				R.layout.add_or_edit_autotextitem, null);
-		inputEditText = (EditText) view
-				.findViewById(R.id.input_add_or_edit_autotext);
-		autotextEditText = (EditText) view
-				.findViewById(R.id.autotext_add_or_edit_autotext);
-		if (autotextItemId != ADD) {// 如果传入的id号不是ADD，表示这是要修改条目，不是新增的
-			RawItem item = dboper.getRawItem(table, autotextItemId);
-			inputEditText.setText(item.getCode());
-			autotextEditText.setText(item.getCandidate());
+				R.layout.add_or_edit_rawitem, null);
+		codeEditText = (EditText) view
+				.findViewById(R.id.code_add_or_edit_raw);
+		candidateEditText = (EditText) view
+				.findViewById(R.id.candidate_add_or_edit_raw);
+		if (rawItemId != ADD) {// 如果传入的id号不是ADD，表示这是要修改条目，不是新增的
+			RawItem item = dboper.getRawItem(table, rawItemId);
+			codeEditText.setText(item.getCode());
+			candidateEditText.setText(item.getCandidate());
 		}
 
 		// 构建一个AlertDialog，用于用户修改或输入数据
@@ -480,9 +517,9 @@ public class RawActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						dboper.addOrSaveRawItem(table, inputEditText
-								.getText().toString(), autotextEditText
-								.getText().toString(), autotextItemId);
+						dboper.addOrSaveRawItem(methodId, codeEditText
+								.getText().toString(), candidateEditText
+								.getText().toString(), rawItemId);
 						refreshListView();
 					}
 				}).setNeutralButton(R.string.b, null)
@@ -495,9 +532,9 @@ public class RawActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						autotextEditText.setText("%b"
-								+ autotextEditText.getText());
-						autotextEditText.setSelection(autotextEditText
+						candidateEditText.setText("%b"
+								+ candidateEditText.getText());
+						candidateEditText.setSelection(candidateEditText
 								.getText().length());
 					}
 				});

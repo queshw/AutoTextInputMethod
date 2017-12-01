@@ -194,22 +194,38 @@ public class DBOperations {
 	}
 
 	// 添加或者修改单条数据
-	public void addOrSaveRawItem(String table, String code, String candidate, int id) {
+	public void addOrSaveRawItem(int methodId, String code, String candidate, int id) {
+		String rawTableName = "raw" + String.valueOf(methodId);
+
 		code = ConstantList.escape(code);
 		candidate = ConstantList.escape(candidate);
 
 		if (!TextUtils.isEmpty(code) && !TextUtils.isEmpty(candidate)) {// 如果有一个为空，则什么都不干
 			// 先判断相应id号的记录是否存在，以此来确定是新增记录还是修改记录
-			String sql = "select id from " + table + " where id = " + String.valueOf(id);
+			String sql = "select id from " + rawTableName + " where id = " + String.valueOf(id);
 			Cursor cursor = db.rawQuery(sql, null);
 
 			if (cursor.getCount() == 0) {// 说明为新增记录
-				sql = "insert into " + table + " values(null, '" + code + "', '" + candidate + "')";
+				ContentValues cv = new ContentValues();
+				cv.put("code", code);
+				cv.put("candidate", candidate);
+				cv.put("twolevel", 0);
+				int tempId = (int) db.insert(rawTableName, null, cv);
+				//sql = "insert into " + rawTableName + " values(null, '" + code + "', '" + candidate + "', null)";
+				//db.execSQL(sql);
+				regenAutotext(methodId, tempId);
 			} else {// 说明为修改原有记录
-				sql = "update " + table + " set code = '" + code + "', candidate='" + candidate + "' where id = " + String.valueOf(id);
+				sql = "update " + rawTableName + " set code = '" + code + "', candidate='" + candidate + "' where id = " + String.valueOf(id);
+				db.execSQL(sql);
+				RawItem item = getRawItem(rawTableName, id);
+				// 接下来应该更新对应的autotext表中的记录
+				if (item.getTwolevel() < 0) {// 是二级替换项目
+					regenAutotext(methodId, item.getTwolevel());
+				} else {// 不是二级替换项目
+					regenAutotext(methodId, item.getId());
+				}
 			}
 			// Log.d("Here", sql);
-			db.execSQL(sql);
 			cursor.close();
 		}
 	}
@@ -309,12 +325,18 @@ public class DBOperations {
 						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
 					}
 				} else {// 当前为此组二级替换的其他行
-					int j = autotext.lastIndexOf("%b" + tempInput.get(0));
+					int j = -1;
+					for(int i = 0; i < autotext.size(); i++){
+						if(rawid.get(i) == cursor.getInt(cursor.getColumnIndex("twolevel")) && autotext.get(i).equals("%b" + tempInput.get(0))){
+							j = i;
+							break;
+							}
+					}
 					if (j == -1) {// 如果没有找到
 						input.add(tempInput.get(0));
 						autotext.add(tempAutotext.get(0));
 						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
-					} else {// 如果找到了
+					} else{// 如果找到了
 						autotext.set(j, tempAutotext.get(0));
 					}
 					for (int i = 1; i < tempInput.size(); i++) {
@@ -348,6 +370,32 @@ public class DBOperations {
 		db.setTransactionSuccessful();
 		db.endTransaction();
 	}
+	
+	public ArrayList<RawItem> exportData(int methodId) {
+		String rawTableName = "raw" + String.valueOf(methodId);
+		ArrayList<RawItem> data = new ArrayList<RawItem>();
+		//先读出不是二级替换的条目
+		String sql = "select * from " + rawTableName + " where twolevel=0 order by id";		
+		Cursor cursor = db.rawQuery(sql, null);
+		while (cursor.moveToNext()) {
+			RawItem item;
+			item = constructRawItem(cursor);
+			data.add(item);
+		}
+		cursor.close();
+		
+		//再读出二级替换的条目
+		sql = "select * from " + rawTableName + " where twolevel<0 order by id,twolevel desc";		
+		cursor = db.rawQuery(sql, null);
+		while (cursor.moveToNext()) {
+			RawItem item;
+			item = constructRawItem(cursor);
+			data.add(item);
+		}
+		cursor.close();
+		
+		return data;
+	}
 
 	// 删除一条数据
 	public void deleteRawItem(int methodId, RawItem item) {
@@ -355,7 +403,7 @@ public class DBOperations {
 		String rawTable = "raw" + String.valueOf(methodId);
 		String sql = "delete from " + rawTable + " where id = " + String.valueOf(item.getId());
 		db.execSQL(sql);
-		// 接下来应该删除autotext表中的对应数据
+		// 接下来应该更新autotext表中的对应数据
 		if (item.getTwolevel() < 0) {// 是二级替换项目
 			regenAutotext(methodId, item.getTwolevel());
 		} else {// 不是二级替换项目
@@ -364,25 +412,25 @@ public class DBOperations {
 	}
 
 	private void regenAutotext(int methodId, int id) {
-		//注意如果是二级替换项目，id应该传入raw表中的twolevel号，如果不是则直接入raw表中的id号即可
+		// 注意如果是二级替换项目，id应该传入raw表中的twolevel号，如果不是则直接入raw表中的id号即可
 		String rawTableName = "raw" + String.valueOf(methodId);
 		String autotextTableName = "autotext" + String.valueOf(methodId);
 		String sql;
-		
-		//先删除现有的对应的项目
+
+		// 先删除现有的对应的项目
 		sql = "delete from " + autotextTableName + " where rawid=" + String.valueOf(id);
 		db.execSQL(sql);
-		
-		//把raw表中对应的数据取出来，生成要插入的autotext的数组
+
+		// 把raw表中对应的数据取出来，生成要插入的autotext的数组
 		ArrayList<String> input = new ArrayList<String>();
 		ArrayList<String> autotext = new ArrayList<String>();
 		ArrayList<Integer> rawid = new ArrayList<Integer>();
 
 		ArrayList<String> tempInput = new ArrayList<String>();
 		ArrayList<String> tempAutotext = new ArrayList<String>();
-		if(id < 0){//需要更新的为二级替换项
+		if (id < 0) {// 需要更新的为二级替换项
 			sql = "select * from " + rawTableName + " where twolevel = " + String.valueOf(id);
-		}else{//需要更新的不是二级替换项
+		} else {// 需要更新的不是二级替换项
 			sql = "select * from " + rawTableName + " where id = " + String.valueOf(id);
 		}
 		Cursor cursor = db.rawQuery(sql, null);

@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/add_menu_autotextactivity"
+        android:id="@+id/add_menu_rawactivity"
         android:icon="@drawable/add"
         android:showAsAction="ifRoom|withText"
         android:title="@string/add"/>
     <item
-        android:id="@+id/import_menu_autotextactivity"
+        android:id="@+id/import_menu_rawactivity"
         android:icon="@drawable/import_icon"
         android:showAsAction="ifRoom|withText"
         android:title="@string/autotextimport"/>
     <item
-        android:id="@+id/export_menu_autotextactivity"
+        android:id="@+id/export_menu_rawactivity"
         android:icon="@drawable/export_icon"
         android:showAsAction="ifRoom|withText"
         android:title="@string/autotextexport"/>

@@ -59,30 +59,30 @@ public final class R {
         public static final int status_sym_lock=0x7f020016;
     }
     public static final class id {
-        public static final int add_menu_autotextactivity=0x7f0b0021;
-        public static final int add_menu_methodactivity=0x7f0b0024;
-        public static final int autotext_add_or_edit_autotext=0x7f0b0001;
+        public static final int add_menu_methodactivity=0x7f0b0021;
+        public static final int add_menu_rawactivity=0x7f0b0024;
+        public static final int candidate_add_or_edit_raw=0x7f0b0003;
         public static final int candidate_textview_rawitem=0x7f0b001f;
+        public static final int code_add_or_edit_raw=0x7f0b0002;
         public static final int code_textview_rawitem=0x7f0b001e;
         public static final int default_imageview_methoditem=0x7f0b0016;
         public static final int delete_imageview_methoditem=0x7f0b0019;
         public static final int delete_imageview_rawitem=0x7f0b0020;
         public static final int edit_imageview_methoditem=0x7f0b001a;
-        public static final int export_menu_autotextactivity=0x7f0b0023;
+        public static final int export_menu_rawactivity=0x7f0b0026;
         public static final int extracted_edittext_layout_extractactivity=0x7f0b0004;
         public static final int file_listView_layout_filepickeractivity=0x7f0b000c;
         public static final int filename_textview_layout_importdefault=0x7f0b0007;
-        public static final int help_menu_methodactivity=0x7f0b0026;
+        public static final int help_menu_methodactivity=0x7f0b0023;
         public static final int help_textview_layout_helpactvity=0x7f0b0011;
-        public static final int import_menu_autotextactivity=0x7f0b0022;
+        public static final int import_menu_rawactivity=0x7f0b0025;
         public static final int import_progressbar_layout_importdefault=0x7f0b0008;
-        public static final int input_add_or_edit_autotext=0x7f0b0000;
         public static final int isdefalut_imageview_methoditem=0x7f0b001b;
-        public static final int isdefault_add_or_edit_method=0x7f0b0003;
+        public static final int isdefault_add_or_edit_method=0x7f0b0001;
         public static final int linearlayout_methoditem=0x7f0b0015;
-        public static final int loaddefault_menu_methodactivity=0x7f0b0025;
+        public static final int loaddefault_menu_methodactivity=0x7f0b0022;
         public static final int methods_listview_activity_main=0x7f0b001c;
-        public static final int name_add_or_edit_method=0x7f0b0002;
+        public static final int name_add_or_edit_method=0x7f0b0000;
         public static final int name_textView_filelist=0x7f0b0006;
         public static final int name_textview_methoditem=0x7f0b0017;
         public static final int no_button_layout_filepickeractivity=0x7f0b000f;
@@ -100,8 +100,8 @@ public final class R {
         public static final int yes_button_layout_filepickeractivity=0x7f0b000e;
     }
     public static final class layout {
-        public static final int add_or_edit_autotextitem=0x7f030000;
-        public static final int add_or_edit_method=0x7f030001;
+        public static final int add_or_edit_method=0x7f030000;
+        public static final int add_or_edit_rawitem=0x7f030001;
         public static final int extracted=0x7f030002;
         public static final int filelist=0x7f030003;
         public static final int importdefault=0x7f030004;
@@ -113,8 +113,8 @@ public final class R {
         public static final int rawitem=0x7f03000a;
     }
     public static final class menu {
-        public static final int menu_autotextactivity=0x7f0a0000;
-        public static final int menu_methodsactivity=0x7f0a0001;
+        public static final int menu_methodsactivity=0x7f0a0000;
+        public static final int menu_rawactivity=0x7f0a0001;
     }
     public static final class string {
         public static final int add=0x7f070003;

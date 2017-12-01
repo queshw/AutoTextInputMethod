@@ -61,15 +61,11 @@ public class ConstantList {
 			char c = str.charAt(i);
 			if (c == '\'')
 				s.append("#SINGLE_QUOTATION#");
-			else if (c == ',')
-				s.append("#C#");
-			else if (c == '#')
-				s.append("#S#");
 			else
 				s.append(c);
 		}
 		return s.toString();
-	}	
+	}
 	
 	public static String recover(String str) {//所有从数据库中取值都需要应用此函数
 		StringBuilder s = new StringBuilder();
@@ -78,9 +74,9 @@ public class ConstantList {
 			if (item[i].equals("SINGLE_QUOTATION"))
 				s.append("'");
 			else if (item[i].equals("S"))
-				s.append("#");
+				s.append("#S#");
 			else if (item[i].equals("C"))
-				s.append(",");
+				s.append("#C#");
 			else
 				s.append(item[i]);
 		}
