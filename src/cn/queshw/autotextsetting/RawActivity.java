@@ -522,7 +522,7 @@ public class RawActivity extends Activity {
 								.getText().toString(), rawItemId);
 						refreshListView();
 					}
-				}).setNeutralButton(R.string.b, null)
+				}).setNeutralButton(R.string.comma, null)
 				.setNegativeButton(R.string.cancel, null).show();
 
 		// 然后手动获得这个altertdialog的中性按纽，给它设置view.onClickListener，这样的话一按按纽就不会默认关闭对话框了
@@ -532,8 +532,7 @@ public class RawActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						candidateEditText.setText("%b"
-								+ candidateEditText.getText());
+						candidateEditText.setText(candidateEditText.getText() + "#COMMA# #SHARP#");
 						candidateEditText.setSelection(candidateEditText
 								.getText().length());
 					}

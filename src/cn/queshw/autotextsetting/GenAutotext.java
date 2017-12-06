@@ -319,10 +319,10 @@ public class GenAutotext {
 				s.append(CHINESE_QUOTATION_RIGHT);
 			} else if (item[i].equals("SINGLE_QUOTATION")) {
 				s.append("#SINGLE_QUOTATION#");
-			} else if (item[i].equals("S") || item[i].equals("s")) {
-				s.append("#S#");
-			} else if (item[i].equals("C") || item[i].equals("c")) {
-				s.append("#C#");
+			} else if (item[i].toUpperCase().equals("SHARP")) {
+				s.append("#SHARP#");
+			} else if (item[i].toUpperCase().equals("COMMA")) {
+				s.append("#COMMA#");
 			} else {
 				s.append(item[i]);
 			}

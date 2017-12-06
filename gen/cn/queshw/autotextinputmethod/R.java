@@ -123,9 +123,9 @@ public final class R {
         public static final int autotextexport=0x7f07001c;
         public static final int autotextimport=0x7f07001b;
         public static final int autotextitem=0x7f07001a;
-        public static final int b=0x7f07000c;
         public static final int cancel=0x7f070007;
         public static final int code_search=0x7f070022;
+        public static final int comma=0x7f07000c;
         public static final int copyed=0x7f070023;
         public static final int delete=0x7f070005;
         public static final int edit=0x7f070004;
@@ -149,10 +149,6 @@ public final class R {
         public static final int setdefault=0x7f070018;
         public static final int settings=0x7f070008;
         public static final int title=0x7f070017;
-        public static final int toend=0x7f070027;
-        public static final int tohome=0x7f070024;
-        public static final int tonext=0x7f070026;
-        public static final int topre=0x7f070025;
         public static final int up=0x7f07000d;
         public static final int wubi_pinyin=0x7f070020;
         public static final int yes=0x7f07000a;

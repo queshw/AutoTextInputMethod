@@ -41,14 +41,16 @@ public class RawAdapter extends ArrayAdapter<RawItem> {
 		// ÉèÖÃ±³¾°ÑÕÉ«
 		if (item.getTwolevel() < 0) {
 			holder.linear.setBackgroundColor(Color.LTGRAY);
-			holder.candidateTextView.setText(item.getCandidate() + "(" + String.valueOf(item.getTwolevel()) + ")");
+			holder.candidateTextView.setText(item.getCandidate());
+			holder.codeTextView.setText("(" + String.valueOf(item.getTwolevel()) + ")" + item.getCode());
 		} else {
 			holder.linear.setBackgroundColor(Color.TRANSPARENT);
 			holder.candidateTextView.setText(item.getCandidate());
+			holder.codeTextView.setText(item.getCode());
 		}
 		// holder.inputTextView.setText(String.valueOf(item.getId()) + "."
 		// +item.getInput());
-		holder.codeTextView.setText(item.getCode());
+		
 		return convertView;
 	}
 

@@ -128,6 +128,8 @@ public class DBOperations {
 		db.delete("methods", "id=?", new String[] { String.valueOf(id) });
 		String rawTableName = "raw" + String.valueOf(id);
 		String autotextTableName = "autotext" + String.valueOf(id);
+		
+		//接下来删除对应的raw表，和autotext表
 		String sql = "drop table if exists " + rawTableName;
 		// Log.d("Here", sql);
 		db.execSQL(sql);
@@ -157,9 +159,13 @@ public class DBOperations {
 		// searchText + "%' order by input limit " + String.valueOf(limit) +
 		// " offset "
 		// + String.valueOf(offset);
-		String sql = "select * from " + table + " where code like '" + searchText + "%' order by code limit " + String.valueOf(limit) + " offset "
-				+ String.valueOf(offset);
-		// Log.d("Here", sql);
+		String sql;
+		if(searchText.equals("twolevel"))
+			sql = "select * from " + table + " where twolevel < 0 order by twolevel,code";
+		else 
+			sql = "select * from " + table + " where code like '" + searchText + "%' order by code limit " + String.valueOf(limit) + " offset "
+					+ String.valueOf(offset);
+		//Log.d("Here", sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		while (cursor.moveToNext()) {
 			RawItem item;
@@ -498,7 +504,7 @@ public class DBOperations {
 	// 用于输入法中的查询与替换
 	public String searchRaw(String table, String input) {
 		// input.toLowerCase();
-		input = ConstantList.escape(input);
+		input = ConstantList.newescape(input);
 		String result;
 		String sql = "select autotext from " + table + " where input = '" + input + "' order by id limit 1";
 		// Log.d("Here", sql + "|");
@@ -507,7 +513,7 @@ public class DBOperations {
 			result = null;
 		} else {// 如果找到了，那么就返回对应的autotext的SpannableStringBuilder对象
 			cursor.moveToNext();
-			result = ConstantList.recover(cursor.getString(cursor.getColumnIndex("autotext")));
+			result = ConstantList.newrecover(cursor.getString(cursor.getColumnIndex("autotext")));
 		}
 		cursor.close();
 		return result;

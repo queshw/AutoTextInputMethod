@@ -52,7 +52,7 @@ public class ConstantList {
 
 	// //////////////////////////////////////////////////////////////////////////
 	/*
-	 * 处理以下转义符，在输出时转为正常的字符 #SINGLE_QUOTATION# ' #SHARP# # #COMMA# ,
+	 * 处理以下转义符，在设置字库的时候处理 #SINGLE_QUOTATION# #S# # #C#，其中后面两个是源文件就存在的。
 	 */
 	public static String escape(String str) {//所有导入都需要应用此函数
 		str = str.trim();
@@ -73,15 +73,49 @@ public class ConstantList {
 		for (int i = 0; i < item.length; i++) {
 			if (item[i].equals("SINGLE_QUOTATION"))
 				s.append("'");
-			else if (item[i].equals("S"))
-				s.append("#S#");
-			else if (item[i].equals("C"))
-				s.append("#C#");
+			else if (item[i].equals("SHARP"))
+				s.append("#SHARP#");
+			else if (item[i].equals("COMMA"))
+				s.append("#COMMA#");
 			else
 				s.append(item[i]);
 		}
 		return s.toString();
 	}
 
+	///////////////////////////////////////////////////////////////////////
+	//下面两个函数用于输入法输入与输出
+	public static String newescape(String str) {//在输入时需要转义，因为在数据库中，逗号、井号、单引号是以转义的方式存储的
+		str = str.trim();
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (c == '\'')
+				s.append("#SINGLE_QUOTATION#");
+			else if (c == '#')
+				s.append("#SHARP#");
+			else if (c == ',')
+				s.append("#COMMA#");
+			else
+				s.append(c);
+		}
+		return s.toString();
+	}
+	
+	public static String newrecover(String str) {//所有从数据库中取值都需要应用此函数
+		StringBuilder s = new StringBuilder();
+		String[] item = str.split("#");
+		for (int i = 0; i < item.length; i++) {
+			if (item[i].equals("SINGLE_QUOTATION"))
+				s.append("'");
+			else if (item[i].equals("SHARP"))
+				s.append("#");
+			else if (item[i].equals("COMMA"))
+				s.append(",");
+			else
+				s.append(item[i]);
+		}
+		return s.toString();
+	}
 }
 

@@ -13,7 +13,7 @@
     <string name="help">帮助</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="b">插入%b</string>
+    <string name="comma">, #</string>
     <string name="up">向上</string>
     <string name="msg1">这是目录名！</string>
     <string name="msg2">文件已经存在，是否覆盖？</string>
@@ -40,10 +40,6 @@
     
     <string name="copyed">复制成功！</string>
     
-    <string name="tohome">home</string>
-    <string name="topre">pre</string>
-    <string name="tonext">next</string>
-    <string name="toend">end</string>
 
     <dimen name="padding">10dp</dimen>
     <dimen name="textsize">16sp</dimen>
