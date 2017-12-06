@@ -71,7 +71,7 @@ public class MethodsListActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 				// TODO Auto-generated method stub
-				AutotextActivity.actionStart(MethodsListActivity.this, methodsItemList.get(position).getId());
+				RawActivity.actionStart(MethodsListActivity.this, methodsItemList.get(position).getId());
 				// Log.d("Here", "Position=" + String.valueOf(position) +
 				// " clicked");
 			}

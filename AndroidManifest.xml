@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.queshw.autotextinputmethod"
-    android:versionCode="60"
-    android:versionName="4.02" >
+    android:versionCode="61"
+    android:versionName="4.1" 
+    >
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -28,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cn.queshw.autotextsetting.AutotextActivity" >
+        <activity android:name="cn.queshw.autotextsetting.RawActivity" >
         </activity>
         <activity android:name="cn.queshw.autotextsetting.FilePickerActivity" >
         </activity>

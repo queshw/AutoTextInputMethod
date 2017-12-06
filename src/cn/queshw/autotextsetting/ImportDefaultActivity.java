@@ -13,6 +13,7 @@ import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -112,13 +113,37 @@ public class ImportDefaultActivity extends Activity {
 						int count = 0;
 						String line;
 						br.reset();
+						//写入methods条目
 						int id = dboper.addOrSaveMethodItem(fileName[i], MethodItem.NOTDEFAULT, MethodsListActivity.ADD);
+						//接下来构造用于导入raw表的数组
 						ArrayList<String[]> data = new ArrayList<String[]>();
+						int twolevel = 0;//用于标识二级替换的项
+						boolean isTwoLevel = false;//用于标识当前是否处于二级替换块内
 						while ((line = br.readLine()) != null) {
+							line = line.trim();
 							count++;
-							String[] item = new String[2];
-							item = line.split(",");
-							data.add(item);							
+							
+							if(TextUtils.isEmpty(line)) continue;//如果为空行则跳过
+							if(line.equals("[twolevel]")){
+								//二级替换块开始
+								isTwoLevel = true;
+								twolevel--;
+								continue;
+							}
+							else if(line.equals("[/twolevel]")){
+								//二级替换块结束
+								isTwoLevel = false;
+								continue;
+							}
+							
+							String[] item = new String[3];
+							item[0] = line.substring(0, line.indexOf(','));
+							item[1] = line.substring(line.indexOf(',') + 1);
+							if(isTwoLevel == true) item[2] = String.valueOf(twolevel);
+							else item[2] = String.valueOf(0);
+							if(TextUtils.isEmpty(item[0]) || TextUtils.isEmpty(item[1])) continue;//如果有一个空的，则是非常的替换项，跳过
+							
+							data.add(item);	
 							if(count % 500 == 0) {
 								Message msg2 = Message.obtain();
 								msg2.what = -1;
@@ -126,7 +151,7 @@ public class ImportDefaultActivity extends Activity {
 								handler.sendMessage(msg2);
 							}
 						}
-						dboper.importData("autotext"+String.valueOf(id), data);
+						dboper.importData(id, data);
 						br.close();
 					}
 					ImportDefaultActivity.this.finish();

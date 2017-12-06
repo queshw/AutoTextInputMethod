@@ -5,10 +5,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/rawitem_linear">
 
         <TextView
-            android:id="@+id/input_textview_autotextitem"
+            android:id="@+id/code_textview_rawitem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -28,7 +29,7 @@
             android:src="@drawable/right_arrow" />
 
         <TextView
-            android:id="@+id/autotext_textview_autotextitem"
+            android:id="@+id/candidate_textview_rawitem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -42,7 +43,7 @@
     </LinearLayout>
 
     <ImageView 
-        android:id="@+id/delete_imageview_autotextitem"
+        android:id="@+id/delete_imageview_rawitem"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="center_vertical|right"

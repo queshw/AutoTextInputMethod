@@ -3,7 +3,9 @@ package cn.queshw.autotextinputmethod;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -24,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import cn.queshw.autotextsetting.DBOperations;
+import cn.queshw.autotextsetting.GenAutotext;
 import cn.queshw.autotextsetting.MethodItem;
 
 @SuppressLint("SimpleDateFormat")
@@ -260,7 +263,7 @@ public class AutotextInputMethod extends InputMethodService {
 			candidateInput = candidateInput.subSequence(candidateInput.length() - offsetBefore, candidateInput.length());
 			// //Log.d("Here", "candidateInput=" + candidateInput + "|");
 
-			String rawAutotext = dboper.searchAutotext("autotext" + defaultMethodId, candidateInput.toString());// 在库中查找替换项
+			String rawAutotext = dboper.searchRaw("autotext" + defaultMethodId, candidateInput.toString());// 在库中查找替换项
 			if (rawAutotext == null) {// 如果没有找到替换项
 				mConnection.commitText(" ", 1);
 				// 如果没有找到替换项，手机提示一下
@@ -848,6 +851,16 @@ public class AutotextInputMethod extends InputMethodService {
 			// Log.d("Here", "sym pressed there");
 			// return false;
 			isSelectModel = false;
+			GenAutotext ga = new GenAutotext();
+			String s = "ji$,几,暂,时,什,么,都,不,做,好,来,几,暂,时,什,么,都,不,做,好,来";
+			ga.gen(s);
+			ArrayList<String> input = ga.getInputList();
+			ArrayList<String> autotext = ga.getAutotextList();
+
+			for (int i = 0; i < input.size(); i++) {
+				Log.d("Here", input.get(i) + "," + autotext.get(i));
+			}
+			return true;
 		} else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
 			isSelectModel = false;
 			mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
