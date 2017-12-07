@@ -128,8 +128,8 @@ public class DBOperations {
 		db.delete("methods", "id=?", new String[] { String.valueOf(id) });
 		String rawTableName = "raw" + String.valueOf(id);
 		String autotextTableName = "autotext" + String.valueOf(id);
-		
-		//接下来删除对应的raw表，和autotext表
+
+		// 接下来删除对应的raw表，和autotext表
 		String sql = "drop table if exists " + rawTableName;
 		// Log.d("Here", sql);
 		db.execSQL(sql);
@@ -160,12 +160,12 @@ public class DBOperations {
 		// " offset "
 		// + String.valueOf(offset);
 		String sql;
-		if(searchText.equals("twolevel"))
+		if (searchText.equals("twolevel"))
 			sql = "select * from " + table + " where twolevel < 0 order by twolevel,code";
-		else 
+		else
 			sql = "select * from " + table + " where code like '" + searchText + "%' order by code limit " + String.valueOf(limit) + " offset "
 					+ String.valueOf(offset);
-		//Log.d("Here", sql);
+		// Log.d("Here", sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		while (cursor.moveToNext()) {
 			RawItem item;
@@ -217,8 +217,9 @@ public class DBOperations {
 				cv.put("candidate", candidate);
 				cv.put("twolevel", 0);
 				int tempId = (int) db.insert(rawTableName, null, cv);
-				//sql = "insert into " + rawTableName + " values(null, '" + code + "', '" + candidate + "', null)";
-				//db.execSQL(sql);
+				// sql = "insert into " + rawTableName + " values(null, '" +
+				// code + "', '" + candidate + "', null)";
+				// db.execSQL(sql);
 				regenAutotext(methodId, tempId);
 			} else {// 说明为修改原有记录
 				sql = "update " + rawTableName + " set code = '" + code + "', candidate='" + candidate + "' where id = " + String.valueOf(id);
@@ -296,7 +297,10 @@ public class DBOperations {
 		for (String[] item : data) {
 			statement.bindString(1, item[0]);
 			statement.bindString(2, item[1]);
-			statement.bindLong(3, Integer.parseInt(item[2]) + preTwolevel);
+			if (Integer.parseInt(item[2]) < 0)
+				statement.bindLong(3, Integer.parseInt(item[2]) + preTwolevel);
+			else
+				statement.bindLong(3, 0);
 			statement.executeInsert();
 		}
 		db.setTransactionSuccessful();
@@ -332,17 +336,17 @@ public class DBOperations {
 					}
 				} else {// 当前为此组二级替换的其他行
 					int j = -1;
-					for(int i = 0; i < autotext.size(); i++){
-						if(rawid.get(i) == cursor.getInt(cursor.getColumnIndex("twolevel")) && autotext.get(i).equals("%b" + tempInput.get(0))){
+					for (int i = 0; i < autotext.size(); i++) {
+						if (rawid.get(i) == cursor.getInt(cursor.getColumnIndex("twolevel")) && autotext.get(i).equals("%b" + tempInput.get(0))) {
 							j = i;
 							break;
-							}
+						}
 					}
 					if (j == -1) {// 如果没有找到
 						input.add(tempInput.get(0));
 						autotext.add(tempAutotext.get(0));
 						rawid.add(cursor.getInt(cursor.getColumnIndex("twolevel")));
-					} else{// 如果找到了
+					} else {// 如果找到了
 						autotext.set(j, tempAutotext.get(0));
 					}
 					for (int i = 1; i < tempInput.size(); i++) {
@@ -376,12 +380,12 @@ public class DBOperations {
 		db.setTransactionSuccessful();
 		db.endTransaction();
 	}
-	
+
 	public ArrayList<RawItem> exportData(int methodId) {
 		String rawTableName = "raw" + String.valueOf(methodId);
 		ArrayList<RawItem> data = new ArrayList<RawItem>();
-		//先读出不是二级替换的条目
-		String sql = "select * from " + rawTableName + " where twolevel=0 order by id";		
+		// 先读出不是二级替换的条目
+		String sql = "select * from " + rawTableName + " where twolevel=0 order by id";
 		Cursor cursor = db.rawQuery(sql, null);
 		while (cursor.moveToNext()) {
 			RawItem item;
@@ -389,9 +393,9 @@ public class DBOperations {
 			data.add(item);
 		}
 		cursor.close();
-		
-		//再读出二级替换的条目
-		sql = "select * from " + rawTableName + " where twolevel<0 order by id,twolevel desc";		
+
+		// 再读出二级替换的条目
+		sql = "select * from " + rawTableName + " where twolevel<0 order by id,twolevel desc";
 		cursor = db.rawQuery(sql, null);
 		while (cursor.moveToNext()) {
 			RawItem item;
@@ -399,7 +403,7 @@ public class DBOperations {
 			data.add(item);
 		}
 		cursor.close();
-		
+
 		return data;
 	}
 
