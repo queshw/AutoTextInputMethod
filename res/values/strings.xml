@@ -41,14 +41,7 @@
     <string name="copyed">复制成功！</string>
     
 
-    <dimen name="padding">10dp</dimen>
-    <dimen name="textsize">16sp</dimen>
 
-    <color name="mygreen">#00bb9c</color>
-    <color name="mygray">#a9b7b7</color>
-    <color name="myyellow">#f4c600</color>
-    <color name="lightGray">#dbdbdb</color>
-    <color name="lightred">#eb4f38</color>
-    <color name="lightgreen">#11cd6e</color>
+
 
 </resources>

@@ -3,16 +3,12 @@ package cn.queshw.autotextinputmethod;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
-import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,12 +17,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputMethodInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
 import cn.queshw.autotextsetting.DBOperations;
-import cn.queshw.autotextsetting.GenAutotext;
 import cn.queshw.autotextsetting.MethodItem;
 
 @SuppressLint("SimpleDateFormat")
@@ -43,6 +35,7 @@ public class AutotextInputMethod extends InputMethodService {
 
 	private int mMetaState = 0;
 	private long state = 0; // for metakeylistener
+
 	private String mBeforeSubString;// 替换前的文本
 	private StringBuilder mAfterSubString;// 替换后的文本
 	private String mUndoSubString;// 删除的文本，用于undo功能
@@ -71,16 +64,33 @@ public class AutotextInputMethod extends InputMethodService {
 	private boolean isCapPressed;
 	private boolean isSymPressed;
 	private boolean switchToFullScreen = false;// 是否切换到全屏模式
-	private boolean isInputStarted = false;
+	private boolean isInputStarted = false;// 输入是否已经开始
 	private boolean isSelectModel = false;
 
+	// 用于emoji表情的输入
+	private int stickerStartPosition = 0;
+	private SymBoard sb;
+	private View candidateView;
+	private boolean NEXT = true;
+	private boolean PRE = false;
+
 	// /////////////////////////////////////////////////////////////////////////
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.inputmethodservice.InputMethodService#onInitializeInterface()
+	 */
 	@Override
-	public void onCreate() {
-		// //Log.d("Here", "onCreate()");
-		super.onCreate();
+	public void onInitializeInterface() {
+		// TODO Auto-generated method stub
+		// Log.d("Here", "onInitializeInterface");
+		super.onInitializeInterface();
 		dboper = new DBOperations(this);
 		clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);// 获得系统剪贴板
+		candidateView = this.getLayoutInflater().inflate(R.layout.sym_keyboard_layout, null);
+		this.setCandidatesView(candidateView);
+		sb = new SymBoard(candidateView);
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -94,48 +104,36 @@ public class AutotextInputMethod extends InputMethodService {
 	// ///////////////////////////////////////////////////////////////////////////
 	@Override
 	public void onStartInput(EditorInfo info, boolean restarting) {
-		// //Log.d("Here", "onStartInput()");
+//		Log.d("Here", "onStartInput()" + " | restart = " + String.valueOf(restarting) + " | initialStart = " + info.initialSelStart
+//				+ " | initialEnd = " + info.initialSelEnd);
 		super.onStartInput(info, restarting);
 		// 初始化光标的位置，也可据此知道当前编辑器光标前已经有多少个字符了。
 		mEditInfo = info;
-	}
-	
-	
-
-	/* (non-Javadoc)
-	 * @see android.inputmethodservice.InputMethodService#onStartInputView(android.view.inputmethod.EditorInfo, boolean)
-	 */
-	@Override
-	public void onStartInputView(EditorInfo info, boolean restarting) {
-		// TODO Auto-generated method stub
-		//super.onStartInputView(info, restarting);
-        isInputStarted = true;
+		mStart = mEditInfo.initialSelStart;
+		mEnd = mEditInfo.initialSelEnd;
+		if (mStart >= 0 && mEnd >= 0) {
+			isInputStarted = true;
+		} else {
+			isInputStarted = false;
+			return;
+		}
+		
 		mConnection = this.getCurrentInputConnection();
 		autotext = new Autotext();
 		curOper = new CursorOperator(mConnection);
 		state = 0L;
 		curStatusIcon = CurrentStatusIcon.NONE;
 
-		
 		// 处理EditorInfo的匹配
 		if (mEditInfo.inputType == InputType.TYPE_CLASS_NUMBER || mEditInfo.inputType == InputType.TYPE_CLASS_PHONE
 				|| mEditInfo.inputType == InputType.TYPE_CLASS_DATETIME) {
 			state |= HandleMetaKey.META_ALT_LOCKED;
-			//handleStatusIcon(HandleMetaKey.getMetaState(state));
+			// handleStatusIcon(HandleMetaKey.getMetaState(state));
 		} else if (mEditInfo.inputType == InputType.TYPE_CLASS_TEXT && (mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0) {
 			state |= HandleMetaKey.META_CAP_LOCKED;
-			//handleStatusIcon(HandleMetaKey.getMetaState(state));
-		} 
-		handleStatusIcon(HandleMetaKey.getMetaState(this.state));
-
-		mStart = mEditInfo.initialSelStart;
-		mEnd = mEditInfo.initialSelEnd;
-		if (mStart == -1 || mEnd == -1) {// 如果没有取到值，则设为默认的０
-			mStart = 0;
-			mEnd = 0;
+			// handleStatusIcon(HandleMetaKey.getMetaState(state));
 		}
-		// //Log.d("Here", "inimStart=" + String.valueOf(mStart) + "|inimEnd=" +
-		// String.valueOf(mEnd));
+		handleStatusIcon(HandleMetaKey.getMetaState(this.state));
 
 		// 获取默认的输入词库
 		methodItemList = dboper.loadMethodsData();
@@ -155,38 +153,30 @@ public class AutotextInputMethod extends InputMethodService {
 		maxInputLength = dboper.getMaxInputLength(defaultMethodId);
 		return;
 	}
-	
-	
 
-	/* (non-Javadoc)
-	 * @see android.inputmethodservice.InputMethodService#onEvaluateInputViewShown()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.inputmethodservice.InputMethodService#onEvaluateInputViewShown()
 	 */
 	@Override
 	public boolean onEvaluateInputViewShown() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;//不使用软键盘
 	}
 
-	/* (non-Javadoc)
-	 * @see android.inputmethodservice.InputMethodService#onFinishInputView(boolean)
-	 */
-	@Override
-	public void onFinishInputView(boolean finishingInput) {
-		// TODO Auto-generated method stub
-		super.onFinishInputView(finishingInput);
-		this.hideStatusIcon();
-		this.currentCursorEnd = -1;
-		this.currentCursorStart = -1;
-		this.isInputStarted = false;
-		this.isSelectModel = false;
-	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.inputmethodservice.InputMethodService#onFinishInput()
 	 */
 	@Override
 	public void onFinishInput() {
 		// TODO Auto-generated method stub
+		//Log.d("Here", "onFinishInput");
 		super.onFinishInput();
 		this.hideStatusIcon();
 		this.currentCursorEnd = -1;
@@ -199,11 +189,11 @@ public class AutotextInputMethod extends InputMethodService {
 	// /////////////////////////////////////////////////////////////////////////
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (!this.isInputStarted) {
-            return super.onKeyDown(selectedMethodPostion, event);
-        }
-        this.mConnection.finishComposingText();
-        this.mConnection.beginBatchEdit();
+		if (!this.isInputStarted) {
+			return super.onKeyDown(selectedMethodPostion, event);
+		}
+		this.mConnection.finishComposingText();
+		this.mConnection.beginBatchEdit();
 		mConnection.endBatchEdit();// 必须加上这个语句，要不然EditText可能会进入到BatchEdit模式，不会及时调用onSelectionupdate函数来更新光标信息，从而出错
 
 		state = HandleMetaKey.handleKeyDown(state, keyCode, event);
@@ -221,8 +211,8 @@ public class AutotextInputMethod extends InputMethodService {
 		}
 
 		if (keyCode == ConstantList.SUBSTITUTION_TRIGGER) {// 触发正向替换字符
-			isSelectModel = false;//退出选择模式
-			
+			isSelectModel = false;// 退出选择模式
+
 			// 如果是短按，接下来准备正向替换
 			mBeforeSubString = "";// 替换前的文本
 			mAfterSubString = new StringBuilder();// 替换后的文本
@@ -254,7 +244,7 @@ public class AutotextInputMethod extends InputMethodService {
 			}
 			char c;
 			for (offsetBefore = 1; offsetBefore <= candidateInput.length(); offsetBefore++) {// 从当前位置开始往前找
-				c = candidateInput.charAt(candidateInput.length() - offsetBefore);				
+				c = candidateInput.charAt(candidateInput.length() - offsetBefore);
 				if (c == ConstantList.SUBSTITUTION_SEPERRATOR || c == '\n') {// 如果找到了替换分隔符
 					break;
 				}
@@ -329,18 +319,18 @@ public class AutotextInputMethod extends InputMethodService {
 				offsetBefore = mConnection.getTextBeforeCursor(offsetBefore, 0).length();
 				mBeforeSubString = mConnection.getTextBeforeCursor(offsetBefore, 0).toString()
 						+ mConnection.getTextAfterCursor(offsetAfter, 0).toString();
-				
-				//处理以换行符作为分隔的情况，相当于是换行符就是最开头 
-	            final int length = mBeforeSubString.length();
-	            //Log.d("Here", "before = |" + this.mBeforeSubString + "|");
-	            for (int j = 0; j < length; ++j) {
-	                if (mBeforeSubString.charAt(length - 1 - j) == '\n') {
-	                    mBeforeSubString = mBeforeSubString.substring(length - j);
-	                    //Log.d("Here", "after = |" + mBeforeSubString + "|");
-	                    offsetBefore = mBeforeSubString.length();
-	                    break;
-	                }
-	            }
+
+				// 处理以换行符作为分隔的情况，相当于是换行符就是最开头
+				final int length = mBeforeSubString.length();
+				// Log.d("Here", "before = |" + this.mBeforeSubString + "|");
+				for (int j = 0; j < length; ++j) {
+					if (mBeforeSubString.charAt(length - 1 - j) == '\n') {
+						mBeforeSubString = mBeforeSubString.substring(length - j);
+						// Log.d("Here", "after = |" + mBeforeSubString + "|");
+						offsetBefore = mBeforeSubString.length();
+						break;
+					}
+				}
 
 				// 第二，记录替换块的信息，不能放到后面记录，因为mAfterSubString会变，可能需要加上空格
 				autotext.start = mStart - offsetBefore;
@@ -412,144 +402,131 @@ public class AutotextInputMethod extends InputMethodService {
 			// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTALL) {
 			// 全选
-			isSelectModel = true;			
+			isSelectModel = true;
 			mConnection.setSelection(0, mEnd + curOper.getAfterLength());
 			if (this.mConnection.getSelectedText(0) == null) {
-                this.isSelectModel = false;
-            }
+				this.isSelectModel = false;
+			}
 			mFromWhichEnd = FROMEND;
 			return true;
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTLINE) {
 			// 选一行
 			isSelectModel = true;
-            int toLineStart = this.curOper.getToLineStart(this.FROMSTART).length();
-            CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
-            this.mConnection.setSelection(mStart - toLineStart, mEnd + getToLineEnd.length() - curOper.getInvisibleCharsNumber(getToLineEnd));
-            if (this.mConnection.getSelectedText(0) == null) {
-                this.isSelectModel = false;
-            }
-            mFromWhichEnd = FROMEND;
+			int toLineStart = this.curOper.getToLineStart(this.FROMSTART).length();
+			CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
+			this.mConnection.setSelection(mStart - toLineStart, mEnd + getToLineEnd.length() - curOper.getInvisibleCharsNumber(getToLineEnd));
+			if (this.mConnection.getSelectedText(0) == null) {
+				this.isSelectModel = false;
+			}
+			mFromWhichEnd = FROMEND;
 			return true;
-		} else if(isCtrlPressed && keyCode == ConstantList.EDIT_SELECTMODEL){
-			//切换选择模式
-			if (isSelectModel) {//退出选择模式
-                isSelectModel = false;
-                if (mFromWhichEnd == FROMSTART) {
-                    mConnection.setSelection(mEnd, mEnd);
-                }
-                else {
-                    mConnection.setSelection(mStart, mStart);
-                }
-            }//接下来是进入选择模式
-			else if (this.mStart != this.mEnd) {//如果已经处于选择状态
-                this.mFromWhichEnd = this.FROMEND;
-                this.isSelectModel = true;
-            }
-            else if (this.mStart == 0 && this.curOper.getAfterLength() == 0) {//如果当前内容为空，则不进入选择状态
-                this.isSelectModel = false;
-            }
-            else if (this.curOper.getAfterLength() == 0) {//如果 有内容，同时后面已经没有内容了，则往前选一格标志进入选择状态
-                this.mConnection.setSelection(this.mEnd - 1, this.mEnd);
-                this.mFromWhichEnd = this.FROMSTART;
-                this.isSelectModel = true;
-            }
-            else {//如果有内容，并且 光标不在最后
-                this.mConnection.setSelection(this.mStart, this.mStart + 1);
-                this.mFromWhichEnd = this.FROMEND;
-                this.isSelectModel = true;
-            }
-            return true;
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTMODEL) {
+			// 切换选择模式
+			if (isSelectModel) {// 退出选择模式
+				isSelectModel = false;
+				if (mFromWhichEnd == FROMSTART) {
+					mConnection.setSelection(mEnd, mEnd);
+				} else {
+					mConnection.setSelection(mStart, mStart);
+				}
+			}// 接下来是进入选择模式
+			else if (this.mStart != this.mEnd) {// 如果已经处于选择状态
+				this.mFromWhichEnd = this.FROMEND;
+				this.isSelectModel = true;
+			} else if (this.mStart == 0 && this.curOper.getAfterLength() == 0) {// 如果当前内容为空，则不进入选择状态
+				this.isSelectModel = false;
+			} else if (this.curOper.getAfterLength() == 0) {// 如果
+															// 有内容，同时后面已经没有内容了，则往前选一格标志进入选择状态
+				this.mConnection.setSelection(this.mEnd - 1, this.mEnd);
+				this.mFromWhichEnd = this.FROMSTART;
+				this.isSelectModel = true;
+			} else {// 如果有内容，并且 光标不在最后
+				this.mConnection.setSelection(this.mStart, this.mStart + 1);
+				this.mFromWhichEnd = this.FROMEND;
+				this.isSelectModel = true;
+			}
+			return true;
 		}
-		//////选择模式////////////////
-		else if(!isCtrlPressed && isSelectModel){
+		// ////选择模式////////////////
+		else if (!isCtrlPressed && isSelectModel) {
 			if (keyCode == ConstantList.EDIT_SELECTALL) {
-				//全选
+				// 全选
 				mConnection.setSelection(0, mEnd + curOper.getAfterLength());
 				if (this.mConnection.getSelectedText(0) == null) {
-	                this.isSelectModel = false;
-	            }
+					this.isSelectModel = false;
+				}
 				mFromWhichEnd = FROMEND;
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_SELECTLINE) {
-				//选行
+			} else if (keyCode == ConstantList.EDIT_SELECTLINE) {
+				// 选行
 				int toLineStart = this.curOper.getToLineStart(this.FROMSTART).length();
-	            CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
-	            this.mConnection.setSelection(mStart - toLineStart, mEnd + getToLineEnd.length() - curOper.getInvisibleCharsNumber(getToLineEnd));
-	            if (this.mConnection.getSelectedText(0) == null) {
-	                this.isSelectModel = false;
-	            }
-	            mFromWhichEnd = FROMEND;
+				CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
+				this.mConnection.setSelection(mStart - toLineStart, mEnd + getToLineEnd.length() - curOper.getInvisibleCharsNumber(getToLineEnd));
+				if (this.mConnection.getSelectedText(0) == null) {
+					this.isSelectModel = false;
+				}
+				mFromWhichEnd = FROMEND;
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_UP) {
-				//选上一行
+			} else if (keyCode == ConstantList.EDIT_UP) {
+				// 选上一行
 				final CharSequence preLine = this.curOper.getPreLine(this.mFromWhichEnd);
-                if (!preLine.toString().equals("")) {
-                    selectedMethodPostion = this.curOper.getInvisibleCharsNumber(preLine);
-                    final int length2 = preLine.length();
-                    final int length3 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
-                    if (this.mFromWhichEnd == this.FROMSTART) {
-                        if (length2 - selectedMethodPostion < length3) {
-                            this.mStart = this.mStart - length3 - selectedMethodPostion;
-                        }
-                        else {
-                            this.mStart -= length2;
-                        }
-                    }
-                    else if (this.mFromWhichEnd == this.FROMEND) {
-                        if (length2 - selectedMethodPostion < length3) {
-                            this.mEnd = this.mEnd - length3 - selectedMethodPostion;
-                        }
-                        else {
-                            this.mEnd -= length2;
-                        }
-                        if (this.mEnd < this.mStart) {
-                            selectedMethodPostion = this.mStart;
-                            this.mStart = this.mEnd;
-                            this.mEnd = selectedMethodPostion;
-                            this.mFromWhichEnd = this.FROMSTART;
-                        }
-                    }
-                    this.mConnection.setSelection(this.mStart, this.mEnd);
-                }
+				if (!preLine.toString().equals("")) {
+					selectedMethodPostion = this.curOper.getInvisibleCharsNumber(preLine);
+					final int length2 = preLine.length();
+					final int length3 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
+					if (this.mFromWhichEnd == this.FROMSTART) {
+						if (length2 - selectedMethodPostion < length3) {
+							this.mStart = this.mStart - length3 - selectedMethodPostion;
+						} else {
+							this.mStart -= length2;
+						}
+					} else if (this.mFromWhichEnd == this.FROMEND) {
+						if (length2 - selectedMethodPostion < length3) {
+							this.mEnd = this.mEnd - length3 - selectedMethodPostion;
+						} else {
+							this.mEnd -= length2;
+						}
+						if (this.mEnd < this.mStart) {
+							selectedMethodPostion = this.mStart;
+							this.mStart = this.mEnd;
+							this.mEnd = selectedMethodPostion;
+							this.mFromWhichEnd = this.FROMSTART;
+						}
+					}
+					this.mConnection.setSelection(this.mStart, this.mEnd);
+				}
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_DOWN) {
-				//选下一行
+			} else if (keyCode == ConstantList.EDIT_DOWN) {
+				// 选下一行
 				final CharSequence nextLine = this.curOper.getNextLine(this.mFromWhichEnd);
-                if (!nextLine.toString().equals("")) {
-                    selectedMethodPostion = this.curOper.getInvisibleCharsNumber(nextLine);
-                    final int length4 = nextLine.length();
-                    final int length5 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
-                    final int length6 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
-                    if (this.mFromWhichEnd == this.FROMEND) {
-                        if (length4 - selectedMethodPostion < length6) {
-                            this.mEnd = this.mEnd + length5 + length4 - selectedMethodPostion;
-                        }
-                        else {
-                            this.mEnd = this.mEnd + length5 + length6;
-                        }
-                    }
-                    else if (this.mFromWhichEnd == this.FROMSTART) {
-                        if (length4 - selectedMethodPostion < length6) {
-                            this.mStart = this.mStart + length5 + length4 - selectedMethodPostion;
-                        }
-                        else {
-                            this.mStart = this.mStart + length5 + length6;
-                        }
-                        if (this.mStart > this.mEnd) {
-                            selectedMethodPostion = this.mEnd;
-                            this.mEnd = this.mStart;
-                            this.mStart = selectedMethodPostion;
-                            this.mFromWhichEnd = this.FROMEND;
-                        }
-                    }
-                    this.mConnection.setSelection(this.mStart, this.mEnd);
-                }
+				if (!nextLine.toString().equals("")) {
+					selectedMethodPostion = this.curOper.getInvisibleCharsNumber(nextLine);
+					final int length4 = nextLine.length();
+					final int length5 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
+					final int length6 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
+					if (this.mFromWhichEnd == this.FROMEND) {
+						if (length4 - selectedMethodPostion < length6) {
+							this.mEnd = this.mEnd + length5 + length4 - selectedMethodPostion;
+						} else {
+							this.mEnd = this.mEnd + length5 + length6;
+						}
+					} else if (this.mFromWhichEnd == this.FROMSTART) {
+						if (length4 - selectedMethodPostion < length6) {
+							this.mStart = this.mStart + length5 + length4 - selectedMethodPostion;
+						} else {
+							this.mStart = this.mStart + length5 + length6;
+						}
+						if (this.mStart > this.mEnd) {
+							selectedMethodPostion = this.mEnd;
+							this.mEnd = this.mStart;
+							this.mStart = selectedMethodPostion;
+							this.mFromWhichEnd = this.FROMEND;
+						}
+					}
+					this.mConnection.setSelection(this.mStart, this.mEnd);
+				}
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_BACK) {
+			} else if (keyCode == ConstantList.EDIT_BACK) {
 				// // 往左选
 				if (mStart != mEnd && mFromWhichEnd == 1) {// 如果光标处于选择状态，并且标记位表明应该移动结束位
 					mEnd = (mEnd - 1) < 0 ? 0 : mEnd - 1;
@@ -570,27 +547,32 @@ public class AutotextInputMethod extends InputMethodService {
 				}
 				mConnection.setSelection(mStart, mEnd);
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_TOLINESTART) {
-				//选到行头
+			} else if (keyCode == ConstantList.EDIT_TOLINESTART) {
+				// 选到行头
 				if (this.mFromWhichEnd == this.FROMSTART) {
-                    this.mConnection.setSelection(this.mStart - this.curOper.getToLineStart(this.FROMSTART).length(), this.mEnd);
-                }
-                else {
-                    this.mConnection.setSelection(this.mStart - this.curOper.getToLineStart(this.FROMSTART).length(), this.mStart);
-                    this.mFromWhichEnd = this.FROMSTART;
-                }
+					this.mConnection.setSelection(this.mStart - this.curOper.getToLineStart(this.FROMSTART).length(), this.mEnd);
+				} else {
+					this.mConnection.setSelection(this.mStart - this.curOper.getToLineStart(this.FROMSTART).length(), this.mStart);
+					this.mFromWhichEnd = this.FROMSTART;
+				}
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_TOLINEEND) {
-				//选到行尾
+			} else if (keyCode == ConstantList.EDIT_TOLINEEND) {
+				// 选到行尾
 				if (this.mFromWhichEnd == this.FROMSTART) {
-                    this.mConnection.setSelection(this.mEnd, this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length() - this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND)));
-                    this.mFromWhichEnd = this.FROMEND;
-                }
+					this.mConnection.setSelection(
+							this.mEnd,
+							this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length()
+									- this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND)));
+					this.mFromWhichEnd = this.FROMEND;
+				} else {
+					this.mConnection.setSelection(
+							this.mStart,
+							this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length()
+									- this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND)));
+					this.mFromWhichEnd = this.FROMEND;
+				}
 				return true;
-			}
-			else if (keyCode == ConstantList.EDIT_TOSTART) {
+			} else if (keyCode == ConstantList.EDIT_TOSTART) {
 				// 选到头
 				// mConnection.setSelection(0, mEnd);
 				mConnection.setSelection(0, mEnd);
@@ -601,82 +583,82 @@ public class AutotextInputMethod extends InputMethodService {
 				mConnection.setSelection(mStart, mEnd + curOper.getAfterLength());
 				mFromWhichEnd = 1;// 如果是往前选到头，接下来移动光标当然应该是移动结束位
 				return true;
-			} 
+			}
 		}
-		//////////选择模式结束//////////////////
-		
-		//////////移动快捷键///////////////////
+		// ////////选择模式结束//////////////////
+
+		// ////////移动快捷键///////////////////
 		else if (isCtrlPressed && keyCode == ConstantList.EDIT_UP) {
-			//向上
+			// 向上
 			isSelectModel = false;
-//			Log.d("Here", "LINE START FROM START = " + "|" + curOper.getToLineStart(FROMSTART) + "|");
-//			Log.d("Here", "LINE START FROM END= " + "|" + curOper.getToLineStart(FROMEND) + "|");
-//			Log.d("Here", "UP FROMSTART = " + "|" + curOper.getPreLine(FROMSTART) + "|");
-//			Log.d("Here", "UP FROMEND = " + "|" + curOper.getPreLine(FROMEND) + "|");	
-			 final CharSequence preLine2 = this.curOper.getPreLine(this.mFromWhichEnd);
-             if (!preLine2.toString().equals("")) {
-                 selectedMethodPostion = this.curOper.getInvisibleCharsNumber(preLine2);
-                 final int length7 = preLine2.length();
-                 final int length8 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
-                 if (this.mFromWhichEnd == this.FROMSTART) {
-                     if (length7 - selectedMethodPostion < length8) {
-                         this.mStart = this.mStart - length8 - selectedMethodPostion;
-                     }
-                     else {
-                         this.mStart -= length7;
-                     }
-                     this.mConnection.setSelection(this.mStart, this.mStart);
-                 }
-                 else if (this.mFromWhichEnd == this.FROMEND) {
-                     if (length7 - selectedMethodPostion < length8) {
-                         this.mEnd = this.mEnd - length8 - selectedMethodPostion;
-                     }
-                     else {
-                         this.mEnd -= length7;
-                     }
-                     this.mConnection.setSelection(this.mEnd, this.mEnd);
-                 }
-             }
+			// Log.d("Here", "LINE START FROM START = " + "|" +
+			// curOper.getToLineStart(FROMSTART) + "|");
+			// Log.d("Here", "LINE START FROM END= " + "|" +
+			// curOper.getToLineStart(FROMEND) + "|");
+			// Log.d("Here", "UP FROMSTART = " + "|" +
+			// curOper.getPreLine(FROMSTART) + "|");
+			// Log.d("Here", "UP FROMEND = " + "|" + curOper.getPreLine(FROMEND)
+			// + "|");
+			final CharSequence preLine2 = this.curOper.getPreLine(this.mFromWhichEnd);
+			if (!preLine2.toString().equals("")) {
+				selectedMethodPostion = this.curOper.getInvisibleCharsNumber(preLine2);
+				final int length7 = preLine2.length();
+				final int length8 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
+				if (this.mFromWhichEnd == this.FROMSTART) {
+					if (length7 - selectedMethodPostion < length8) {
+						this.mStart = this.mStart - length8 - selectedMethodPostion;
+					} else {
+						this.mStart -= length7;
+					}
+					this.mConnection.setSelection(this.mStart, this.mStart);
+				} else if (this.mFromWhichEnd == this.FROMEND) {
+					if (length7 - selectedMethodPostion < length8) {
+						this.mEnd = this.mEnd - length8 - selectedMethodPostion;
+					} else {
+						this.mEnd -= length7;
+					}
+					this.mConnection.setSelection(this.mEnd, this.mEnd);
+				}
+			}
 
 			return true;
-		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DOWN) {
-			//向下
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DOWN) {
+			// 向下
 			isSelectModel = false;
-//			Log.d("Here", "LINE END FROM START = " + "|" + curOper.getToLineEnd(FROMSTART) + "|");
-//			Log.d("Here", "LINE END FROM END= " + "|" + curOper.getToLineEnd(FROMEND) + "|");
-//			Log.d("Here", "DOWN FROMSTART = " + "|" + curOper.getNextLine(FROMSTART) + "|");
-//			Log.d("Here", "DOWN FROMEND = " + "|" + curOper.getNextLine(FROMEND) + "|");	
-			 final CharSequence nextLine2 = this.curOper.getNextLine(this.mFromWhichEnd);
-             if (!nextLine2.toString().equals("")) {
-                 selectedMethodPostion = this.curOper.getInvisibleCharsNumber(nextLine2);
-                 final int length9 = nextLine2.length();
-                 final int length10 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
-                 final int length11 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
-                 if (this.mFromWhichEnd == this.FROMEND) {
-                     if (length9 - selectedMethodPostion < length11) {
-                         this.mEnd = this.mEnd + length10 + length9 - selectedMethodPostion;
-                     }
-                     else {
-                         this.mEnd = this.mEnd + length10 + length11;
-                     }
-                     this.mConnection.setSelection(this.mEnd, this.mEnd);
-                 }
-                 else if (this.mFromWhichEnd == this.FROMSTART) {
-                     if (length9 - selectedMethodPostion < length11) {
-                         this.mStart = this.mStart + length10 + length9 - selectedMethodPostion;
-                     }
-                     else {
-                         this.mStart = this.mStart + length10 + length11;
-                     }
-                     this.mConnection.setSelection(this.mStart, this.mStart);
-                 }
-             }
-             this.mConnection.setSelection(this.mEnd, this.mEnd);
+			// Log.d("Here", "LINE END FROM START = " + "|" +
+			// curOper.getToLineEnd(FROMSTART) + "|");
+			// Log.d("Here", "LINE END FROM END= " + "|" +
+			// curOper.getToLineEnd(FROMEND) + "|");
+			// Log.d("Here", "DOWN FROMSTART = " + "|" +
+			// curOper.getNextLine(FROMSTART) + "|");
+			// Log.d("Here", "DOWN FROMEND = " + "|" +
+			// curOper.getNextLine(FROMEND) + "|");
+			final CharSequence nextLine2 = this.curOper.getNextLine(this.mFromWhichEnd);
+			if (!nextLine2.toString().equals("")) {
+				selectedMethodPostion = this.curOper.getInvisibleCharsNumber(nextLine2);
+				final int length9 = nextLine2.length();
+				final int length10 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
+				final int length11 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
+				if (this.mFromWhichEnd == this.FROMEND) {
+					if (length9 - selectedMethodPostion < length11) {
+						this.mEnd = this.mEnd + length10 + length9 - selectedMethodPostion;
+					} else {
+						this.mEnd = this.mEnd + length10 + length11;
+					}
+					this.mConnection.setSelection(this.mEnd, this.mEnd);
+				} else if (this.mFromWhichEnd == this.FROMSTART) {
+					if (length9 - selectedMethodPostion < length11) {
+						this.mStart = this.mStart + length10 + length9 - selectedMethodPostion;
+					} else {
+						this.mStart = this.mStart + length10 + length11;
+					}
+					this.mConnection.setSelection(this.mStart, this.mStart);
+				}
+			}
+			this.mConnection.setSelection(this.mEnd, this.mEnd);
 
 			return true;
-		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_BACK) {
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_BACK) {
 			// 向左移
 			isSelectModel = false;
 			int pos = mStart != mEnd ? mStart : mStart - 1;
@@ -695,69 +677,68 @@ public class AutotextInputMethod extends InputMethodService {
 			// curOper.moveCursorTo(pos, mStart, mEnd);
 			mConnection.setSelection(pos, pos);
 			return true;
-		}		
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINESTART) {
-			//移到行头
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINESTART) {
+			// 移到行头
 			isSelectModel = false;
 			selectedMethodPostion = this.curOper.getToLineStart(this.FROMSTART).length();
-            this.mConnection.setSelection(this.mStart - selectedMethodPostion, this.mStart - selectedMethodPostion);
-            this.mFromWhichEnd = this.FROMEND;
+			this.mConnection.setSelection(this.mStart - selectedMethodPostion, this.mStart - selectedMethodPostion);
+			this.mFromWhichEnd = this.FROMEND;
 			return true;
-		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINEEND) {
-			//移到行尾
-			 selectedMethodPostion = this.curOper.getToLineEnd(this.FROMEND).length();
-             this.mEnd = this.mEnd + selectedMethodPostion - this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND));
-             this.mConnection.setSelection(this.mEnd, this.mEnd);
-             this.mFromWhichEnd = this.FROMEND;
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINEEND) {
+			// 移到行尾
+			selectedMethodPostion = this.curOper.getToLineEnd(this.FROMEND).length();
+			this.mEnd = this.mEnd + selectedMethodPostion - this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND));
+			this.mConnection.setSelection(this.mEnd, this.mEnd);
+			this.mFromWhichEnd = this.FROMEND;
 			isSelectModel = false;
 			return true;
-		}
-		else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOSTART) {
+		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOSTART) {
 			// 移到头
 			isSelectModel = false;
 			// curOper.moveCursorTo(0, mStart, mEnd);
 			mConnection.setSelection(0, 0);
 			return true;
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOEND) {
-			//移到尾
+			// 移到尾
 			isSelectModel = false;
 			int totalLength = mEnd + curOper.getAfterLength();
 			// curOper.moveCursorTo(totalLength, mStart, mEnd);
 			mConnection.setSelection(totalLength, totalLength);
 			return true;
-		} 
-		///////////移动快捷键结束///////////////
-		
-		//////////删除快捷键开始////////////////
+		}
+		// /////////移动快捷键结束///////////////
+
+		// ////////删除快捷键开始////////////////
 		else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEALL) {
-				// // 删除全部内容OKKKKKKKKKKKKKK
+			// // 删除全部内容OKKKKKKKKKKKKKK
 			isSelectModel = false;
-				mConnection.setSelection(mStart, mStart);// 这样可以确保光标不会处于选择状态
-				int afterLength = curOper.getAfterLength();
-				mUndoSubString = mConnection.getTextBeforeCursor(mStart + 1, 0).toString() + mConnection.getTextAfterCursor(afterLength, 0).toString();
-				mConnection.deleteSurroundingText(mStart + 1, afterLength);
-				mConnection.setSelection(0, 0);
-				return true;			 
+			mConnection.setSelection(mStart, mStart);// 这样可以确保光标不会处于选择状态
+			int afterLength = curOper.getAfterLength();
+			mUndoSubString = mConnection.getTextBeforeCursor(mStart + 1, 0).toString() + mConnection.getTextAfterCursor(afterLength, 0).toString();
+			mConnection.deleteSurroundingText(mStart + 1, afterLength);
+			mConnection.setSelection(0, 0);
+			return true;
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETELINE) {
 			// 删除行
 			isSelectModel = false;
 			selectedMethodPostion = this.curOper.getToLineStart(this.FROMSTART).length();
-            this.mConnection.setSelection(this.mStart - selectedMethodPostion, this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length());
-            if (this.mConnection.getSelectedText(0) == null) {
-                this.isSelectModel = false;
-            }
-            return true;
+			this.mConnection.setSelection(this.mStart - selectedMethodPostion, this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length());
+			if (this.mConnection.getSelectedText(0) == null) {
+				this.isSelectModel = false;
+			} else {
+				mUndoSubString = (String) mConnection.getSelectedText(0);
+			}
+			return true;
 		} else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEFORWARD) {
 			// 删除后面一个字符
 			isSelectModel = false;
 			mUndoSubString = mConnection.getTextAfterCursor(1, 0).toString();
 			mConnection.deleteSurroundingText(0, 1);
 			return true;
-		} 
-		///////////删除快捷键结束/////////////////
-		
-		//////////其他快捷键开始//////////////////
+		}
+		// /////////删除快捷键结束/////////////////
+
+		// ////////其他快捷键开始//////////////////
 		else if (isCtrlPressed && keyCode == ConstantList.EDIT_UNDO) {
 			// undo功能
 			isSelectModel = false;
@@ -808,7 +789,7 @@ public class AutotextInputMethod extends InputMethodService {
 				mConnection.performContextMenuAction(android.R.id.cut);
 			}
 			return true;
-		} else if (isAltPressed && keyCode == ConstantList.SWITCH_INPUTMETHOD) {
+		} else if (isCtrlPressed && keyCode == ConstantList.SWITCH_INPUTMETHOD) {
 			// 切换输入法的快捷键
 			// InputMethodManager imm = (InputMethodManager)
 			// this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -845,34 +826,35 @@ public class AutotextInputMethod extends InputMethodService {
 			dboper.addOrSaveMethodItem(methodItemList.get(selectedMethodPostion).getName(), MethodItem.DEFAULT, defaultMethodId);
 			Toast.makeText(this, methodItemList.get(selectedMethodPostion).getName(), TOASTDURATION).show();
 			return true;
-		} 
-        //////////其他快捷键结束//////////////////
+		}
+		// ////////其他快捷键结束//////////////////
 		else if (isSymPressed) {// 暂时什么都不做！！
 			// Log.d("Here", "sym pressed there");
 			// return false;
 			isSelectModel = false;
-			GenAutotext ga = new GenAutotext();
-			String s = "ji$,几,暂,时,什,么,都,不,做,好,来,几,暂,时,什,么,都,不,做,好,来";
-			ga.gen(s);
-			ArrayList<String> input = ga.getInputList();
-			ArrayList<String> autotext = ga.getAutotextList();
+			if (keyCode == KeyEvent.KEYCODE_0) {// 往前翻页
+				this.symBoardTurn(stickerStartPosition, PRE);
+				state |= KeyEvent.META_SYM_ON | HandleMetaKey.META_SYM_RELEASED;
+				return true;
+			}
 
-			for (int i = 0; i < input.size(); i++) {
-				Log.d("Here", input.get(i) + "," + autotext.get(i));
+			String temp = sb.getSticker(keyCode);
+			if (!temp.equals("NONE")) {
+				mConnection.commitText(temp, 1);
 			}
 			return true;
 		} else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
 			isSelectModel = false;
 			mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
 		} else {
-			
+
 			KeyCharacterMap kcm = event.getKeyCharacterMap();
 			// //Log.d("Here", String.valueOf(kcm.getModifierBehavior()));
 			if (kcm.isPrintingKey(keyCode)) {
 
 				if (isCtrlPressed)// 说明正处于快捷命令模式中
 					return true;
-				
+
 				isSelectModel = false;
 				char c;
 				if (event.getRepeatCount() == 0) {// 短按
@@ -908,10 +890,15 @@ public class AutotextInputMethod extends InputMethodService {
 		// String.valueOf(Integer.toBinaryString(event.getFlags())));
 
 		state = HandleMetaKey.handleKeyUp(state, keyCode, event);
+
+		if (isSymPressed && (state & HandleMetaKey.META_SYM_TURNPAGE) != 0 && (state & HandleMetaKey.META_SYM_RELEASED) != 0) {// 说明表情小键盘要翻页
+			// 翻页
+			this.symBoardTurn(stickerStartPosition, NEXT);
+		}
+
 		// Log.d("Here", "uphandled=" + Long.toBinaryString(state));
 		mMetaState = HandleMetaKey.getMetaState(state) | event.getMetaState();
 		handleStatusIcon(mMetaState);
-
 		return super.onKeyUp(keyCode, event);
 	}
 
@@ -959,10 +946,33 @@ public class AutotextInputMethod extends InputMethodService {
 		if ((mMetaState & KeyEvent.META_SYM_ON) != 0) {// 按了sym键
 			// Log.d("Here", "sym true");
 			isSymPressed = true;
+
 		} else {
 			// Log.d("Here", "sym false");
 			isSymPressed = false;
+
 		}
+
+		if ((state & HandleMetaKey.META_SYM_TURNPAGE) != 0) {// 说明表情小键盘要翻页
+			this.symBoardTurn(stickerStartPosition, NEXT);
+		}
+	}
+
+	// 用于表情键盘的翻页
+	private void symBoardTurn(int stickerStartPosition2, boolean turnDirection) {
+		if (turnDirection == PRE) {// 往前翻页
+			stickerStartPosition -= 2 * sb.getStickerNumbersPerPage();
+			if (stickerStartPosition < 0)
+				stickerStartPosition = 0;
+		}
+
+		sb.setStickerKeyboard(stickerStartPosition);
+		stickerStartPosition += sb.getStickerNumbersPerPage();
+		if (stickerStartPosition >= sb.getEmojiNumbers())
+			stickerStartPosition = 0;
+
+		// 清空
+		state &= ~HandleMetaKey.META_SYM_TURNPAGE;
 	}
 
 	// /////////////////////////////////////////////
@@ -970,24 +980,32 @@ public class AutotextInputMethod extends InputMethodService {
 		// Log.d("Here", "handleStatusIcon = " +
 		// String.valueOf(Integer.toBinaryString(mMetaState)));
 		CurrentStatusIcon icon;
-		if ((mMetaState & 0x100) != 0) {// cap locked
-			icon = CurrentStatusIcon.CAP_LOCK;
-		} else if ((mMetaState & KeyEvent.META_SHIFT_RIGHT_ON) != 0) {// cap on
-			icon = CurrentStatusIcon.CAP_ON;
-		} else if ((mMetaState & 0x200) != 0) {// alt locked
-			icon = CurrentStatusIcon.ALT_LOCK;
-		} else if ((mMetaState & KeyEvent.META_ALT_ON) != 0) {// alt on
-			icon = CurrentStatusIcon.ALT_ON;
-		} else if ((mMetaState & 0x400) != 0) {// sym locked
-			icon = CurrentStatusIcon.SYM_LOCK;
-		} else if ((mMetaState & KeyEvent.META_SYM_ON) != 0) {// sym on
+		if ((mMetaState & KeyEvent.META_SYM_ON) != 0) {// sym on
 			icon = CurrentStatusIcon.SYM_ON;
-		} else if ((mMetaState & 0x800) != 0) {// ctrl locked
-			icon = CurrentStatusIcon.NEWSIM_LOCK;
-		} else if ((mMetaState & KeyEvent.META_SHIFT_LEFT_ON) != 0) {// ctrl on
-			icon = CurrentStatusIcon.NEWSIM_ON;
+			// Log.d("Here", String.valueOf(stickerStartPosition));
+			this.setCandidatesViewShown(true);// 显示表情小键盘
 		} else {
-			icon = CurrentStatusIcon.NORMAL;
+			this.setCandidatesViewShown(false);// 关闭表情小键盘
+			stickerStartPosition = 0;
+			if ((mMetaState & 0x100) != 0) {// cap locked
+				icon = CurrentStatusIcon.CAP_LOCK;
+			} else if ((mMetaState & KeyEvent.META_SHIFT_RIGHT_ON) != 0) {// cap
+																			// on
+				icon = CurrentStatusIcon.CAP_ON;
+			} else if ((mMetaState & 0x200) != 0) {// alt locked
+				icon = CurrentStatusIcon.ALT_LOCK;
+			} else if ((mMetaState & KeyEvent.META_ALT_ON) != 0) {// alt on
+				icon = CurrentStatusIcon.ALT_ON;
+			} else if ((mMetaState & 0x400) != 0) {// sym locked
+				icon = CurrentStatusIcon.SYM_LOCK;
+			} else if ((mMetaState & 0x800) != 0) {// ctrl locked
+				icon = CurrentStatusIcon.NEWSIM_LOCK;
+			} else if ((mMetaState & KeyEvent.META_SHIFT_LEFT_ON) != 0) {// ctrl
+																			// on
+				icon = CurrentStatusIcon.NEWSIM_ON;
+			} else {
+				icon = CurrentStatusIcon.NORMAL;
+			}
 		}
 
 		if (curStatusIcon != icon) {
@@ -1013,4 +1031,5 @@ public class AutotextInputMethod extends InputMethodService {
 			return iconId;
 		}
 	}
+
 }
