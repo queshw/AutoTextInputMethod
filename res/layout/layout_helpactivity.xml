@@ -1,16 +1,24 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/help_textview_layout_helpactvity"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:enabled="true"  
-        android:textIsSelectable="true"
-        android:focusable="true" 
-        android:text="@string/help"
-         />
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/mygreen"
+        app:tabSelectedTextColor="@color/mygreen"
+        app:tabTextColor="#FF000000"
+        app:tabMode="scrollable"
+        app:tabGravity="center"/>
 
-</ScrollView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
