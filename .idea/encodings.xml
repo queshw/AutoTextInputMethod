@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextinputmethod/Autotext.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextinputmethod/AutotextInputMethod.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextinputmethod/ConstantList.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextinputmethod/CursorOperator.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextinputmethod/EmojiBoard.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextinputmethod/HandleMetaKey.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/DBHelper.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/DBOperations.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/FilePickerActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/FilePickerAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/HelpActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/ImportDefaultActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/MethodItem.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/MethodsAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/MethodsListActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/RawActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/RawAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/autotextInputMethod/src/main/java/cn/queshw/autotextsetting/RawItem.java" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

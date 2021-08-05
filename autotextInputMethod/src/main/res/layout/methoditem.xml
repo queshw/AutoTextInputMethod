@@ -1,0 +1,76 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:id="@+id/linearlayout_methoditem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/default_imageview_methoditem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/isdefault"
+            android:padding="@dimen/padding"
+            android:src="@drawable/ok" />
+
+        <TextView
+            android:id="@+id/name_textview_methoditem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:hint="@string/method_name"
+            android:padding="@dimen/padding"
+            android:textSize="@dimen/textsize" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/slidemenu_linearlayout_methoditem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+
+        <ImageView
+            android:id="@+id/delete_imageview_methoditem"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/lightred"
+            android:contentDescription="@string/delete"
+            android:scaleType="fitXY"
+            android:src="@drawable/delete"
+            android:padding="@dimen/padding" />
+
+        <ImageView
+            android:id="@+id/edit_imageview_methoditem"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/delete_imageview_methoditem"
+            android:background="@color/lightgreen"
+            android:contentDescription="@string/edit"
+            android:scaleType="fitXY"
+            android:src="@drawable/edit"
+            android:padding="@dimen/padding" />
+                
+                <ImageView
+            android:id="@+id/isdefalut_imageview_methoditem"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/edit_imageview_methoditem"
+            android:background="@color/myyellow"
+            android:contentDescription="@string/isdefault"
+            android:scaleType="fitXY"
+            android:src="@drawable/ok"
+            android:padding="@dimen/padding" />
+    </RelativeLayout>
+
+</FrameLayout>
