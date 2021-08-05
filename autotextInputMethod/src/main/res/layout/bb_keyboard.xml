@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightGray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/ImageView_status"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:focusable="false"
+            android:src="@drawable/status_normal" />
+
+        <TextView
+            android:id="@+id/textView_inputmethod"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:focusable="false"
+            android:gravity="center"
+            android:text="@string/msg7"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/ImageView_setting"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/setting" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bb_keyboard_keyonly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:background="@color/lightGray"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <ImageButton
+                android:id="@+id/button_q"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_q"
+                android:tag="45" />
+
+            <ImageButton
+                android:id="@+id/button_w"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_w"
+                android:tag="51" />
+
+            <ImageButton
+                android:id="@+id/button_e"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_e"
+                android:tag="33" />
+
+            <ImageButton
+                android:id="@+id/button_r"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_r"
+                android:tag="46" />
+
+            <ImageButton
+                android:id="@+id/button_t"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_t"
+                android:tag="48" />
+
+            <ImageButton
+                android:id="@+id/button_y"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_y"
+                android:tag="53" />
+
+            <ImageButton
+                android:id="@+id/button_u"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_u"
+                android:tag="49" />
+
+            <ImageButton
+                android:id="@+id/button_i"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_i"
+                android:tag="37" />
+
+            <ImageButton
+                android:id="@+id/button_o"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_o"
+                android:tag="43" />
+
+            <ImageButton
+                android:id="@+id/button_p"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginLeft="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_p"
+                android:tag="44" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <ImageButton
+                android:id="@+id/button_a"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_a"
+                android:tag="29" />
+
+            <ImageButton
+                android:id="@+id/button_s"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_s"
+                android:tag="47" />
+
+            <ImageButton
+                android:id="@+id/button_d"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_d"
+                android:tag="32" />
+
+            <ImageButton
+                android:id="@+id/button_f"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_f"
+                android:tag="34" />
+
+            <ImageButton
+                android:id="@+id/button_g"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_g"
+                android:tag="35" />
+
+            <ImageButton
+                android:id="@+id/button_h"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_h"
+                android:tag="36" />
+
+            <ImageButton
+                android:id="@+id/button_j"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_j"
+                android:tag="38" />
+
+            <ImageButton
+                android:id="@+id/button_k"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_k"
+                android:tag="39" />
+
+            <ImageButton
+                android:id="@+id/button_l"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_l"
+                android:tag="40" />
+
+            <ImageButton
+                android:id="@+id/button_delete"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginLeft="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_delete"
+                android:tag="67" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <ImageButton
+                android:id="@+id/button_alt"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="false"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_alt"
+                android:tag="57" />
+
+            <ImageButton
+                android:id="@+id/button_z"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_z"
+                android:tag="54" />
+
+            <ImageButton
+                android:id="@+id/button_x"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_x"
+                android:tag="52" />
+
+            <ImageButton
+                android:id="@+id/button_c"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_c"
+                android:tag="31" />
+
+            <ImageButton
+                android:id="@+id/button_v"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_v"
+                android:tag="50" />
+
+            <ImageButton
+                android:id="@+id/button_b"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_b"
+                android:tag="30" />
+
+            <ImageButton
+                android:id="@+id/button_n"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_n"
+                android:tag="42" />
+
+            <ImageButton
+                android:id="@+id/button_m"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_m"
+                android:tag="41" />
+
+            <ImageButton
+                android:id="@+id/button_dolla"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_dolla"
+                android:tag="71" />
+
+            <ImageButton
+                android:id="@+id/button_enter"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginLeft="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_enter"
+                android:tag="66" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="10"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/button_ctrl"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="15"
+                android:longClickable="false"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_ctrl"
+                android:tag="59" />
+
+            <ImageButton
+                android:id="@+id/button_0"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="15"
+                android:longClickable="false"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_0"
+                android:tag="7" />
+
+            <ImageButton
+                android:id="@+id/button_space"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="45"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:tag="62" />
+
+            <ImageButton
+                android:id="@+id/button_emoji"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="15"
+                android:longClickable="false"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/key_emoji"
+                android:tag="63" />
+
+            <ImageButton
+                android:id="@+id/button_cap"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="15"
+                android:longClickable="false"
+                android:padding="5dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/bb_keyboard_color_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/status_cap"
+                android:tag="60" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="10"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clickable="false"
+            android:visibility="invisible" />
+    </LinearLayout>
+</LinearLayout>
