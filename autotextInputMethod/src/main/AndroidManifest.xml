@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="cn.queshw.autotextinputmethod"
-    android:versionCode="102"
+    android:versionCode="105"
     android:versionName="5.3"
     >
 

@@ -9,13 +9,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     
-    <dimen name="key_height">50dip</dimen>
-    
-    <dimen name="sym_keyboard_leyout_tablepadding">3dp</dimen>
+    <dimen name="sym_keyboard_key_height">45dp</dimen>
+    <dimen name="sym_keyboard_leyout_tablepadding">2dp</dimen>
     <dimen name="sym_keyboard_leyout_keypadding">2dp</dimen>
-    
     <dimen name="sym_keyboard_leyout_keytextsize">10sp</dimen>
     <dimen name="sym_keyboard_leyout_stickertextsize">16sp</dimen>
-    
-    <dimen name="sym_keyboard_leyout_margin">2dp</dimen>
+    <dimen name="sym_keyboard_leyout_margin">1dp</dimen>
+
+    <dimen name="bb_keyboard_key_height">45dp</dimen>
+    <dimen name="bb_keyboard_leyout_padding">2dp</dimen>
+    <dimen name="bb_keyboard_leyout_nomal_margin">2dp</dimen>
+    <dimen name="bb_keyboard_leyout_edge_margin">5dp</dimen>
 </resources>
