@@ -48,77 +48,6 @@ public class BBkeyboardMap {
         
         keycode.add(KeyEvent.KEYCODE_0);
         keycode.add(KeyEvent.KEYCODE_LEFT_BRACKET);//自定义的 $  这个符号的值
-        
-        
-        
-        altKeys.add('*');
-        altKeys.add('!');
-        altKeys.add('9');
-        altKeys.add('5');
-        altKeys.add('2');
-        altKeys.add('6');
-        altKeys.add('/');
-
-        altKeys.add(':');
-        altKeys.add('-');
-        altKeys.add(';');
-        altKeys.add('\'');
-        altKeys.add('"');
-        altKeys.add('.');
-        altKeys.add(',');
-        
-        altKeys.add('+');
-        altKeys.add('@');
-        altKeys.add('#');
-        altKeys.add('3');
-        altKeys.add('4');
-        altKeys.add('(');
-        
-        altKeys.add('_');
-        altKeys.add('?');
-        altKeys.add('1');
-        altKeys.add('8');
-        altKeys.add(')');
-        altKeys.add('7');
-        
-        altKeys.add('\\');
-        altKeys.add('%');
-        
-        
-        
-        capKeys.add('A');
-        capKeys.add('B');
-        capKeys.add('C');
-        capKeys.add('D');
-        capKeys.add('E');
-        capKeys.add('F');
-        capKeys.add('G');
-
-        capKeys.add('H');
-        capKeys.add('I');
-        capKeys.add('J');
-        capKeys.add('K');
-        capKeys.add('L');
-        capKeys.add('M');
-        capKeys.add('N');
-
-        capKeys.add('O');
-        capKeys.add('P');
-        capKeys.add('Q');
-        capKeys.add('R');
-        capKeys.add('S');
-        capKeys.add('T');
-        
-        capKeys.add('U');
-        capKeys.add('V');
-        capKeys.add('W');
-        capKeys.add('X');
-        capKeys.add('Y');
-        capKeys.add('Z');
-        
-        capKeys.add('0');
-        capKeys.add('$');
-
 
         normalKeys.add('a');
         normalKeys.add('b');
@@ -150,8 +79,78 @@ public class BBkeyboardMap {
         normalKeys.add('y');
         normalKeys.add('z');
 
-        normalKeys.add('0');
+        normalKeys.add('&');
         normalKeys.add('$');
+
+        capKeys.add('A');
+        capKeys.add('B');
+        capKeys.add('C');
+        capKeys.add('D');
+        capKeys.add('E');
+        capKeys.add('F');
+        capKeys.add('G');
+
+        capKeys.add('H');
+        capKeys.add('I');
+        capKeys.add('J');
+        capKeys.add('K');
+        capKeys.add('L');
+        capKeys.add('M');
+        capKeys.add('N');
+
+        capKeys.add('O');
+        capKeys.add('P');
+        capKeys.add('Q');
+        capKeys.add('R');
+        capKeys.add('S');
+        capKeys.add('T');
+
+        capKeys.add('U');
+        capKeys.add('V');
+        capKeys.add('W');
+        capKeys.add('X');
+        capKeys.add('Y');
+        capKeys.add('Z');
+
+        capKeys.add('&');
+        capKeys.add('$');
+
+
+
+        altKeys.add('*');
+        altKeys.add('!');
+        altKeys.add('9');
+        altKeys.add('5');
+        altKeys.add('2');
+        altKeys.add('6');
+        altKeys.add('/');
+
+        altKeys.add(':');
+        altKeys.add('-');
+        altKeys.add(';');
+        altKeys.add('\'');
+        altKeys.add('"');
+        altKeys.add('.');
+        altKeys.add(',');
+        
+        altKeys.add('+');
+        altKeys.add('@');
+        altKeys.add('#');
+        altKeys.add('3');
+        altKeys.add('4');
+        altKeys.add('(');
+        
+        altKeys.add('_');
+        altKeys.add('?');
+        altKeys.add('1');
+        altKeys.add('8');
+        altKeys.add(')');
+        altKeys.add('7');
+        
+        altKeys.add('0');
+        altKeys.add('%');
+        
+
     }
     //根据按键 和 功能键的状态 来获取字符
     char getCharactor(int code, boolean isAltPressed, boolean isCapPressed){

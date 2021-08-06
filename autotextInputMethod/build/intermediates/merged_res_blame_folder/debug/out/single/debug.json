@@ -44,12 +44,12 @@
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\layout\\rawitem.xml"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_key_l.png.flat",
-        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\key_l.png"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_key_z.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\key_z.png"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_key_l.png.flat",
+        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\key_l.png"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_file.png.flat",
@@ -68,12 +68,12 @@
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\key_alt.png"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_delete.png.flat",
-        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\delete.png"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi_status_cap_lock.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\status_cap_lock.png"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_delete.png.flat",
+        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\delete.png"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_key_q.png.flat",
@@ -92,36 +92,36 @@
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-xxhdpi\\status_sym.png"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi_status_sym.png.flat",
-        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\status_sym.png"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_status_cap.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-hdpi\\status_cap.png"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi_status_sym.png.flat",
+        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\status_sym.png"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_launcher.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-xhdpi\\ic_launcher.png"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_setting.png.flat",
-        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-hdpi\\setting.png"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi_key_t.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\key_t.png"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_setting.png.flat",
+        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-hdpi\\setting.png"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_status_sym_lock.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-hdpi\\status_sym_lock.png"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_key_m.png.flat",
-        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-hdpi\\key_m.png"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_key_c.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-xxhdpi\\key_c.png"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_key_m.png.flat",
+        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-hdpi\\key_m.png"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_status_ctrl.png.flat",

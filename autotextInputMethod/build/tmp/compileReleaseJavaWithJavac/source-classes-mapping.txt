@@ -19,6 +19,8 @@ cn/queshw/autotextinputmethod/AutotextInputMethod.java
  cn.queshw.autotextinputmethod.AutotextInputMethod$1
 cn/queshw/autotextinputmethod/CursorOperator.java
  cn.queshw.autotextinputmethod.CursorOperator
+cn/queshw/autotextinputmethod/BbKeyBoard.java
+ cn.queshw.autotextinputmethod.BbKeyBoard
 cn/queshw/autotextsetting/HelpActivity.java
  cn.queshw.autotextsetting.HelpActivity
  cn.queshw.autotextsetting.HelpActivity$1

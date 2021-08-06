@@ -56,12 +56,12 @@
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-mdpi\\status_normal.png"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\release\\drawable-ldpi_ok.png.flat",
-        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\ok.png"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\release\\drawable-ldpi_key_y.png.flat",
         "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\key_y.png"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\release\\drawable-ldpi_ok.png.flat",
+        "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\drawable-ldpi\\ok.png"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\res\\merged\\release\\drawable-ldpi_key_alt.png.flat",

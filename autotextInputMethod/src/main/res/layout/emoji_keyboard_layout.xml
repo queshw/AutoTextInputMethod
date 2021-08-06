@@ -10,8 +10,8 @@
         <TableRow>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
                 android:padding="@dimen/sym_keyboard_leyout_keypadding">
@@ -38,8 +38,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -67,8 +67,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -96,8 +96,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -125,8 +125,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -154,8 +154,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -183,8 +183,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -212,8 +212,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -241,8 +241,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -270,8 +270,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -302,8 +302,8 @@
         <TableRow>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeybackground"
@@ -331,8 +331,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -361,8 +361,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -391,8 +391,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -421,8 +421,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -451,8 +451,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -481,8 +481,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -511,8 +511,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -541,8 +541,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -571,8 +571,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -583,16 +583,16 @@
         <TableRow>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
                 android:background="@color/emojikeyboardbackground"
                 android:padding="@dimen/sym_keyboard_leyout_keypadding"></RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -621,8 +621,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -651,8 +651,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -681,8 +681,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -711,8 +711,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -741,8 +741,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -771,8 +771,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -801,8 +801,8 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"
@@ -810,8 +810,8 @@
                 android:padding="@dimen/sym_keyboard_leyout_keypadding" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
                 android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
                 android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
                 android:layout_weight="100"

@@ -6,9 +6,12 @@
                 {
                     "source": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\src\\main\\res\\values-v11\\styles.xml",
                     "from": {
-                        "startLines": "-1",
-                        "startColumns": "-1",
-                        "startOffsets": "-1"
+                        "startLines": "6",
+                        "startColumns": "4",
+                        "startOffsets": "182",
+                        "endLines": "8",
+                        "endColumns": "12",
+                        "endOffsets": "316"
                     },
                     "to": {
                         "startLines": "12",
@@ -16,7 +19,7 @@
                         "startOffsets": "527",
                         "endLines": "14",
                         "endColumns": "12",
-                        "endOffsets": "610"
+                        "endOffsets": "659"
                     }
                 },
                 {

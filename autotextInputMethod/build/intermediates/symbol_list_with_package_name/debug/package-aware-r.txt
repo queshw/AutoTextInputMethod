@@ -721,6 +721,10 @@ dimen abc_text_size_title_material
 dimen abc_text_size_title_material_toolbar
 dimen activity_horizontal_margin
 dimen activity_vertical_margin
+dimen bb_keyboard_key_height
+dimen bb_keyboard_leyout_edge_margin
+dimen bb_keyboard_leyout_nomal_margin
+dimen bb_keyboard_leyout_padding
 dimen cardview_compat_inset_shadow
 dimen cardview_default_elevation
 dimen cardview_default_radius
@@ -790,7 +794,6 @@ dimen hint_pressed_alpha_material_light
 dimen item_touch_helper_max_drag_scroll_per_frame
 dimen item_touch_helper_swipe_escape_max_velocity
 dimen item_touch_helper_swipe_escape_velocity
-dimen key_height
 dimen mtrl_bottomappbar_fabOffsetEndMode
 dimen mtrl_bottomappbar_fab_cradle_margin
 dimen mtrl_bottomappbar_fab_cradle_rounded_corner_radius
@@ -855,6 +858,7 @@ dimen notification_subtext_size
 dimen notification_top_pad
 dimen notification_top_pad_large_text
 dimen padding
+dimen sym_keyboard_key_height
 dimen sym_keyboard_leyout_keypadding
 dimen sym_keyboard_leyout_keytextsize
 dimen sym_keyboard_leyout_margin
@@ -1088,6 +1092,7 @@ id button_0
 id button_a
 id button_alt
 id button_b
+id button_bottom
 id button_c
 id button_cap
 id button_ctrl
@@ -1105,6 +1110,8 @@ id button_j
 id button_k
 id button_l
 id button_m
+id button_midleft
+id button_midright
 id button_n
 id button_o
 id button_p
@@ -1113,6 +1120,8 @@ id button_r
 id button_s
 id button_space
 id button_t
+id button_topleft
+id button_topright
 id button_u
 id button_v
 id button_w

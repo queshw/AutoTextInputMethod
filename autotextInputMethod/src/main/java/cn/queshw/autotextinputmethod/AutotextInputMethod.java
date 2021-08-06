@@ -74,7 +74,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     // 用于emoji表情的输入
     private int stickerStartPosition = 0;
     private EmojiBoard emojiBoard;
-    private View candidateView;
+    private View emojiKeyboard;
     private boolean NEXT = true;
     private boolean PRE = false;
 
@@ -94,18 +94,27 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
      */
     @Override
     public void onInitializeInterface() {
-        // TODO Auto-generated method stub
-        // Log.d("Here", "onInitializeInterface");
         super.onInitializeInterface();
         dboper = new DBOperations(this);
         clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);// 获得系统剪贴板
-        candidateView = this.getLayoutInflater().inflate(R.layout.emoji_keyboard_layout, null);
-        this.setCandidatesView(candidateView);
-        emojiBoard = new EmojiBoard(candidateView);
 
-        //设置软键盘的状态栏
+        //设置emoji键盘
+        emojiKeyboard = this.getLayoutInflater().inflate(R.layout.emoji_keyboard_layout, null);
+        this.setCandidatesView(emojiKeyboard);
+        emojiBoard = new EmojiBoard(emojiKeyboard);
+
+        //初始化软键盘和字符映射表
         BBsoftKeyboardMap = new BBkeyboardMap();
         bb_keyboard = this.getLayoutInflater().inflate(R.layout.bb_keyboard, null);
+        //计算按键的宽度
+        float xdpi = this.getResources().getDisplayMetrics().xdpi;
+        int width = this.getResources().getDisplayMetrics().widthPixels;
+        int keyWidth = (width - 2* getResources().getDimensionPixelSize(R.dimen.bb_keyboard_leyout_edge_margin) - 9 * getResources().getDimensionPixelSize(R.dimen.bb_keyboard_leyout_nomal_margin))/10;
+        int defalultHeight = getResources().getDimensionPixelSize(R.dimen.bb_keyboard_key_height);
+        keyWidth = Math.min(keyWidth, defalultHeight);
+        //设置软键盘的监听器和按键高度
+        BbKeyBoard.initBbKeyboard(bb_keyboard, keyWidth, this, this);
+        //设置软键盘的状态栏
         metakey_staus = (ImageView) bb_keyboard.findViewById(R.id.ImageView_status);
         inputMethodName = (TextView) bb_keyboard.findViewById(R.id.textView_inputmethod);
         setting = (ImageView) bb_keyboard.findViewById(R.id.ImageView_setting);
@@ -120,80 +129,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             }
         });
         this.setInputView(bb_keyboard);
-
-        //设置软键盘的监听事件
-        bb_keyboard.findViewById(R.id.button_a).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_a).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_b).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_b).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_c).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_c).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_d).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_d).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_e).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_e).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_f).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_f).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_g).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_g).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_h).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_h).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_i).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_i).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_j).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_j).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_k).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_k).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_l).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_l).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_m).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_m).setOnLongClickListener(this);
-
-        bb_keyboard.findViewById(R.id.button_n).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_n).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_o).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_o).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_p).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_p).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_q).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_q).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_r).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_r).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_s).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_s).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_t).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_t).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_u).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_u).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_v).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_v).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_w).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_w).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_x).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_x).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_y).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_y).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_z).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_z).setOnLongClickListener(this);
-
-        bb_keyboard.findViewById(R.id.button_alt).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_alt).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_ctrl).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_ctrl).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_0).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_0).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_space).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_space).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_emoji).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_emoji).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_cap).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_cap).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_dolla).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_dolla).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_enter).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_enter).setOnLongClickListener(this);
-        bb_keyboard.findViewById(R.id.button_delete).setOnClickListener(this);
-        bb_keyboard.findViewById(R.id.button_delete).setOnLongClickListener(this);
     }
 
     @Override
@@ -220,8 +155,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     // ///////////////////////////////////////////////////////////////////////////
     @Override
     public void onStartInput(EditorInfo info, boolean restarting) {
-        //Log.d("Here", "onStartInput()" + " | restart = " + String.valueOf(restarting) + " | initialStart = " + info.initialSelStart
-        //        + " | initialEnd = " + info.initialSelEnd);
         super.onStartInput(info, restarting);
         // 初始化光标的位置，也可据此知道当前编辑器光标前已经有多少个字符了。
         mEditInfo = info;
@@ -920,11 +853,18 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         } else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
             isSelectModel = false;
             //如果是多行的输入框，刚回车表示换行
-            if((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0){
+            /*if((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0){
                 mConnection.commitText("\n",1);
             }else{//如果是单行的输入框，回车表示执行输入框定义的动作，比如go search等
                 mConnection.performEditorAction(mEditInfo.actionId & EditorInfo.IME_MASK_ACTION);
-            }
+            }*/
+            int actionId = mEditInfo.actionId & EditorInfo.IME_MASK_ACTION;
+            long eventTime = System.currentTimeMillis();
+            mConnection.sendKeyEvent(new KeyEvent(eventTime, eventTime,
+                                    event.getAction(), KeyEvent.KEYCODE_ENTER, 0, 0,
+                                    KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
+                                    KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE
+                                    | KeyEvent.FLAG_EDITOR_ACTION));
             return true;
         } else {
             KeyCharacterMap kcm = event.getKeyCharacterMap();
