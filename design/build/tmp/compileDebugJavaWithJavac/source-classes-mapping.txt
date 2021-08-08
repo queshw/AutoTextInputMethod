@@ -1,2 +1,0 @@
-android/support/design/BuildConfig.java
- android.support.design.BuildConfig

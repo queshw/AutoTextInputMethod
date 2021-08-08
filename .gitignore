@@ -1,6 +1,5 @@
 build/
 build.gradle
-design/
 gradle/
 gradle.properties
 gradlew
