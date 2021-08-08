@@ -1,7 +1,7 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="cn.queshw.autotextinputmethod"
-4    android:versionCode="105"
+4    android:versionCode="110"
 5    android:versionName="5.3" >
 6
 7    <uses-sdk
@@ -10,104 +10,98 @@
 9        android:targetSdkVersion="30" />
 9-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
 10
-11    <!--
-12        <uses-sdk
-13        android:minSdkVersion="23"
-14        android:targetSdkVersion="23" />
-15    -->
-16
-17    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-17-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:13:5-14:47
-17-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:13:22-81
-18    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-18-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:15:5-81
-18-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:15:22-78
-19    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-19-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:16:5-80
-19-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:16:22-77
-20
-21    <!--
-22    <uses-permission android:name="android.permission.VIBRATE" />
-23    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-24    -->
-25    <application
-25-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:20:5-59:19
-26        android:allowBackup="true"
-26-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:21:9-35
-27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-27-->[androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:22:18-86
-28        android:extractNativeLibs="false"
-29        android:icon="@drawable/ic_lanucher"
-29-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:22:9-45
-30        android:label="@string/app_name"
-30-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:23:9-41
-31        android:theme="@style/AppTheme"
-31-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:24:9-40
-32        android:uiOptions="splitActionBarWhenNarrow" >
-32-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:25:9-53
-33        <activity
-33-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:26:9-34:20
-34            android:name="cn.queshw.autotextsetting.MethodsListActivity"
-34-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:27:13-73
-35            android:label="@string/app_name" >
-35-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:28:13-45
-36            <intent-filter>
-36-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:29:13-33:29
-37                <action android:name="android.intent.action.MAIN" />
-37-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:30:17-69
-37-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:30:25-66
-38
-39                <category android:name="android.intent.category.LAUNCHER" />
-39-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:32:17-77
-39-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:32:27-74
-40            </intent-filter>
-41        </activity>
-42        <activity android:name="cn.queshw.autotextsetting.RawActivity" >
-42-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:35:9-36:20
-42-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:35:19-71
-43        </activity>
-44        <activity android:name="cn.queshw.autotextsetting.FilePickerActivity" >
-44-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:37:9-38:20
-44-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:37:19-78
-45        </activity>
-46
-47        <service
-47-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:40:9-50:19
-48            android:name="cn.queshw.autotextinputmethod.AutotextInputMethod"
-48-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:41:13-47
-49            android:enabled="true"
-49-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:42:71-93
-50            android:permission="android.permission.BIND_INPUT_METHOD" >
-50-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:42:13-70
-51            <intent-filter>
-51-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:43:13-45:29
-52                <action android:name="android.view.InputMethod" />
-52-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:44:17-67
-52-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:44:25-64
-53            </intent-filter>
-54
-55            <meta-data
-55-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:47:13-49:50
-56                android:name="android.view.im"
-56-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:48:17-47
-57                android:resource="@xml/method" />
-57-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:49:17-47
-58        </service>
-59
-60        <activity android:name="cn.queshw.autotextsetting.HelpActivity" />
-60-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:52:9-75
-60-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:52:19-72
-61        <activity
-61-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:53:9-55:73
-62            android:name="cn.queshw.autotextsetting.ImportDefaultActivity"
-62-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:54:13-75
-63            android:theme="@android:style/Theme.Holo.Dialog.MinWidth" />
-63-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:55:13-70
-64        <!--
-65            <activity
-66            android:name="ExtractActivity"
-67            android:theme="@android:style/Theme.Holo.Dialog.MinWidth" />
-68        -->
-69    </application>
-70
-71</manifest>
+11    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+11-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:9:5-10:47
+11-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:9:22-81
+12    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+12-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:11:5-81
+12-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:11:22-78
+13    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+13-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:12:5-80
+13-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:12:22-77
+14
+15    <!--
+16    <uses-permission android:name="android.permission.VIBRATE" />
+17    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+18    -->
+19    <application
+19-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:16:5-55:19
+20        android:allowBackup="true"
+20-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:17:9-35
+21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+21-->[androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:22:18-86
+22        android:extractNativeLibs="false"
+23        android:icon="@drawable/ic_lanucher"
+23-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:18:9-45
+24        android:label="@string/app_name"
+24-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:19:9-41
+25        android:theme="@style/AppTheme"
+25-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:20:9-40
+26        android:uiOptions="splitActionBarWhenNarrow" >
+26-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:21:9-53
+27        <activity
+27-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:22:9-30:20
+28            android:name="cn.queshw.autotextsetting.MethodsListActivity"
+28-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:23:13-73
+29            android:label="@string/app_name" >
+29-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:24:13-45
+30            <intent-filter>
+30-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:25:13-29:29
+31                <action android:name="android.intent.action.MAIN" />
+31-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:26:17-69
+31-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:26:25-66
+32
+33                <category android:name="android.intent.category.LAUNCHER" />
+33-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:28:17-77
+33-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:28:27-74
+34            </intent-filter>
+35        </activity>
+36        <activity android:name="cn.queshw.autotextsetting.RawActivity" >
+36-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:31:9-32:20
+36-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:31:19-71
+37        </activity>
+38        <activity android:name="cn.queshw.autotextsetting.FilePickerActivity" >
+38-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:33:9-34:20
+38-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:33:19-78
+39        </activity>
+40
+41        <service
+41-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:36:9-46:19
+42            android:name="cn.queshw.autotextinputmethod.AutotextInputMethod"
+42-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:37:13-47
+43            android:enabled="true"
+43-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:38:71-93
+44            android:permission="android.permission.BIND_INPUT_METHOD" >
+44-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:38:13-70
+45            <intent-filter>
+45-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:39:13-41:29
+46                <action android:name="android.view.InputMethod" />
+46-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:40:17-67
+46-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:40:25-64
+47            </intent-filter>
+48
+49            <meta-data
+49-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:43:13-45:50
+50                android:name="android.view.im"
+50-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:44:17-47
+51                android:resource="@xml/method" />
+51-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:45:17-47
+52        </service>
+53
+54        <activity android:name="cn.queshw.autotextsetting.HelpActivity" />
+54-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:48:9-75
+54-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:48:19-72
+55        <activity
+55-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:49:9-51:73
+56            android:name="cn.queshw.autotextsetting.ImportDefaultActivity"
+56-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:50:13-75
+57            android:theme="@android:style/Theme.Holo.Dialog.MinWidth" />
+57-->D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:51:13-70
+58        <!--
+59            <activity
+60            android:name="ExtractActivity"
+61            android:theme="@android:style/Theme.Holo.Dialog.MinWidth" />
+62        -->
+63    </application>
+64
+65</manifest>

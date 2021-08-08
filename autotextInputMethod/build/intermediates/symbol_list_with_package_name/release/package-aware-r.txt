@@ -722,9 +722,10 @@ dimen abc_text_size_title_material_toolbar
 dimen activity_horizontal_margin
 dimen activity_vertical_margin
 dimen bb_keyboard_key_height
+dimen bb_keyboard_key_padding
+dimen bb_keyboard_key_space_height
 dimen bb_keyboard_leyout_edge_margin
 dimen bb_keyboard_leyout_nomal_margin
-dimen bb_keyboard_leyout_padding
 dimen cardview_compat_inset_shadow
 dimen cardview_default_elevation
 dimen cardview_default_radius
@@ -961,6 +962,8 @@ drawable add
 drawable avd_hide_password
 drawable avd_show_password
 drawable bb_keyboard_color_selector
+drawable button_pressed
+drawable button_unpressed
 drawable delete
 drawable design_bottom_navigation_item_background
 drawable design_fab_background
@@ -1092,7 +1095,6 @@ id button_0
 id button_a
 id button_alt
 id button_b
-id button_bottom
 id button_c
 id button_cap
 id button_ctrl
@@ -1110,7 +1112,6 @@ id button_j
 id button_k
 id button_l
 id button_m
-id button_midleft
 id button_midright
 id button_n
 id button_o
@@ -1317,6 +1318,13 @@ id submit_area
 id t_key_textview
 id t_sticker_textview
 id tabMode
+id tab_bottomleft
+id tab_bottomright
+id tab_midleft
+id tab_under_0
+id tab_under_cap
+id tab_under_ctrl
+id tab_under_emoji
 id tag_transition_group
 id tag_unhandled_key_event_manager
 id tag_unhandled_key_listeners

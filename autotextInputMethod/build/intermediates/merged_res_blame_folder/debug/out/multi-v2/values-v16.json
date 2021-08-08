@@ -4,7 +4,17 @@
             "outputFile": "D:\\AndroidStudioProjects\\AutotextInputMethod\\autotextInputMethod\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\gradle\\caches\\transforms-2\\files-2.1\\240b03f5975b1df36610d723eab46265\\appcompat-1.0.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\gradle\\caches\\transforms-3\\ea36836c97c1c141353f7acdd87e0be6\\transformed\\core-1.0.0\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                },
+                {
+                    "source": "C:\\gradle\\caches\\transforms-3\\11add78f1e45d28da3dd10a073400c4c\\transformed\\appcompat-1.0.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -20,16 +30,6 @@
                         "endLines": "6",
                         "endColumns": "12",
                         "endOffsets": "289"
-                    }
-                },
-                {
-                    "source": "C:\\gradle\\caches\\transforms-2\\files-2.1\\704168206db443cc6a8404f53cd4e417\\core-1.0.0\\res\\values-v16\\values-v16.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "65",
-                        "endOffsets": "116"
                     }
                 }
             ]

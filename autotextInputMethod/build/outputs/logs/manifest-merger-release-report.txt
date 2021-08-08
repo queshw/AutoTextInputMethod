@@ -1,42 +1,42 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
-INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
-INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
-INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
-MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1252afd1dc9f5469c30b4174466bb74f\material-1.0.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.appcompat:appcompat:1.0.0] C:\gradle\caches\transforms-2\files-2.1\240b03f5975b1df36610d723eab46265\appcompat-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.fragment:fragment:1.0.0] C:\gradle\caches\transforms-2\files-2.1\939487120f8beb920a58dc41bbe9f02a\fragment-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b8e1c55b226b4c886055bf095cd57a2f\recyclerview-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\gradle\caches\transforms-2\files-2.1\359a50d098d5826e3b063aef4f5919f4\vectordrawable-animated-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b913b577636afb646741ffd904028e15\legacy-support-core-ui-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1e3214591e5f847e6b5b2333c34f548f\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.transition:transition:1.0.0] C:\gradle\caches\transforms-2\files-2.1\82a0035bf4a30e92c875e315dbee6bab\transition-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b9a8ccdf08677e6ebe8a29448e9bae04\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\e1c1a328fa5c525d8a813cf3d0ad18ce\coordinatorlayout-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\9bcad8df747e7e541c668492e993a22d\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\7430e01f2c6ea8ff3578619715c15e18\slidingpanelayout-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.customview:customview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\3438716bbde0c4ae93b6b3ca42413f5c\customview-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\a4aa212df090916fdc5167a61460eb35\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\gradle\caches\transforms-2\files-2.1\d7ef7342eb80ff707691a83b9012e6a9\asynclayoutinflater-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.loader:loader:1.0.0] C:\gradle\caches\transforms-2\files-2.1\818f45328ee8f5b99bad88c27c6cc009\loader-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\c957036829a0bfc56e2a531c675b44e2\vectordrawable-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.cardview:cardview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\204d56b624e751e7990ccfa8a11e8889\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\34741137234e1c5c22970a0a3b0c3fd3\versionedparcelable-1.0.0\AndroidManifest.xml:17:1-25:12
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\gradle\caches\transforms-2\files-2.1\9b615267ab01aab8f9f5ed2bdc1c6d21\lifecycle-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.interpolator:interpolator:1.0.0] C:\gradle\caches\transforms-2\files-2.1\a81ff3a6f4fe4cdba627ce49c2369465\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\gradle\caches\transforms-2\files-2.1\9f5395c9e2c4a1a11a43e64f5d81258c\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.documentfile:documentfile:1.0.0] C:\gradle\caches\transforms-2\files-2.1\815bb9272ee789daabc21bc15b42e2c3\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b93e2b8a7319b8231fdc1936a598b860\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.print:print:1.0.0] C:\gradle\caches\transforms-2\files-2.1\f8503f66578d12caa389b09e1e5eca48\print-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\gradle\caches\transforms-2\files-2.1\0fae1921ea392fcf1099ebc521d9f280\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\gradle\caches\transforms-2\files-2.1\e3a7d3b723deff8b2b903c0665652c62\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\gradle\caches\transforms-2\files-2.1\c9ce6976a0ee114a7df6a78a9d188526\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\gradle\caches\transforms-2\files-2.1\750b7b3e6ba5087b346f6e90470bbb4c\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
-INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
-INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
-INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-61:12
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
+MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-3\115873913b46fe4bdafd090b2daafaa7\transformed\material-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat:1.0.0] C:\gradle\caches\transforms-3\11add78f1e45d28da3dd10a073400c4c\transformed\appcompat-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.fragment:fragment:1.0.0] C:\gradle\caches\transforms-3\7daf3f6dcef0f5c6cd2818e50c462a5f\transformed\fragment-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\gradle\caches\transforms-3\2b56f2ce9086472ccb73911f2a363a8c\transformed\recyclerview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\gradle\caches\transforms-3\abd2a091f82332a716980d65cc24aa89\transformed\vectordrawable-animated-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\gradle\caches\transforms-3\913e08ed52afe8f9bdfeff7169cfe857\transformed\legacy-support-core-ui-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\gradle\caches\transforms-3\3a91b684008f575ae984b8716902e3f7\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.transition:transition:1.0.0] C:\gradle\caches\transforms-3\7abf8b571e0f95c7ee6e53f3cb274083\transformed\transition-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\gradle\caches\transforms-3\5b5b966ca59807804aa23da69f0f2cc1\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\gradle\caches\transforms-3\5591782a0e4bdcdb9c630a32c203af8f\transformed\coordinatorlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\gradle\caches\transforms-3\06a90d9743f8212f77a343f46d78c090\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\gradle\caches\transforms-3\2f558a16ae7effefb4c40445cb99fcf6\transformed\slidingpanelayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] C:\gradle\caches\transforms-3\ab184f952a956d2124517adce3ea9eec\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\gradle\caches\transforms-3\02ba2442eddfc12787d7e8f7834095e1\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\gradle\caches\transforms-3\1d5929fdd2dd1eb6526d78cff549db56\transformed\asynclayoutinflater-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\gradle\caches\transforms-3\4fb902d840465e2b9805977f1d6b945a\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.0] C:\gradle\caches\transforms-3\329e998912fa76efc4d1b14305beb167\transformed\vectordrawable-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.cardview:cardview:1.0.0] C:\gradle\caches\transforms-3\f950e68cf2d530665e7ddc5a0bb6330c\transformed\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-3\3167448e1a0e3c67fc3145a4a742153b\transformed\versionedparcelable-1.0.0\AndroidManifest.xml:17:1-25:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\gradle\caches\transforms-3\6e75cf8b76b7bafaa1c61a9ba318365b\transformed\lifecycle-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\gradle\caches\transforms-3\2c33c4bae6ea4f0acc28f0ec64c6b2d4\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\gradle\caches\transforms-3\769e8eeb090a40829e9ec33d2a71a862\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\gradle\caches\transforms-3\23574aa646515120bc7d481972f71742\transformed\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\gradle\caches\transforms-3\4a686211be3134d52c983281414d9a4c\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] C:\gradle\caches\transforms-3\137fae5cb8b43fd4d77cda20fb259169\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\gradle\caches\transforms-3\547f7efa8960c06cb412f90782c114c6\transformed\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\gradle\caches\transforms-3\e39262abccdf4c3a9281c19542803319\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\gradle\caches\transforms-3\98006fa0842eeb889f972732f9d31478\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\gradle\caches\transforms-3\e656f0c5b9b75f08d112991d26ac37df\transformed\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:2:1-57:12
 	package
 		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:4:5-44
 		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
@@ -54,157 +54,157 @@ INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\s
 		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
 		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
 uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:13:5-14:47
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:9:5-10:47
 	tools:ignore
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:14:9-44
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:10:9-44
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:13:22-81
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:9:22-81
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:15:5-81
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:11:5-81
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:15:22-78
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:11:22-78
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:16:5-80
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:12:5-80
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:16:22-77
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:12:22-77
 application
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:20:5-59:19
-MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1252afd1dc9f5469c30b4174466bb74f\material-1.0.0\AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1252afd1dc9f5469c30b4174466bb74f\material-1.0.0\AndroidManifest.xml:22:5-20
-MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:22:5-89
-MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:22:5-89
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\34741137234e1c5c22970a0a3b0c3fd3\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\34741137234e1c5c22970a0a3b0c3fd3\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:16:5-55:19
+MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-3\115873913b46fe4bdafd090b2daafaa7\transformed\material-1.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-3\115873913b46fe4bdafd090b2daafaa7\transformed\material-1.0.0\AndroidManifest.xml:22:5-20
+MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:22:5-89
+MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:22:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-3\3167448e1a0e3c67fc3145a4a742153b\transformed\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-3\3167448e1a0e3c67fc3145a4a742153b\transformed\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
 	android:appComponentFactory
-		ADDED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:22:18-86
+		ADDED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:22:18-86
 	android:label
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:23:9-41
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:19:9-41
 	android:uiOptions
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:25:9-53
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:21:9-53
 	android:icon
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:22:9-45
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:18:9-45
 	android:allowBackup
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:21:9-35
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:17:9-35
 	android:theme
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:24:9-40
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:20:9-40
 activity#cn.queshw.autotextsetting.MethodsListActivity
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:26:9-34:20
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:22:9-30:20
 	android:label
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:28:13-45
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:24:13-45
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:27:13-73
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:23:13-73
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:29:13-33:29
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:25:13-29:29
 action#android.intent.action.MAIN
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:30:17-69
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:26:17-69
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:30:25-66
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:26:25-66
 category#android.intent.category.LAUNCHER
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:32:17-77
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:28:17-77
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:32:27-74
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:28:27-74
 activity#cn.queshw.autotextsetting.RawActivity
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:35:9-36:20
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:31:9-32:20
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:35:19-71
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:31:19-71
 activity#cn.queshw.autotextsetting.FilePickerActivity
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:37:9-38:20
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:33:9-34:20
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:37:19-78
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:33:19-78
 service#cn.queshw.autotextinputmethod.AutotextInputMethod
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:40:9-50:19
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:36:9-46:19
 	android:enabled
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:42:71-93
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:38:71-93
 	android:permission
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:42:13-70
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:38:13-70
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:41:13-47
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:37:13-47
 intent-filter#action:name:android.view.InputMethod
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:43:13-45:29
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:39:13-41:29
 action#android.view.InputMethod
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:44:17-67
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:40:17-67
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:44:25-64
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:40:25-64
 meta-data#android.view.im
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:47:13-49:50
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:43:13-45:50
 	android:resource
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:49:17-47
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:45:17-47
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:48:17-47
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:44:17-47
 activity#cn.queshw.autotextsetting.HelpActivity
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:52:9-75
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:48:9-75
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:52:19-72
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:48:19-72
 activity#cn.queshw.autotextsetting.ImportDefaultActivity
-ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:53:9-55:73
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:49:9-51:73
 	android:theme
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:55:13-70
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:51:13-70
 	android:name
-		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:54:13-75
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml:50:13-75
 uses-sdk
 INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
 INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
-MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1252afd1dc9f5469c30b4174466bb74f\material-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1252afd1dc9f5469c30b4174466bb74f\material-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.0.0] C:\gradle\caches\transforms-2\files-2.1\240b03f5975b1df36610d723eab46265\appcompat-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.0.0] C:\gradle\caches\transforms-2\files-2.1\240b03f5975b1df36610d723eab46265\appcompat-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.fragment:fragment:1.0.0] C:\gradle\caches\transforms-2\files-2.1\939487120f8beb920a58dc41bbe9f02a\fragment-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.fragment:fragment:1.0.0] C:\gradle\caches\transforms-2\files-2.1\939487120f8beb920a58dc41bbe9f02a\fragment-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b8e1c55b226b4c886055bf095cd57a2f\recyclerview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b8e1c55b226b4c886055bf095cd57a2f\recyclerview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\gradle\caches\transforms-2\files-2.1\359a50d098d5826e3b063aef4f5919f4\vectordrawable-animated-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\gradle\caches\transforms-2\files-2.1\359a50d098d5826e3b063aef4f5919f4\vectordrawable-animated-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b913b577636afb646741ffd904028e15\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b913b577636afb646741ffd904028e15\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1e3214591e5f847e6b5b2333c34f548f\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\gradle\caches\transforms-2\files-2.1\1e3214591e5f847e6b5b2333c34f548f\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.transition:transition:1.0.0] C:\gradle\caches\transforms-2\files-2.1\82a0035bf4a30e92c875e315dbee6bab\transition-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.transition:transition:1.0.0] C:\gradle\caches\transforms-2\files-2.1\82a0035bf4a30e92c875e315dbee6bab\transition-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b9a8ccdf08677e6ebe8a29448e9bae04\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b9a8ccdf08677e6ebe8a29448e9bae04\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\e1c1a328fa5c525d8a813cf3d0ad18ce\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\e1c1a328fa5c525d8a813cf3d0ad18ce\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\9bcad8df747e7e541c668492e993a22d\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\9bcad8df747e7e541c668492e993a22d\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\7430e01f2c6ea8ff3578619715c15e18\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\7430e01f2c6ea8ff3578619715c15e18\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\3438716bbde0c4ae93b6b3ca42413f5c\customview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\3438716bbde0c4ae93b6b3ca42413f5c\customview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\a4aa212df090916fdc5167a61460eb35\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\gradle\caches\transforms-2\files-2.1\a4aa212df090916fdc5167a61460eb35\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\gradle\caches\transforms-2\files-2.1\d7ef7342eb80ff707691a83b9012e6a9\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\gradle\caches\transforms-2\files-2.1\d7ef7342eb80ff707691a83b9012e6a9\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] C:\gradle\caches\transforms-2\files-2.1\818f45328ee8f5b99bad88c27c6cc009\loader-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] C:\gradle\caches\transforms-2\files-2.1\818f45328ee8f5b99bad88c27c6cc009\loader-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\c957036829a0bfc56e2a531c675b44e2\vectordrawable-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\c957036829a0bfc56e2a531c675b44e2\vectordrawable-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-2\files-2.1\704168206db443cc6a8404f53cd4e417\core-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cardview:cardview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\204d56b624e751e7990ccfa8a11e8889\cardview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cardview:cardview:1.0.0] C:\gradle\caches\transforms-2\files-2.1\204d56b624e751e7990ccfa8a11e8889\cardview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\34741137234e1c5c22970a0a3b0c3fd3\versionedparcelable-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-2\files-2.1\34741137234e1c5c22970a0a3b0c3fd3\versionedparcelable-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\gradle\caches\transforms-2\files-2.1\9b615267ab01aab8f9f5ed2bdc1c6d21\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\gradle\caches\transforms-2\files-2.1\9b615267ab01aab8f9f5ed2bdc1c6d21\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] C:\gradle\caches\transforms-2\files-2.1\a81ff3a6f4fe4cdba627ce49c2369465\interpolator-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] C:\gradle\caches\transforms-2\files-2.1\a81ff3a6f4fe4cdba627ce49c2369465\interpolator-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\gradle\caches\transforms-2\files-2.1\9f5395c9e2c4a1a11a43e64f5d81258c\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\gradle\caches\transforms-2\files-2.1\9f5395c9e2c4a1a11a43e64f5d81258c\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.documentfile:documentfile:1.0.0] C:\gradle\caches\transforms-2\files-2.1\815bb9272ee789daabc21bc15b42e2c3\documentfile-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.documentfile:documentfile:1.0.0] C:\gradle\caches\transforms-2\files-2.1\815bb9272ee789daabc21bc15b42e2c3\documentfile-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b93e2b8a7319b8231fdc1936a598b860\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\gradle\caches\transforms-2\files-2.1\b93e2b8a7319b8231fdc1936a598b860\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.print:print:1.0.0] C:\gradle\caches\transforms-2\files-2.1\f8503f66578d12caa389b09e1e5eca48\print-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.print:print:1.0.0] C:\gradle\caches\transforms-2\files-2.1\f8503f66578d12caa389b09e1e5eca48\print-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\gradle\caches\transforms-2\files-2.1\0fae1921ea392fcf1099ebc521d9f280\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\gradle\caches\transforms-2\files-2.1\0fae1921ea392fcf1099ebc521d9f280\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\gradle\caches\transforms-2\files-2.1\e3a7d3b723deff8b2b903c0665652c62\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\gradle\caches\transforms-2\files-2.1\e3a7d3b723deff8b2b903c0665652c62\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\gradle\caches\transforms-2\files-2.1\c9ce6976a0ee114a7df6a78a9d188526\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\gradle\caches\transforms-2\files-2.1\c9ce6976a0ee114a7df6a78a9d188526\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\gradle\caches\transforms-2\files-2.1\750b7b3e6ba5087b346f6e90470bbb4c\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\gradle\caches\transforms-2\files-2.1\750b7b3e6ba5087b346f6e90470bbb4c\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-3\115873913b46fe4bdafd090b2daafaa7\transformed\material-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.0.0] C:\gradle\caches\transforms-3\115873913b46fe4bdafd090b2daafaa7\transformed\material-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.0] C:\gradle\caches\transforms-3\11add78f1e45d28da3dd10a073400c4c\transformed\appcompat-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.0] C:\gradle\caches\transforms-3\11add78f1e45d28da3dd10a073400c4c\transformed\appcompat-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0] C:\gradle\caches\transforms-3\7daf3f6dcef0f5c6cd2818e50c462a5f\transformed\fragment-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0] C:\gradle\caches\transforms-3\7daf3f6dcef0f5c6cd2818e50c462a5f\transformed\fragment-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\gradle\caches\transforms-3\2b56f2ce9086472ccb73911f2a363a8c\transformed\recyclerview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\gradle\caches\transforms-3\2b56f2ce9086472ccb73911f2a363a8c\transformed\recyclerview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\gradle\caches\transforms-3\abd2a091f82332a716980d65cc24aa89\transformed\vectordrawable-animated-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\gradle\caches\transforms-3\abd2a091f82332a716980d65cc24aa89\transformed\vectordrawable-animated-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\gradle\caches\transforms-3\913e08ed52afe8f9bdfeff7169cfe857\transformed\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\gradle\caches\transforms-3\913e08ed52afe8f9bdfeff7169cfe857\transformed\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\gradle\caches\transforms-3\3a91b684008f575ae984b8716902e3f7\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\gradle\caches\transforms-3\3a91b684008f575ae984b8716902e3f7\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0] C:\gradle\caches\transforms-3\7abf8b571e0f95c7ee6e53f3cb274083\transformed\transition-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0] C:\gradle\caches\transforms-3\7abf8b571e0f95c7ee6e53f3cb274083\transformed\transition-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\gradle\caches\transforms-3\5b5b966ca59807804aa23da69f0f2cc1\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\gradle\caches\transforms-3\5b5b966ca59807804aa23da69f0f2cc1\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\gradle\caches\transforms-3\5591782a0e4bdcdb9c630a32c203af8f\transformed\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\gradle\caches\transforms-3\5591782a0e4bdcdb9c630a32c203af8f\transformed\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\gradle\caches\transforms-3\06a90d9743f8212f77a343f46d78c090\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\gradle\caches\transforms-3\06a90d9743f8212f77a343f46d78c090\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\gradle\caches\transforms-3\2f558a16ae7effefb4c40445cb99fcf6\transformed\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\gradle\caches\transforms-3\2f558a16ae7effefb4c40445cb99fcf6\transformed\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\gradle\caches\transforms-3\ab184f952a956d2124517adce3ea9eec\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\gradle\caches\transforms-3\ab184f952a956d2124517adce3ea9eec\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\gradle\caches\transforms-3\02ba2442eddfc12787d7e8f7834095e1\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\gradle\caches\transforms-3\02ba2442eddfc12787d7e8f7834095e1\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\gradle\caches\transforms-3\1d5929fdd2dd1eb6526d78cff549db56\transformed\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\gradle\caches\transforms-3\1d5929fdd2dd1eb6526d78cff549db56\transformed\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\gradle\caches\transforms-3\4fb902d840465e2b9805977f1d6b945a\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\gradle\caches\transforms-3\4fb902d840465e2b9805977f1d6b945a\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.0] C:\gradle\caches\transforms-3\329e998912fa76efc4d1b14305beb167\transformed\vectordrawable-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.0] C:\gradle\caches\transforms-3\329e998912fa76efc4d1b14305beb167\transformed\vectordrawable-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.0] C:\gradle\caches\transforms-3\ea36836c97c1c141353f7acdd87e0be6\transformed\core-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\gradle\caches\transforms-3\f950e68cf2d530665e7ddc5a0bb6330c\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\gradle\caches\transforms-3\f950e68cf2d530665e7ddc5a0bb6330c\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-3\3167448e1a0e3c67fc3145a4a742153b\transformed\versionedparcelable-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\gradle\caches\transforms-3\3167448e1a0e3c67fc3145a4a742153b\transformed\versionedparcelable-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\gradle\caches\transforms-3\6e75cf8b76b7bafaa1c61a9ba318365b\transformed\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\gradle\caches\transforms-3\6e75cf8b76b7bafaa1c61a9ba318365b\transformed\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\gradle\caches\transforms-3\2c33c4bae6ea4f0acc28f0ec64c6b2d4\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\gradle\caches\transforms-3\2c33c4bae6ea4f0acc28f0ec64c6b2d4\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\gradle\caches\transforms-3\769e8eeb090a40829e9ec33d2a71a862\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\gradle\caches\transforms-3\769e8eeb090a40829e9ec33d2a71a862\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\gradle\caches\transforms-3\23574aa646515120bc7d481972f71742\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\gradle\caches\transforms-3\23574aa646515120bc7d481972f71742\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\gradle\caches\transforms-3\4a686211be3134d52c983281414d9a4c\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\gradle\caches\transforms-3\4a686211be3134d52c983281414d9a4c\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\gradle\caches\transforms-3\137fae5cb8b43fd4d77cda20fb259169\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\gradle\caches\transforms-3\137fae5cb8b43fd4d77cda20fb259169\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\gradle\caches\transforms-3\547f7efa8960c06cb412f90782c114c6\transformed\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\gradle\caches\transforms-3\547f7efa8960c06cb412f90782c114c6\transformed\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\gradle\caches\transforms-3\e39262abccdf4c3a9281c19542803319\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\gradle\caches\transforms-3\e39262abccdf4c3a9281c19542803319\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\gradle\caches\transforms-3\98006fa0842eeb889f972732f9d31478\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\gradle\caches\transforms-3\98006fa0842eeb889f972732f9d31478\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\gradle\caches\transforms-3\e656f0c5b9b75f08d112991d26ac37df\transformed\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\gradle\caches\transforms-3\e656f0c5b9b75f08d112991d26ac37df\transformed\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
 INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
 INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\autotextInputMethod\src\main\AndroidManifest.xml
 	android:targetSdkVersion

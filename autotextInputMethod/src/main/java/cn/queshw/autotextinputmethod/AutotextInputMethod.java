@@ -106,14 +106,10 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         //初始化软键盘和字符映射表
         BBsoftKeyboardMap = new BBkeyboardMap();
         bb_keyboard = this.getLayoutInflater().inflate(R.layout.bb_keyboard, null);
-        //计算按键的宽度
-        float xdpi = this.getResources().getDisplayMetrics().xdpi;
-        int width = this.getResources().getDisplayMetrics().widthPixels;
-        int keyWidth = (width - 2* getResources().getDimensionPixelSize(R.dimen.bb_keyboard_leyout_edge_margin) - 9 * getResources().getDimensionPixelSize(R.dimen.bb_keyboard_leyout_nomal_margin))/10;
-        int defalultHeight = getResources().getDimensionPixelSize(R.dimen.bb_keyboard_key_height);
-        keyWidth = Math.min(keyWidth, defalultHeight);
-        //设置软键盘的监听器和按键高度
-        BbKeyBoard.initBbKeyboard(bb_keyboard, keyWidth, this, this);
+
+        //设置软键盘上按键的监听器
+        BbKeyBoard.initBbKeyboard(bb_keyboard, this, this);
+
         //设置软键盘的状态栏
         metakey_staus = (ImageView) bb_keyboard.findViewById(R.id.ImageView_status);
         inputMethodName = (TextView) bb_keyboard.findViewById(R.id.textView_inputmethod);
@@ -129,9 +125,9 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             }
         });
         this.setInputView(bb_keyboard);
+
     }
 
-    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         View bb_keyboard_only = (LinearLayout) bb_keyboard.findViewById(R.id.bb_keyboard_keyonly);
         if(newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES){//没有物理键盘
@@ -853,18 +849,11 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         } else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
             isSelectModel = false;
             //如果是多行的输入框，刚回车表示换行
-            /*if((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0){
+            if((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0){
                 mConnection.commitText("\n",1);
             }else{//如果是单行的输入框，回车表示执行输入框定义的动作，比如go search等
-                mConnection.performEditorAction(mEditInfo.actionId & EditorInfo.IME_MASK_ACTION);
-            }*/
-            int actionId = mEditInfo.actionId & EditorInfo.IME_MASK_ACTION;
-            long eventTime = System.currentTimeMillis();
-            mConnection.sendKeyEvent(new KeyEvent(eventTime, eventTime,
-                                    event.getAction(), KeyEvent.KEYCODE_ENTER, 0, 0,
-                                    KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
-                                    KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE
-                                    | KeyEvent.FLAG_EDITOR_ACTION));
+                mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
+            }
             return true;
         } else {
             KeyCharacterMap kcm = event.getKeyCharacterMap();
@@ -903,7 +892,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // 翻页
             this.symBoardTurn(stickerStartPosition, NEXT);
         }
-
         mMetaState = HandleMetaKey.getMetaState(state);
         handleStatusIcon(mMetaState);
         return super.onKeyUp(keyCode, event);
