@@ -1,14 +1,13 @@
 package cn.queshw.autotextsetting;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,6 +21,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import cn.queshw.autotextinputmethod.R;
 
 public class FilePickerActivity extends Activity {
@@ -34,7 +36,8 @@ public class FilePickerActivity extends Activity {
 
 	// 布局中的元素
 	ListView fileListView;
-	ArrayList<File> fileList = new ArrayList<File>();
+	ArrayList<File> fileList = new ArrayList<File>();//某目录下所有文件和文件夹的数据
+	ArrayList<File> showfileList = new ArrayList<File>();//真实用于显示的文件或文件夹的数据，在连输入边搜索的情况下，不符合条件的就不显示
 	FilePickerAdapter fileListAdapter;
 	EditText resultEditText;
 	Button yesButton;
@@ -53,24 +56,8 @@ public class FilePickerActivity extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.layout_filepickeractivity);
 
-		// Log.d("Here", "getDataDirectory()=" +
-		// Environment.getDataDirectory().toString());
-		// Log.d("Here", "getDownloadCacheDirectory()=" +
-		// Environment.getDownloadCacheDirectory().toString());
-		// Log.d("Here", "getExternalStorageDirectory()=" +
-		// Environment.getExternalStorageDirectory().toString());
-		// Log.d("Here", "getExternalStoragePublicDirectory()=" +
-		// Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString());
-		// Log.d("Here", "getExternalStorageState()=" +
-		// Environment.getExternalStorageState());
-		// Log.d("Here", "getRootDirectory()=" +
-		// Environment.getRootDirectory().toString());
-		// Log.d("Here", "isExternalStorageRemovable()=" +
-		// Environment.isExternalStorageRemovable());
-		// 获取传过来的两个参数
 		Intent intent = this.getIntent();
 		relativeRoot = intent.getStringExtra("relativeRoot");
-		// if(!new File(relativeRoot).exists()) relativeRoot = "/";
 		purpose = intent.getIntExtra("purpose", IMPORT);
 		// 获取布局中的元素
 		fileListView = (ListView) findViewById(R.id.file_listView_layout_filepickeractivity);
@@ -82,8 +69,8 @@ public class FilePickerActivity extends Activity {
 
 		// 设置文件列表的适配器
 		fileListAdapter = new FilePickerAdapter(this, R.layout.filelist,
-				fileList);
-		fileListAdapter.setNotifyOnChange(false);
+				showfileList);
+		fileListAdapter.setNotifyOnChange(true);
 		fileListView.setAdapter(fileListAdapter);
 
 		// 设置下拉列表的适配器
@@ -91,7 +78,7 @@ public class FilePickerActivity extends Activity {
 				android.R.layout.simple_spinner_item, pathList);
 		spinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinnerAdapter.setNotifyOnChange(false);
+		spinnerAdapter.setNotifyOnChange(true);
 		pathSpinner.setAdapter(spinnerAdapter);
 
 		// 调用数据构造函数
@@ -131,11 +118,33 @@ public class FilePickerActivity extends Activity {
 					long arg3) {
 				// TODO Auto-generated method stub
 
-				if (fileList.get(pos).isDirectory()) {// 如果点击了一个目录，则打开进入
-					updateData(fileList.get(pos).getPath(), purpose);
-					// resultEditText.setText("");
+				if (showfileList.get(pos).isDirectory()) {// 如果点击了一个目录，则打开进入
+					updateData(showfileList.get(pos).getPath(), purpose);
+					resultEditText.setText("");
 				} else {// 如果点击了一个文件，则获取文件名
-					resultEditText.setText(fileList.get(pos).getName());
+					resultEditText.setText(showfileList.get(pos).getName());
+				}
+			}
+		});
+
+		// 设置文件各输入框的 边输入边搜索监听器
+		resultEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				showfileList.clear();
+				for(int i= 0; i < fileList.size(); i++){
+					if(fileList.get(i).getName().contains(s.toString()))
+						showfileList.add(fileList.get(i));
 				}
 			}
 		});
@@ -241,34 +250,36 @@ public class FilePickerActivity extends Activity {
 
 	// 构造数据的函数，从而更新下拉路径列表和文件列表
 	private void updateData(String path, int purpose) {
-		// Log.d("Here", "path = " + path);
-		// Log.d("Here", "purpose = " + String.valueOf(purpose));
 
 		// 先把原有数据清空
 		fileList.clear();
+		showfileList.clear();
 		pathList.clear();
 
-		// 如果传过来的path不存在，或者是一个文件名，则用root路径代替
-		File root = new File(path);
-		if (!root.exists())
+		// 如果传过来的path不存在，或者是一个文件名，则用根路径代替
+		File nowPathFile = new File(path);
+		if (!nowPathFile.exists()){
 			path = "/";
+		 	nowPathFile = new File(path);
+		}
 
 		// 更新文件列表的数据
-		for (File tempFile : root.listFiles()) {
+		for (File tempFile : nowPathFile.listFiles()) {
 			fileList.add(tempFile);
+			showfileList.add(tempFile);
 		}
 
 		// 更新下拉列表的数据
-		while (root != null) {
-			pathList.add(root.getPath());
-			root = root.getParentFile();
+		while (nowPathFile != null) {
+			pathList.add(nowPathFile.getPath());
+			nowPathFile = nowPathFile.getParentFile();
 		}
 
 		// 更新下拉列表和文件列表
 		fileListAdapter.notifyDataSetChanged();
 		spinnerAdapter.notifyDataSetChanged();
 		pathSpinner.setSelection(0);
-		relativeRoot = path;
+		this.relativeRoot = path;
 	}
 
 }

@@ -119,6 +119,7 @@ public class RawActivity extends Activity {
 			}
 
 		});
+
 		// 为listview设置触摸监听器，向左划出现删除图标，点击后删除相应的条目
 		rawListview.setOnTouchListener(new OnTouchListener() {
 			@Override

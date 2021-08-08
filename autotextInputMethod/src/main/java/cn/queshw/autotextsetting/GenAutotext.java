@@ -1,8 +1,8 @@
 package cn.queshw.autotextsetting;
 
-import java.util.ArrayList;
-
 import static java.lang.String.valueOf;
+
+import java.util.ArrayList;
 
 public class GenAutotext {
 	public final char CHINESE_QUOTATION_LEFT = '[';
@@ -108,13 +108,9 @@ public class GenAutotext {
 				if (k == pages.length - 1) {
 					input.add(pages[k]);
 					autotext.add(pages[1] + "%B");// 如果为最后一页，则翻回第一页
-					//Log.d("Here", "k = " + String.valueOf(k));
-					//Log.d("Here", pages[k]  + "--" + pages[1] + "%B");
 				} else {
 					input.add(pages[k]);
 					autotext.add(pages[k + 1] + "%B");// 否则往后翻
-					//Log.d("Here", "k = " + String.valueOf(k));
-					//Log.d("Here", pages[k]  + "--" + pages[k + 1] + "%B");
 				}
 
 				// 接下来处理往前翻
@@ -192,7 +188,7 @@ public class GenAutotext {
 					autotext.add("%b" + items[i]);
 				}
 			}else{// 如果是多页
-				input.add(pages[pageNumber] + getchar(i));
+				input.add(pages[pageNumber] + getchar(i%9));
 				autotext.add("%b" + items[i]);
 			}
 		}
@@ -234,7 +230,7 @@ public class GenAutotext {
 			c = "x";
 			break;
 		}
-		case 9: {
+		case 0: {//由于模计算的原因，所以为0的时候，表示第9个
 			c = "c";
 			break;
 		}

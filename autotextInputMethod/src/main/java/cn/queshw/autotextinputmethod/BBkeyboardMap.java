@@ -79,7 +79,7 @@ public class BBkeyboardMap {
         normalKeys.add('y');
         normalKeys.add('z');
 
-        normalKeys.add('&');
+        normalKeys.add('0');
         normalKeys.add('$');
 
         capKeys.add('A');
@@ -112,7 +112,7 @@ public class BBkeyboardMap {
         capKeys.add('Y');
         capKeys.add('Z');
 
-        capKeys.add('&');
+        capKeys.add('0');
         capKeys.add('$');
 
 

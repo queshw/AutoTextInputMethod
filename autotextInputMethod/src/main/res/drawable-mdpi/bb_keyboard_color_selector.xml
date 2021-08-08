@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true"
-        android:drawable="@color/mygreen" />
+        android:drawable="@drawable/button_pressed" />
 
     <item
         android:state_pressed="false"
-        android:drawable="@color/mygray" />
+        android:drawable="@drawable/button_unpressed" />
 
     <item
         android:drawable="@color/mygray" />
