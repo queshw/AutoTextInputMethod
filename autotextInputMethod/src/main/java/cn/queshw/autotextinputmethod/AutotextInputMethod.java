@@ -40,8 +40,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     private int mMetaState = 0;
     private long state = 0; // for metakeylistener
 
-    private String mBeforeSubString;// 替换前的文本
-    private StringBuilder mAfterSubString;// 替换后的文本
+    private String inputString;// 替换前的文本
+    private StringBuilder autotextString;// 替换后的文本
     private String mUndoSubString;// 删除的文本，用于undo功能
     private int mEnd;// 用于保存某个光标位置
     private int mStart;// 用于保存某个光标位置
@@ -144,7 +144,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     // 不进入全屏模式
     @Override
     public boolean onEvaluateFullscreenMode() {
-        // TODO Auto-generated method stub
         return switchToFullScreen;
     }
 
@@ -212,7 +211,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
      */
     @Override
     public boolean onEvaluateInputViewShown() {
-        // TODO Auto-generated method stub
         super.onEvaluateInputViewShown();
         return true;
     }
@@ -224,8 +222,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
      */
     @Override
     public void onFinishInput() {
-        // TODO Auto-generated method stub
-        // Log.d("Here", "onFinishInput");
         super.onFinishInput();
         this.hideStatusIcon();
         this.currentCursorEnd = -1;
@@ -263,8 +259,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             isSelectModel = false;// 退出选择模式
 
             // 如果是短按，接下来准备正向替换
-            mBeforeSubString = "";// 替换前的文本
-            mAfterSubString = new StringBuilder();// 替换后的文本
+            inputString = "";// 替换前的文本
+            autotextString = new StringBuilder();// 替换后的文本
 
             if (mStart != mEnd) {// 处于选择模式
                 mConnection.commitText("", 1);
@@ -272,11 +268,12 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 mEnd = mStart;
             }
 
-            // 如果mBeforeSubString不为空，说明之前有替换，那么首先就是要判断，现在光标是否正好在上次反向替换的结尾处：
-            if (!TextUtils.isEmpty(autotext.beforeString)) {
+            // 判断是否是刚反向替换完
+            if (autotext.getStat() == Autotext.REVERSE_AFTER) {//刚反向替换完
                 // 取光标前相应长度的字符，或者取到头
-                String rawInput = mConnection.getTextBeforeCursor(autotext.beforeString.length(), 0).toString();
-                if (mEnd == autotext.end && rawInput.equals(autotext.beforeString)) {
+                String rawInput = mConnection.getTextBeforeCursor(autotext.getInput().length(), 0).toString();
+                //如果光标处于上次替换的结尾处，并且光标前的字符与上次输入的编码一样，那么就不替换，直接输出一个空格
+                if (mEnd == autotext.getEnd() && rawInput.equals(autotext.getInput())) {
                     mConnection.commitText(" ", 1);
                     mConnection.setSelection(mEnd + 1, mEnd + 1);
                     autotext.clear();
@@ -286,7 +283,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // 如果不是正好在反向替换后，那么就开始正常偿试替换的过程
             CharSequence candidateInput = mConnection.getTextBeforeCursor(maxInputLength + 1, 0);
             if (candidateInput.length() < 1) {
-
                 mConnection.commitText(" ", 1);
                 mConnection.setSelection(mEnd + 1, mEnd + 1);
                 return true;
@@ -300,15 +296,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             }
             offsetBefore--;
             candidateInput = candidateInput.subSequence(candidateInput.length() - offsetBefore, candidateInput.length());
-            //Log.d("Here", "candidateInput=" + candidateInput + "|");
 
             String rawAutotext = dboper.searchAutotext("autotext" + defaultMethodId, candidateInput.toString());// 在库中查找替换项
-            if (rawAutotext == null) {// 如果没有找到替换项
+            if (rawAutotext == null) {// 如果没有找到替换项，替换失败
                 mConnection.commitText(" ", 1);
-                // 如果没有找到替换项，手机提示一下
-                // Vibrator vibrator = (Vibrator)
-                // getSystemService(VIBRATOR_SERVICE);
-                // vibrator.vibrate(50);
+                //autotext.beforeString = candidateInput.toString();
+                //把失败的字串保存起来，后面%w宏命令要用到
+                autotext.update(mEnd - candidateInput.length(), mEnd, candidateInput.toString(), "", Autotext.FAIL);
                 return true;
             } else {// 如果找到了替换项
                 // 开始扫描替换项
@@ -320,15 +314,15 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                         c = (i + 1 < rawAutotext.length()) ? rawAutotext.charAt(i + 1) : ConstantList.MACRO_MACROCHARACTER;// '%'不能是最后一个字符，否则就当作是普通字符
                         switch (c) {
                             case ConstantList.MACRO_DELETEBACK:// 在前面删除一个字符
-                                if (mAfterSubString.length() != 0) {
-                                    mAfterSubString.deleteCharAt(mAfterSubString.length() - 1);
+                                if (autotextString.length() != 0) {
+                                    autotextString.deleteCharAt(autotextString.length() - 1);
                                 } else {
                                     offsetBefore++;
                                 }
                                 i++;
                                 break;
                             case ConstantList.MACRO_DELETEWORD:// 删除刚替换的单词
-                                offsetBefore += autotext.end - autotext.start;
+                                offsetBefore += autotext.getEnd() - autotext.getStart();
                                 i++;
                                 break;
                             case ConstantList.MACRO_DELETEFORWARD:// 在后面删除一个字符
@@ -337,25 +331,25 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                                 break;
                             case ConstantList.MACRO_DATE:// date
                                 String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
-                                mAfterSubString.append(date);
+                                autotextString.append(date);
                                 i++;
                                 break;
                             case ConstantList.MACRO_LONGDATE:// date
                                 String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(System.currentTimeMillis()));
-                                mAfterSubString.append(datetime);
+                                autotextString.append(datetime);
                                 i++;
                                 break;
                             case ConstantList.MACRO_TIME:// time
                                 String time = new SimpleDateFormat("HH:mm").format(new Date(System.currentTimeMillis()));
-                                mAfterSubString.append(time);
+                                autotextString.append(time);
                                 i++;
                                 break;
                             default:
-                                mAfterSubString.append(ConstantList.MACRO_MACROCHARACTER);
+                                autotextString.append(ConstantList.MACRO_MACROCHARACTER);
                                 //mAfterSubString.append(c);
                         }
                     } else {// 是普通字符
-                        mAfterSubString.append(c);
+                        autotextString.append(c);
                     }
                 }
 
@@ -364,41 +358,40 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 offsetAfter = macroBnumber <= 1 ? 0 : macroBnumber - 1;// 因为后面还有一个刚输入的空格需要考虑到
                 offsetAfter = mConnection.getTextAfterCursor(offsetAfter, 0).length();
                 offsetBefore = mConnection.getTextBeforeCursor(offsetBefore, 0).length();
-                mBeforeSubString = mConnection.getTextBeforeCursor(offsetBefore, 0).toString()
+                inputString = mConnection.getTextBeforeCursor(offsetBefore, 0).toString()
                         + mConnection.getTextAfterCursor(offsetAfter, 0).toString();
 
                 // 处理以换行符作为分隔的情况，相当于是换行符就是最开头
-                final int length = mBeforeSubString.length();
+                final int length = inputString.length();
                 // Log.d("Here", "before = |" + this.mBeforeSubString + "|");
                 for (int j = 0; j < length; ++j) {
-                    if (mBeforeSubString.charAt(length - 1 - j) == '\n') {
-                        mBeforeSubString = mBeforeSubString.substring(length - j);
-                        // Log.d("Here", "after = |" + mBeforeSubString + "|");
-                        offsetBefore = mBeforeSubString.length();
+                    if (inputString.charAt(length - 1 - j) == '\n') {
+                        inputString = inputString.substring(length - j);
+                        offsetBefore = inputString.length();
                         break;
                     }
                 }
 
                 // 第二，记录替换块的信息，不能放到后面记录，因为mAfterSubString会变，可能需要加上空格
-                autotext.start = mStart - offsetBefore;
+                /*autotext.start = mStart - offsetBefore;
                 autotext.end = autotext.start + mAfterSubString.length();
                 autotext.beforeString = mBeforeSubString;
-                autotext.afterString = mAfterSubString.toString();
+                autotext.afterString = mAfterSubString.toString();*/
+                autotext.update(mStart - offsetBefore, mStart - offsetBefore + autotextString.length(), inputString, autotextString.toString(), Autotext.AFTER);
 
                 // 第三，构建用于替换的文本，看是否要加上空格
-                mAfterSubString = macroBnumber == 0 ? mAfterSubString.append(ConstantList.SUBSTITUTION_SEPERRATOR) : mAfterSubString;
+                autotextString = macroBnumber == 0 ? autotextString.append(ConstantList.SUBSTITUTION_SEPERRATOR) : autotextString;
 
                 // 第四，准备好了之后，最后才替换，同时强制更新光标位置
 
                 mConnection.deleteSurroundingText(offsetBefore, offsetAfter);
-                mConnection.commitText(mAfterSubString, 1);
-                mConnection.setSelection(autotext.start + mAfterSubString.length(), autotext.start + mAfterSubString.length());
+                mConnection.commitText(autotextString, 1);
+                mConnection.setSelection(autotext.getStart() + autotextString.length(), autotext.getStart() + autotextString.length());
 
                 return true;
             }
             // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        } else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符
-            // //Log.d("Here", "SUBTRIGGER");
+        } else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符，为"backspace"键
             isSelectModel = false;
             if (mStart != mEnd) {// 处于选择模式
                 mConnection.setSelection(mStart, mStart);
@@ -411,33 +404,46 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // 触发反向替换的条件是：
             // 1、替换块不能为空
             // 2、当前光标前的字符与替换块的完全相同，并且光标的位置与替换块的结束标记相同
+            // 3、autotext对象的状态为 Autotext.AFTER ，即替换成功状态
+
             // 下面是反向替换过程
-            // 如果 条件1:替换块不能为空  不满足
-            if (TextUtils.isEmpty(autotext.afterString) || TextUtils.isEmpty(autotext.beforeString)) {
+            //先找出光标前的相应字符
+            String rawInput = mConnection.getTextBeforeCursor(autotext.getAutotext().length(), 0).toString();
+            if(!TextUtils.isEmpty(autotext.getAutotext()) &&
+                    !TextUtils.isEmpty(autotext.getInput()) &&
+                    mEnd == autotext.getEnd() &&
+                    rawInput.equals(autotext.getAutotext()) &&
+                    (autotext.getStat() == Autotext.AFTER))
+            {
+                // 开始反向替换
+                mConnection.deleteSurroundingText(autotext.getEnd() - autotext.getStart(), 0);
+                mConnection.commitText(autotext.getInput(), 1);
+
+                // 记录替换块信息的变化，并强制更新光标位置
+                autotext.update(mEnd - autotext.getAutotext().length(), mEnd - autotext.getAutotext().length() + autotext.getInput().length(),
+                        autotext.getInput(), autotext.getAutotext(), Autotext.REVERSE_AFTER);
+                mConnection.setSelection(autotext.getEnd(), autotext.getEnd());
+                return true;
+            }else{// 删除光标前一个字符
+                mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
+                mConnection.deleteSurroundingText(1, 0);
+                return true;
+            }
+
+            /*// 如果 条件1:替换块不能为空  不满足
+            if (TextUtils.isEmpty(autotext.getAfterString()) || TextUtils.isEmpty(autotext.getBeforeString())) {
                 mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
                 mConnection.deleteSurroundingText(1, 0);
                 return true;
             }
 
             // 如果 条件2 当前光标前的字符与替换块的完全相同，并且光标的位置与替换块的结束标记相同 不满足
-            String rawInput = mConnection.getTextBeforeCursor(autotext.afterString.length(), 0).toString();
-            if (mEnd != autotext.end || !rawInput.equals(autotext.afterString)) {
+            String rawInput = mConnection.getTextBeforeCursor(autotext.getAfterString().length(), 0).toString();
+            if (mEnd != autotext.getEnd() || !rawInput.equals(autotext.getAfterString())) {
                 mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
                 mConnection.deleteSurroundingText(1, 0);
                 return true;
-            }
-
-            // 开始反向替换
-            mConnection.deleteSurroundingText(autotext.end - autotext.start, 0);
-            mConnection.commitText(autotext.beforeString, 1);
-
-            // 记录替换块信息的变化，并强制更新光标位置
-            autotext.start = mEnd - autotext.afterString.length();
-            autotext.end = mEnd - autotext.afterString.length() + autotext.beforeString.length();
-            autotext.afterString = "";
-            mConnection.setSelection(autotext.end, autotext.end);
-
-            return true;
+            }*/
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTALL) {
             // 全选
             isSelectModel = true;

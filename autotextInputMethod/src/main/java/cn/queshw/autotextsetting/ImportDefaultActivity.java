@@ -1,11 +1,5 @@
 package cn.queshw.autotextsetting;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +11,13 @@ import android.text.TextUtils;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 import cn.queshw.autotextinputmethod.R;
 
 public class ImportDefaultActivity extends Activity {
@@ -39,7 +40,7 @@ public class ImportDefaultActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// 
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.importdefault);
@@ -68,13 +69,12 @@ public class ImportDefaultActivity extends Activity {
 				}
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		handler = new Handler() {			
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub				
+				// 				
 				if (msg.what != -1) {
 					filenameTextview.setText(fileName[msg.what]);
 					lines = msg.arg1;
@@ -90,7 +90,7 @@ public class ImportDefaultActivity extends Activity {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+				// 
 				try {
 					for (int i = 0; i < list.length; i++) {
 						// 取得文件的行数

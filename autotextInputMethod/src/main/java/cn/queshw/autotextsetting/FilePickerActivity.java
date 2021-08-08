@@ -51,7 +51,7 @@ public class FilePickerActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// 
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.layout_filepickeractivity);
@@ -89,14 +89,14 @@ public class FilePickerActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				// TODO Auto-generated method stub
+				// 
 				// Log.d("Here", "position=" + String.valueOf(position));
 				updateData(pathList.get(position), purpose);
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
+				// 
 
 			}
 		});
@@ -105,7 +105,7 @@ public class FilePickerActivity extends Activity {
 		parentButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				// 
 				if (new File(relativeRoot).getParent() != null)
 					updateData(new File(relativeRoot).getParent(), purpose);
 			}
@@ -116,7 +116,7 @@ public class FilePickerActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
-				// TODO Auto-generated method stub
+				// 
 
 				if (showfileList.get(pos).isDirectory()) {// 如果点击了一个目录，则打开进入
 					updateData(showfileList.get(pos).getPath(), purpose);
@@ -153,7 +153,7 @@ public class FilePickerActivity extends Activity {
 		noButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				// 
 				FilePickerActivity.this.setResult(RESULT_CANCELED);
 				finish();
 			}
@@ -163,7 +163,7 @@ public class FilePickerActivity extends Activity {
 		yesButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				// 
 
 				if (relativeRoot.equals("/"))
 					result = relativeRoot + resultEditText.getText().toString();
@@ -214,7 +214,6 @@ public class FilePickerActivity extends Activity {
 											public void onClick(
 													DialogInterface dialog,
 													int which) {
-												// TODO Auto-generated method
 												// stub
 												Intent intent = new Intent();
 												intent.putExtra("result",

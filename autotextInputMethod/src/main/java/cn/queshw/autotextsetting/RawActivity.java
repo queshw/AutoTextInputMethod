@@ -93,7 +93,7 @@ public class RawActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_rawactivity);
 
@@ -114,7 +114,7 @@ public class RawActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				// TODO Auto-generated method stub
+				// 
 				addOrEdit(listdata.get(position).getId());
 			}
 
@@ -124,7 +124,7 @@ public class RawActivity extends Activity {
 		rawListview.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
+				// 
 				// 看看点击的是哪个条目
 				position = rawListview.pointToPosition((int) event.getX(),
 						(int) event.getY());
@@ -158,14 +158,13 @@ public class RawActivity extends Activity {
 									.setOnClickListener(new View.OnClickListener() {
 										@Override
 										public void onClick(View arg0) {
-											// TODO Auto-generated method stub
+											// 
 											view.startAnimation(animation);// 设置动画
 											animation
 													.setAnimationListener(new AnimationListener() {
 														@Override
 														public void onAnimationEnd(
 																Animation animation) {
-															// TODO
 															// Auto-generated
 															// method stub
 															dboper.deleteRawItem(
@@ -181,7 +180,6 @@ public class RawActivity extends Activity {
 														@Override
 														public void onAnimationRepeat(
 																Animation animation) {
-															// TODO
 															// Auto-generated
 															// method stub
 														}
@@ -189,7 +187,6 @@ public class RawActivity extends Activity {
 														@Override
 														public void onAnimationStart(
 																Animation animation) {
-															// TODO
 															// Auto-generated
 															// method stub
 														}
@@ -210,7 +207,7 @@ public class RawActivity extends Activity {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
+				// 
 				switch (msg.what) {
 				case LOADED:// 如果数据已经加载完了
 					adapter.notifyDataSetChanged();
@@ -247,7 +244,7 @@ public class RawActivity extends Activity {
 			@Override
 			public void onScroll(AbsListView listview, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
+				// 
 
 				if (listview.getLastVisiblePosition() == totalItemCount - LIMIT
 						/ 2
@@ -259,7 +256,7 @@ public class RawActivity extends Activity {
 					Thread loaddata = new Thread(new Runnable() {
 						@Override
 						public synchronized void run() {
-							// TODO Auto-generated method stub
+							// 
 							ArrayList<RawItem> data = dboper
 									.searchRawItems(table, searchText,
 											LIMIT, totalItems);
@@ -280,7 +277,7 @@ public class RawActivity extends Activity {
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// TODO Auto-generated method stub
+				// 
 			}
 
 		});
@@ -290,7 +287,7 @@ public class RawActivity extends Activity {
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
+				// 
 				// 加载数据，刷新列表内容
 				offset = 0;
 				loadtag = NOTLOAD;
@@ -301,13 +298,13 @@ public class RawActivity extends Activity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
+				// 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
+				// 
 			}
 		});
 
@@ -331,14 +328,14 @@ public class RawActivity extends Activity {
 	// 菜单处理
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
+		// 
 		this.getMenuInflater().inflate(R.menu.menu_rawactivity, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+		// 
 		switch (item.getItemId()) {
 		case R.id.add_menu_rawactivity:
 			addOrEdit(ADD);
@@ -368,7 +365,7 @@ public class RawActivity extends Activity {
 	// FilePickerActivity返回数据后的处理函数
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
+		// 
 		if (resultCode == Activity.RESULT_OK) {
 			String result = data.getStringExtra("result");
 			// Log.d("Here", "RequestCode=" + String.valueOf(requestCode)
@@ -379,7 +376,7 @@ public class RawActivity extends Activity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
+						// 
 
 						FileReader fr;
 						ArrayList<String[]> data = new ArrayList<String[]>();
@@ -431,7 +428,6 @@ public class RawActivity extends Activity {
 							handler.sendMessage(msg);
 
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -441,7 +437,7 @@ public class RawActivity extends Activity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
+						// 
 
 						FileWriter fw;
 						try {
@@ -478,7 +474,6 @@ public class RawActivity extends Activity {
 							handler.sendMessage(msg);
 
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -514,7 +509,7 @@ public class RawActivity extends Activity {
 				.setPositiveButton(R.string.save, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
+						// 
 						dboper.addOrSaveRawItem(methodId, codeEditText
 								.getText().toString(), candidateEditText
 								.getText().toString(), rawItemId);
@@ -529,7 +524,7 @@ public class RawActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
+						// 
 						candidateEditText.setText(candidateEditText.getText() + "%c %p");
 						candidateEditText.setSelection(candidateEditText
 								.getText().length());

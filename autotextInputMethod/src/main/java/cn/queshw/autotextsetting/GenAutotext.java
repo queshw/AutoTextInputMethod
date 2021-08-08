@@ -14,7 +14,6 @@ public class GenAutotext {
     private int numcodesPrepage = 6;//每页最多几个编码，最大为9，最小为2
 	
 	public GenAutotext() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public ArrayList<String> getInputList(){
@@ -133,7 +132,6 @@ public class GenAutotext {
 	}
 
 	private String getNumber(int i) {
-		// TODO Auto-generated method stub
 		String c = "";
 		switch (i) {
 		case 1: {

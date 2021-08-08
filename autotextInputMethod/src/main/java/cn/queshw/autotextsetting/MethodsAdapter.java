@@ -1,7 +1,5 @@
 package cn.queshw.autotextsetting;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import cn.queshw.autotextinputmethod.R;
 
 public class MethodsAdapter extends ArrayAdapter<MethodItem> {
@@ -19,7 +20,6 @@ public class MethodsAdapter extends ArrayAdapter<MethodItem> {
 	public MethodsAdapter(Context context, int resourceId,
 			List<MethodItem> objects) {
 		super(context, resourceId, objects);
-		// TODO Auto-generated constructor stub
 		resource = resourceId;
 		this.context = context;
 	}
@@ -32,7 +32,6 @@ public class MethodsAdapter extends ArrayAdapter<MethodItem> {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		// Log.d("Here", "getView position=" + String.valueOf(position));
 		MethodItem item = getItem(position);
 		Holder holder = new Holder();

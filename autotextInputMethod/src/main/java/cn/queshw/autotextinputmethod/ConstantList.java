@@ -14,13 +14,18 @@ public class ConstantList {
 	static final char SUBSTITUTION_SEPERRATOR = ' ';// 替换分隔符
 
 	// 宏命令
-	static final char MACRO_DELETEBACK = 'b';
-	static final char MACRO_DELETEFORWARD = 'B';
+	static final char MACRO_DELETEBACK = 'b';//替换前 往前删除一个字符
+	static final char MACRO_DELETEFORWARD = 'B';//替换后 往前删除一个字符
+
+
+	//用途1：如果输入错误，导致替换成别的内容，则删除错误替换的内容
+	//用途2：如果输入错误，替换没有成功，则删除刚输入的内容
 	static final char MACRO_DELETEWORD = 'w';
-	static final char MACRO_DATE = 'd';
-	static final char MACRO_LONGDATE = 'D';
-	static final char MACRO_TIME = 't';
-	static final char MACRO_MACROCHARACTER = '%';
+
+	static final char MACRO_DATE = 'd';//日期， 只包括几月几号
+	static final char MACRO_LONGDATE = 'D';//长日期 包括几月几号几点几分
+	static final char MACRO_TIME = 't';//时间，几点几分
+	static final char MACRO_MACROCHARACTER = '%';//宏命令标识符，在这个字符后的第一个字符，即要对其进行判断是否为宏命令
 
 	// 编辑快捷皱键
 	static final int EDIT_COPY = KeyEvent.KEYCODE_C;

@@ -1,16 +1,13 @@
 package cn.queshw.autotextsetting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.database.sqlite.SQLiteStatement;
+
+import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private final String method_sql = "CREATE TABLE methods(" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "name TEXT NOT NULL,"
@@ -19,19 +16,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	public DBHelper(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
 		mdb = db;
 		mdb.execSQL(method_sql);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
 		switch (oldVersion) {
 		case 1:// 从autotext中产生源文件
 				// 第一步先取出methods表中的id号
@@ -221,7 +215,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private String getCandidate(CharSequence s, CharSequence start, ArrayList<String> inputList, ArrayList<String> autotextList,
 			ArrayList<String> inputList2, ArrayList<String> autotextList2) {
-		// TODO Auto-generated method stub
 		String candidate = "";
 		int i = inputList.indexOf(s);
 		if (i != -1) {
