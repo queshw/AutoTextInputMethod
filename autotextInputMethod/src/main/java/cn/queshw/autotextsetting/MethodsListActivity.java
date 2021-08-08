@@ -1,7 +1,5 @@
 package cn.queshw.autotextsetting;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,6 +26,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+
+import java.util.ArrayList;
+
 import cn.queshw.autotextinputmethod.R;
 
 public class MethodsListActivity extends Activity {
@@ -70,7 +71,7 @@ public class MethodsListActivity extends Activity {
 		methodsListview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
-				// TODO Auto-generated method stub
+				// 
 				RawActivity.actionStart(MethodsListActivity.this, methodsItemList.get(position).getId());
 				// Log.d("Here", "Position=" + String.valueOf(position) +
 				// " clicked");
@@ -82,7 +83,7 @@ public class MethodsListActivity extends Activity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
+				// 
 				// 确定点到哪条了
 				position = methodsListview.pointToPosition((int) event.getX(), (int) event.getY());
 				if (position == AdapterView.INVALID_POSITION) {// 如果点击的是无效位置
@@ -120,7 +121,7 @@ public class MethodsListActivity extends Activity {
 							isdefaultImageView.setOnClickListener(new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
+									// 
 									dboper.addOrUpdateMethodItem(methodsItemList.get(position).getName(), MethodItem.DEFAULT,
 											methodsItemList.get(position).getId());
 									slideMenu.setVisibility(View.GONE);
@@ -132,7 +133,7 @@ public class MethodsListActivity extends Activity {
 							editImageView.setOnClickListener(new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
+									// 
 									addOrEdit(methodsItemList.get(position).getId());
 									slideMenu.setVisibility(View.GONE);
 									slideMenu = null;
@@ -143,12 +144,11 @@ public class MethodsListActivity extends Activity {
 							deleteImageView.setOnClickListener(new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
+									// 
 									view.startAnimation(animation);
 									animation.setAnimationListener(new AnimationListener() {
 										@Override
 										public void onAnimationEnd(Animation animation) {
-											// TODO
 											// Auto-generated
 											// method stub
 											dboper.deleteMethodItem("methods", methodsItemList.get(position).getId());
@@ -159,14 +159,12 @@ public class MethodsListActivity extends Activity {
 
 										@Override
 										public void onAnimationRepeat(Animation animation) {
-											// TODO
 											// Auto-generated
 											// method stub
 										}
 
 										@Override
 										public void onAnimationStart(Animation animation) {
-											// TODO
 											// Auto-generated
 											// method stub
 
@@ -187,14 +185,14 @@ public class MethodsListActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
+		// 
 		super.onResume();
 		refresh();
 	}
 
 	// 用于刷新列表
 	private void refresh() {
-		// TODO Auto-generated method stub
+		// 
 		// Log.d("Here", "refresh");
 		methodsItemList.clear();
 		for (MethodItem item : dboper.loadMethodsData()) {
@@ -206,7 +204,7 @@ public class MethodsListActivity extends Activity {
 	// @Override
 	// public void onCreateContextMenu(ContextMenu menu, View v,
 	// ContextMenuInfo menuInfo) {
-	// // TODO Auto-generated method stub
+	// // 
 	// super.onCreateContextMenu(menu, v, menuInfo);
 	// menu.add(0, 0, 0, R.string.edit);
 	// menu.add(0, 2, 0, R.string.setdefault);
@@ -215,7 +213,7 @@ public class MethodsListActivity extends Activity {
 	//
 	// @Override
 	// public boolean onContextItemSelected(MenuItem item) {
-	// // TODO Auto-generated method stub
+	// // 
 	// AdapterView.AdapterContextMenuInfo info = (AdapterContextMenuInfo)
 	// item.getMenuInfo();
 	// MethodItem methodItem = methodsItemList.get(info.position);
@@ -248,7 +246,7 @@ public class MethodsListActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+		// 
 		switch (item.getItemId()) {
 		case R.id.add_menu_methodactivity:
 			addOrEdit(ADD);
@@ -265,7 +263,7 @@ public class MethodsListActivity extends Activity {
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
+		// 
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_C:
 			addOrEdit(ADD);
@@ -343,7 +341,7 @@ public class MethodsListActivity extends Activity {
 		sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
+				// 
 				isDefault = isChecked ? MethodItem.DEFAULT : MethodItem.NOTDEFAULT;
 				// Log.d("Here", "isDefault=" + String.valueOf(isDefault));
 			}
@@ -353,7 +351,7 @@ public class MethodsListActivity extends Activity {
 				.setOnCancelListener(new OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
-						// TODO Auto-generated method stub
+						// 
 						isDefault = MethodItem.NOTDEFAULT;
 						refresh();
 						// Log.d("Here", "cancel isDefault=" +
@@ -365,7 +363,7 @@ public class MethodsListActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
+						// 
 						dialog.dismiss();
 						isDefault = MethodItem.NOTDEFAULT;
 						refresh();
@@ -377,7 +375,7 @@ public class MethodsListActivity extends Activity {
 				.setPositiveButton(R.string.save, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
+						// 
 						name = ed.getText().toString();
 						dboper.addOrUpdateMethodItem(name, isDefault, id);
 						isDefault = MethodItem.NOTDEFAULT;

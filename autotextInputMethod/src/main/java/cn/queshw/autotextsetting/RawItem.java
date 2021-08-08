@@ -7,11 +7,9 @@ public class RawItem {
 	private int twolevel;
 
 	public RawItem() {
-		// TODO Auto-generated constructor stub
 		twolevel = 0;
 	}
 	public RawItem(int id, String code, String candidate, int twolevel) {
-		// TODO Auto-generated constructor stub
 		this.id = id;
 		this.code = code;
 		this.candidate = candidate;

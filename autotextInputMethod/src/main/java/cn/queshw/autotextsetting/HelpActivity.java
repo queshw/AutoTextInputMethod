@@ -1,19 +1,22 @@
 package cn.queshw.autotextsetting;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import cn.queshw.autotextinputmethod.R;
 
 public class HelpActivity extends Activity {
@@ -32,7 +35,7 @@ public class HelpActivity extends Activity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// 
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.layout_helpactivity);
 
@@ -59,7 +62,6 @@ public class HelpActivity extends Activity {
 				}
 				tempTv.setText(text);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 		}

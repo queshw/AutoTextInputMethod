@@ -1,9 +1,5 @@
 package cn.queshw.autotextsetting;
 
-import java.util.List;
-
-import cn.queshw.autotextinputmethod.R;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
+import cn.queshw.autotextinputmethod.R;
 
 public class RawAdapter extends ArrayAdapter<RawItem> {
 	int resource;
@@ -25,7 +25,6 @@ public class RawAdapter extends ArrayAdapter<RawItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		RawItem item = getItem(position);
 		ViewHolder holder = new ViewHolder();
 		if (convertView == null) {

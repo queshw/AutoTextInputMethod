@@ -1,10 +1,5 @@
 package cn.queshw.autotextsetting;
 
-import java.io.File;
-import java.util.List;
-
-import cn.queshw.autotextinputmethod.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.util.List;
+
+import cn.queshw.autotextinputmethod.R;
+
 public class FilePickerAdapter extends ArrayAdapter<File> {
 	private int resource;
 	private Context context;
@@ -20,14 +20,12 @@ public class FilePickerAdapter extends ArrayAdapter<File> {
 	public FilePickerAdapter(Context context, int resourceId,
 			List<File> objects) {
 		super(context, resourceId, objects);
-		// TODO Auto-generated constructor stub
 		resource = resourceId;
 		this.context = context;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub		
 		File file = getItem(position);
 		Holder holder = new Holder();
 		if(convertView == null){

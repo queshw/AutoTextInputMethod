@@ -22,7 +22,6 @@ public class DBOperations {
 	// ////////////////////////////////////////////////////
 	// 构造函数
 	public DBOperations(Context context) {
-		// TODO Auto-generated constructor stub
 		helper = new DBHelper(context, "methods.db", null, 2);
 		db = helper.getWritableDatabase();
 	}
@@ -104,7 +103,6 @@ public class DBOperations {
 
 	// 删除一条记录
 	public void deleteMethodItem(String table, int id) {// ??
-		// TODO Auto-generated method stub
 		Cursor cursor = db.rawQuery("select isDefault from methods where id = ?", new String[] { String.valueOf(id) });
 		cursor.moveToNext();
 		// int isDefault = cursor.getInt(cursor.getColumnIndex("isDefault"));//
@@ -172,7 +170,6 @@ public class DBOperations {
 
 	// 构造rawitem
 	private RawItem constructRawItem(Cursor cursor) {
-		// TODO Auto-generated method stub
 		RawItem item = new RawItem();
 		item.setId(cursor.getInt(cursor.getColumnIndex("id")));
 		item.setCode(cursor.getString(cursor.getColumnIndex("code")));
@@ -442,7 +439,6 @@ public class DBOperations {
 
 	// 删除一条数据
 	public void deleteRawItem(int methodId, RawItem item) {
-		// TODO Auto-generated method stub
 		String rawTable = "raw" + String.valueOf(methodId);
 		String sql = "delete from " + rawTable + " where id = " + String.valueOf(item.getId());
 		db.execSQL(sql);
