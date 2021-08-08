@@ -11,7 +11,7 @@ public class GenAutotext {
 	// private HashMap<String, String> result = new HashMap<String, String>();
 	private ArrayList<String> input = new ArrayList<String>();// 用于存放autotext条目的input
 	private ArrayList<String> autotext = new ArrayList<String>();// 用于存放autotext条目的autotext
-
+    private int numcodesPrepage = 6;//每页最多几个编码，最大为9，最小为2
 	
 	public GenAutotext() {
 		// TODO Auto-generated constructor stub
@@ -61,10 +61,10 @@ public class GenAutotext {
 		// 计算替换项有几页
 		final int candiWordNumber = items.length - 1;
 		int candiPageNumber;
-		if (candiWordNumber % 9 > 0) {
-			candiPageNumber = candiWordNumber / 9 + 1;
+		if (candiWordNumber % numcodesPrepage > 0) {
+			candiPageNumber = candiWordNumber / numcodesPrepage + 1;
 		} else {
-			candiPageNumber = candiWordNumber / 9;
+			candiPageNumber = candiWordNumber / numcodesPrepage;
 		}
 
 		// 构造按页分的数组，在每一个项前标上数字
@@ -73,7 +73,7 @@ public class GenAutotext {
 		int itemIndex = 1;
 		for (int k = 1; k <= candiPageNumber; ++k) {
 			final StringBuilder candiPage = new StringBuilder();
-			for (int i = 0; i < 9 && itemIndex <= candiWordNumber; ++itemIndex, ++i) {
+			for (int i = 0; i < numcodesPrepage && itemIndex <= candiWordNumber; ++itemIndex, ++i) {
 				if (itemIndex == candiWordNumber && i == 0) {
 					candiPage.append(items[itemIndex]);// 如果只有一项
 				} else {
@@ -177,10 +177,10 @@ public class GenAutotext {
 	}
     //用于构建autotext的数组
 	private void writeEntries(int pageNumber, boolean singlePage, String[] pages, String[] items) {
-		for (int i = (pageNumber - 1) * 9 + 1; i < pageNumber * 9 + 1 && i < items.length; ++i) {
+		for (int i = (pageNumber - 1) * numcodesPrepage + 1; i < pageNumber * numcodesPrepage + 1 && i < items.length; ++i) {
 			// 如果是单页
 			if(singlePage){
-				if (i == (pageNumber - 1) * 9 + 1) {//如果是第一项，相当于是默认，不需要再输入数字来选择
+				if (i == (pageNumber - 1) * numcodesPrepage + 1) {//如果是第一项，相当于是默认，不需要再输入数字来选择
 					input.add(pages[pageNumber]);
 					autotext.add("%b" + items[i]);
 				} else{
@@ -188,7 +188,7 @@ public class GenAutotext {
 					autotext.add("%b" + items[i]);
 				}
 			}else{// 如果是多页
-				input.add(pages[pageNumber] + getchar(i%9));
+				input.add(pages[pageNumber] + getchar(i%numcodesPrepage));
 				autotext.add("%b" + items[i]);
 			}
 		}
