@@ -89,9 +89,7 @@ public class FilePickerActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				// 
-				// Log.d("Here", "position=" + String.valueOf(position));
-				updateData(pathList.get(position), purpose);
+				if(position != 0)	updateData(pathList.get(position), purpose);
 			}
 
 			@Override
@@ -143,9 +141,10 @@ public class FilePickerActivity extends Activity {
 			public void afterTextChanged(Editable s) {
 				showfileList.clear();
 				for(int i= 0; i < fileList.size(); i++){
-					if(fileList.get(i).getName().contains(s.toString()))
+					if(fileList.get(i).getName().toLowerCase().contains(s.toString().toLowerCase()))
 						showfileList.add(fileList.get(i));
 				}
+				fileListAdapter.notifyDataSetChanged();
 			}
 		});
 
@@ -255,23 +254,23 @@ public class FilePickerActivity extends Activity {
 		showfileList.clear();
 		pathList.clear();
 
-		// 如果传过来的path不存在，或者是一个文件名，则用根路径代替
+		// 如果目录列不出东西，则直接返回
 		File nowPathFile = new File(path);
-		if (!nowPathFile.exists()){
-			path = "/";
-		 	nowPathFile = new File(path);
-		}
+		File[] temp = nowPathFile.listFiles();
+		if(temp != null){
+			// 更新文件列表的数据
+			for (File tempFile : temp) {
+				fileList.add(tempFile);
+				showfileList.add(tempFile);
+			}
 
-		// 更新文件列表的数据
-		for (File tempFile : nowPathFile.listFiles()) {
-			fileList.add(tempFile);
-			showfileList.add(tempFile);
-		}
-
-		// 更新下拉列表的数据
-		while (nowPathFile != null) {
-			pathList.add(nowPathFile.getPath());
-			nowPathFile = nowPathFile.getParentFile();
+			// 更新下拉列表的数据
+			while (nowPathFile != null) {
+				pathList.add(nowPathFile.getPath());
+				nowPathFile = nowPathFile.getParentFile();
+			}
+		}else{
+			pathList.add(path);
 		}
 
 		// 更新下拉列表和文件列表

@@ -93,7 +93,7 @@ public class RawActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// 
+		//
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_rawactivity);
 
@@ -114,7 +114,7 @@ public class RawActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				// 
+				//
 				addOrEdit(listdata.get(position).getId());
 			}
 
@@ -124,7 +124,7 @@ public class RawActivity extends Activity {
 		rawListview.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// 
+				//
 				// 看看点击的是哪个条目
 				position = rawListview.pointToPosition((int) event.getX(),
 						(int) event.getY());
@@ -158,7 +158,7 @@ public class RawActivity extends Activity {
 									.setOnClickListener(new View.OnClickListener() {
 										@Override
 										public void onClick(View arg0) {
-											// 
+											//
 											view.startAnimation(animation);// 设置动画
 											animation
 													.setAnimationListener(new AnimationListener() {
@@ -207,7 +207,7 @@ public class RawActivity extends Activity {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// 
+				//
 				switch (msg.what) {
 				case LOADED:// 如果数据已经加载完了
 					adapter.notifyDataSetChanged();
@@ -244,7 +244,7 @@ public class RawActivity extends Activity {
 			@Override
 			public void onScroll(AbsListView listview, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				// 
+				//
 
 				if (listview.getLastVisiblePosition() == totalItemCount - LIMIT
 						/ 2
@@ -256,7 +256,7 @@ public class RawActivity extends Activity {
 					Thread loaddata = new Thread(new Runnable() {
 						@Override
 						public synchronized void run() {
-							// 
+							//
 							ArrayList<RawItem> data = dboper
 									.searchRawItems(table, searchText,
 											LIMIT, totalItems);
@@ -277,17 +277,16 @@ public class RawActivity extends Activity {
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// 
+				//
 			}
 
 		});
 
 		// 给输入框设置按键监听器
-		searchEditText = (EditText) findViewById(R.id.search_edittext_layout_rawactivity);		
+		searchEditText = (EditText) findViewById(R.id.search_edittext_layout_rawactivity);
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
-				// 
 				// 加载数据，刷新列表内容
 				offset = 0;
 				loadtag = NOTLOAD;
@@ -298,18 +297,18 @@ public class RawActivity extends Activity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// 
+				//
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// 
+				//
 			}
 		});
 
 		// 获得导入导出状态显示的TextView
-		statusTextView = (TextView) findViewById(R.id.status_textview_layout_rawactivity);		
+		statusTextView = (TextView) findViewById(R.id.status_textview_layout_rawactivity);
 	}
 
 	// ////////////////////////////////////////
@@ -328,14 +327,14 @@ public class RawActivity extends Activity {
 	// 菜单处理
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// 
+		//
 		this.getMenuInflater().inflate(R.menu.menu_rawactivity, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// 
+		//
 		switch (item.getItemId()) {
 		case R.id.add_menu_rawactivity:
 			addOrEdit(ADD);
@@ -365,7 +364,7 @@ public class RawActivity extends Activity {
 	// FilePickerActivity返回数据后的处理函数
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// 
+		//
 		if (resultCode == Activity.RESULT_OK) {
 			String result = data.getStringExtra("result");
 			// Log.d("Here", "RequestCode=" + String.valueOf(requestCode)
@@ -376,7 +375,7 @@ public class RawActivity extends Activity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						// 
+						//
 
 						FileReader fr;
 						ArrayList<String[]> data = new ArrayList<String[]>();
@@ -384,13 +383,13 @@ public class RawActivity extends Activity {
 							fr = new FileReader(resultFile);
 							BufferedReader br = new BufferedReader(fr);
 							String line = "";
-							
+
 							int twolevel = 0;//用于标识二级替换的项
 							boolean isTwoLevel = false;//用于标识当前是否处于二级替换块内
-							
+
 							while ((line = br.readLine()) != null) {
 								line = line.trim();
-								
+
 								if(TextUtils.isEmpty(line)) continue;//如果为空行则跳过
 								if(line.equals("[twolevel]")){
 									//二级替换块开始
@@ -403,18 +402,18 @@ public class RawActivity extends Activity {
 									isTwoLevel = false;
 									continue;
 								}
-								
+
 								String[] item = new String[3];
 								item[0] = line.substring(0, line.indexOf(','));
 								item[1] = line.substring(line.indexOf(',') + 1);
 								if(isTwoLevel == true) item[2] = String.valueOf(twolevel);
 								else item[2] = String.valueOf(0);
 								if(TextUtils.isEmpty(item[0]) || TextUtils.isEmpty(item[1])) continue;//如果有一个空的，则是非常的替换项，跳过
-								
+
 								data.add(item);
 								// dboper.importAutotext(table, item[0],
 								// item[1]);
-								// 通知显示导入进度								
+								// 通知显示导入进度
 								Message msg = new Message();
 								msg.what = ++lines;
 								if(lines % 500 == 0) handler.sendMessage(msg);
@@ -437,7 +436,7 @@ public class RawActivity extends Activity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						// 
+						//
 
 						FileWriter fw;
 						try {
@@ -453,13 +452,13 @@ public class RawActivity extends Activity {
 								if(i != 0) preTwolevel = tempData.get(i - 1).getTwolevel();
 								if(i != tempData.size() - 1) nextTwolevel = tempData.get(i + 1).getTwolevel();
 								item = tempData.get(i);
-								
-								
+
+
 								if(item.getTwolevel() < 0 && item.getTwolevel() != preTwolevel) bw.write("[twolevel]\n");
-								
+
 								bw.write(ConstantList.commaPercentEscape(item.getCode()) + ","
 										+ item.getCandidate() + "\n");
-								
+
 								if(item.getTwolevel() < 0 && item.getTwolevel() != nextTwolevel) bw.write("[/twolevel]\n");
 								// 通知显示导出进度
 								Message msg = new Message();
@@ -479,7 +478,7 @@ public class RawActivity extends Activity {
 					}
 				}).start();
 				//exportAutotexts(result);
-			}			
+			}
 		} else {
 			Log.d("Here", "set result cancel!");
 		}
@@ -509,7 +508,7 @@ public class RawActivity extends Activity {
 				.setPositiveButton(R.string.save, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// 
+						//
 						dboper.addOrSaveRawItem(methodId, codeEditText
 								.getText().toString(), candidateEditText
 								.getText().toString(), rawItemId);
@@ -524,7 +523,7 @@ public class RawActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// 
+						//
 						candidateEditText.setText(candidateEditText.getText() + "%c %p");
 						candidateEditText.setSelection(candidateEditText
 								.getText().length());

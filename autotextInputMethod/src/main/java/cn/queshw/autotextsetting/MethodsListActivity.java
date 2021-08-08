@@ -201,42 +201,6 @@ public class MethodsListActivity extends Activity {
 		adapter.notifyDataSetChanged();
 	}
 
-	// @Override
-	// public void onCreateContextMenu(ContextMenu menu, View v,
-	// ContextMenuInfo menuInfo) {
-	// // 
-	// super.onCreateContextMenu(menu, v, menuInfo);
-	// menu.add(0, 0, 0, R.string.edit);
-	// menu.add(0, 2, 0, R.string.setdefault);
-	// menu.add(0, 1, 0, R.string.delete);
-	// }
-	//
-	// @Override
-	// public boolean onContextItemSelected(MenuItem item) {
-	// // 
-	// AdapterView.AdapterContextMenuInfo info = (AdapterContextMenuInfo)
-	// item.getMenuInfo();
-	// MethodItem methodItem = methodsItemList.get(info.position);
-	// int id = methodItem.getId();
-	//
-	// switch(item.getItemId()){
-	// case 0://修改
-	// //Log.d("Here", "0 click");
-	// addOrEdit(id);
-	// break;
-	// case 1://删除
-	// dboper.deleteMethodItem("methods", id);
-	// //Log.d("Here", "1 click");
-	// refresh();
-	// break;
-	// case 2://设为默认
-	// dboper.addOrSaveMethodItem(methodItem.getName(), MethodItem.DEFAULT, id);
-	// refresh();
-	// break;
-	// }
-	// return true;
-	// }
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
