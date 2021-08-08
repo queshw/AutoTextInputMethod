@@ -1,9 +1,0 @@
-build/
-build.gradle
-gradle/
-gradle.properties
-gradlew
-gradlew.bat
-import-summary.txt
-local.properties
-settings.gradle
