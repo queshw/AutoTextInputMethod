@@ -412,41 +412,32 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // 1、替换块不能为空
             // 2、当前光标前的字符与替换块的完全相同，并且光标的位置与替换块的结束标记相同
             // 下面是反向替换过程
-            // 条件1:替换块不能为空
+            // 如果 条件1:替换块不能为空  不满足
             if (TextUtils.isEmpty(autotext.afterString) || TextUtils.isEmpty(autotext.beforeString)) {
                 mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
                 mConnection.deleteSurroundingText(1, 0);
-                // mStart = mStart - 1 < 0 ? 0 : mStart - 1;
-                // mEnd = mStart;
-                // mConnection.setSelection(mStart, mStart);
                 return true;
             }
-            // //Log.d("Here", "condition1");
 
-            // 条件2 当前光标前的字符与替换块的完全相同，并且光标的位置与替换块的结束标记相同
+            // 如果 条件2 当前光标前的字符与替换块的完全相同，并且光标的位置与替换块的结束标记相同 不满足
             String rawInput = mConnection.getTextBeforeCursor(autotext.afterString.length(), 0).toString();
             if (mEnd != autotext.end || !rawInput.equals(autotext.afterString)) {
                 mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
                 mConnection.deleteSurroundingText(1, 0);
-                // mStart = mStart - 1 < 0 ? 0 : mStart - 1;
-                // mEnd = mStart;
-                // mConnection.setSelection(mStart, mStart);
                 return true;
             }
-            // //Log.d("Here", "condition2");
 
             // 开始反向替换
-
             mConnection.deleteSurroundingText(autotext.end - autotext.start, 0);
             mConnection.commitText(autotext.beforeString, 1);
 
             // 记录替换块信息的变化，并强制更新光标位置
             autotext.start = mEnd - autotext.afterString.length();
             autotext.end = mEnd - autotext.afterString.length() + autotext.beforeString.length();
+            autotext.afterString = "";
             mConnection.setSelection(autotext.end, autotext.end);
 
             return true;
-            // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTALL) {
             // 全选
             isSelectModel = true;
