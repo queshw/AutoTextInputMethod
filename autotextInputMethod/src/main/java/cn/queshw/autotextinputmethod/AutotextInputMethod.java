@@ -321,8 +321,17 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                                 }
                                 i++;
                                 break;
-                            case ConstantList.MACRO_DELETEWORD:// 删除刚替换的单词
-                                offsetBefore += autotext.getEnd() - autotext.getStart();
+                            case ConstantList.MACRO_DELETEWORD:// 删除刚替换的单词，或者错误的输入
+                                if(autotext.getStat() == Autotext.AFTER){//如果再上一次替换成功了
+                                    //则删除上一次成功替换的内容
+                                    //这是第二个循环分支，在下一行计算前，offsetBefore已经在上一个循环中加1了，因为前面有%b
+                                    offsetBefore += autotext.getEnd() - autotext.getStart();
+                                    //如果当前光标位置减去offsetBefore等于0，这说明要删除到头上，那么在用于触发正向替换的空格也不需要了
+                                    if(mEnd - offsetBefore == 0) macroBnumber++;
+                                }else if(autotext.getStat() == Autotext.FAIL){//如果再上一次替换失败
+                                    offsetBefore += autotext.getEnd() - autotext.getStart();
+                                    macroBnumber++;
+                                }
                                 i++;
                                 break;
                             case ConstantList.MACRO_DELETEFORWARD:// 在后面删除一个字符
