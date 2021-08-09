@@ -55,7 +55,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     private int defaultMethodId;// 默认输入法的id
     private int maxInputLength;// 表中最长的input的长度，用于在正向替换的时候，最长需要从光标前面取多长的文本
 
-    private ArrayList<MethodItem> methodItemList;//
+    private ArrayList<MethodItem> methodItemList;//保存着所有词库的数据
+    private int methodItemNum;//现有词库在methodItemList中的序号
 
     // 用于标记功能键是否按下
     private boolean isCtrlPressed;
@@ -186,12 +187,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         }
 
         //获得黙认词库的id
-        defaultMethodId = methodItemList.get(0).getId();//先把第一个词库的id作为默认词库
-        for (MethodItem item : methodItemList) {
-            if (item.getIsDefault() == MethodItem.DEFAULT)
-                defaultMethodId = item.getId();
-                inputMethodName.setText(item.getName());
+        methodItemNum = 0;//先把第一个词库的id作为默认词库
+        for (int i = 0; i < methodItemList.size(); i++) {
+            if (methodItemList.get(i).getIsDefault() == MethodItem.DEFAULT)
+                methodItemNum = i;
         }
+        defaultMethodId = methodItemList.get(methodItemNum).getId();
+        inputMethodName.setText(methodItemList.get(methodItemNum).getName());
         maxInputLength = dboper.getMaxInputLength(defaultMethodId);
 
         return;
@@ -209,11 +211,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see android.inputmethodservice.InputMethodService#onFinishInput()
-     */
     @Override
     public void onFinishInput() {
         super.onFinishInput();
@@ -620,14 +617,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         else if (isCtrlPressed && keyCode == ConstantList.EDIT_UP) {
             // 向上
             isSelectModel = false;
-            // Log.d("Here", "LINE START FROM START = " + "|" +
-            // curOper.getToLineStart(FROMSTART) + "|");
-            // Log.d("Here", "LINE START FROM END= " + "|" +
-            // curOper.getToLineStart(FROMEND) + "|");
-            // Log.d("Here", "UP FROMSTART = " + "|" +
-            // curOper.getPreLine(FROMSTART) + "|");
-            // Log.d("Here", "UP FROMEND = " + "|" + curOper.getPreLine(FROMEND)
-            // + "|");
             final CharSequence preLine2 = this.curOper.getPreLine(this.mFromWhichEnd);
             if (!preLine2.toString().equals("")) {
                 int tempNum = this.curOper.getInvisibleCharsNumber(preLine2);
@@ -791,12 +780,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // 剪切OKKKKKKKKKKKKKKKKKK
             isSelectModel = false;
             if (mStart != mEnd) {
-                // ClipboardManager clipboard = (ClipboardManager)
-                // this.getSystemService(CLIPBOARD_SERVICE);
-                // ClipData clip = ClipData.newPlainText("AutotextInputMethod",
-                // mConnection.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES));
-                // clipboard.setPrimaryClip(clip);
-                // mConnection.commitText("", 1);
                 int mUndoStart = mStart;
                 int mUndoEnd = mEnd;
                 mConnection.setSelection(mStart, mStart);
@@ -807,10 +790,10 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             return true;
         } else if (isCtrlPressed && keyCode == ConstantList.SWITCH_INPUTMETHOD) {
             //c-enter 切换输入词库
-            defaultMethodId = defaultMethodId + 1 < methodItemList.size() ? defaultMethodId + 1 : 0;
-			defaultMethodId = methodItemList.get(defaultMethodId).getId();
-			dboper.addOrUpdateMethodItem(methodItemList.get(defaultMethodId).getName(), MethodItem.DEFAULT, defaultMethodId);
-            inputMethodName.setText(methodItemList.get(defaultMethodId).getName());
+            methodItemNum = methodItemNum + 1 < methodItemList.size() ? methodItemNum + 1 : 0;
+			defaultMethodId = methodItemList.get(methodItemNum).getId();
+			dboper.addOrUpdateMethodItem(methodItemList.get(methodItemNum).getName(), MethodItem.DEFAULT, defaultMethodId);
+            inputMethodName.setText(methodItemList.get(methodItemNum).getName());
 			return true;
         }
         // ////////其他快捷键结束//////////////////
