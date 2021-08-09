@@ -46,17 +46,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     private int mEnd;// 用于保存某个光标位置
     private int mStart;// 用于保存某个光标位置
     private int mFromWhichEnd = this.FROMEND;// 用于标记，选择光标移动是应该移动头（0）还是尾（1）
-    // private int mPreEnd;// 保存光标位置，用于undo
-    // private int mPreStart;//保存光标位置，用于undo
     ClipboardManager clipboard; // 用于复制，粘贴，undo等功能
 
     private Autotext autotext;// 用于记录替换信息
     private CursorOperator curOper;
 
     private DBOperations dboper;// 用于数据库操作
-    private int selectedMethodPostion = 0;// 在spinner中选择默认输入法
-    private int defaultMethodId;// 在spinner中选择默认输入法的id
-    //private CurrentStatusIcon curStatusIcon;// 当前的状态图标
+    private int defaultMethodId;// 默认输入法的id
     private int maxInputLength;// 表中最长的input的长度，用于在正向替换的时候，最长需要从光标前面取多长的文本
 
     private ArrayList<MethodItem> methodItemList;//
@@ -168,7 +164,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         autotext = new Autotext();
         curOper = new CursorOperator(mConnection);
         state = 0L;
-        //curStatusIcon = CurrentStatusIcon.NONE;
 
         // 处理EditorInfo的匹配
         if (mEditInfo.inputType == InputType.TYPE_CLASS_NUMBER || mEditInfo.inputType == InputType.TYPE_CLASS_PHONE
@@ -190,14 +185,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             return;
         }
 
-        for (int i = 0; i < methodItemList.size(); i++) {
-            MethodItem item = methodItemList.get(i);
+        //获得黙认词库的id
+        defaultMethodId = methodItemList.get(0).getId();//先把第一个词库的id作为默认词库
+        for (MethodItem item : methodItemList) {
             if (item.getIsDefault() == MethodItem.DEFAULT)
-                selectedMethodPostion = i;
+                defaultMethodId = item.getId();
+                inputMethodName.setText(item.getName());
         }
-        defaultMethodId = methodItemList.get(selectedMethodPostion).getId();
-        inputMethodName.setText(methodItemList.get(selectedMethodPostion).getName());
-        //Toast.makeText(this, methodItemList.get(selectedMethodPostion).getName(), TOASTDURATION).show();
         maxInputLength = dboper.getMaxInputLength(defaultMethodId);
 
         return;
@@ -234,7 +228,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (!this.isInputStarted) {
-            return super.onKeyDown(selectedMethodPostion, event);
+            return super.onKeyDown(0, event);
         }
 
         this.mConnection.finishComposingText();
@@ -382,10 +376,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 }
 
                 // 第二，记录替换块的信息，不能放到后面记录，因为mAfterSubString会变，可能需要加上空格
-                /*autotext.start = mStart - offsetBefore;
-                autotext.end = autotext.start + mAfterSubString.length();
-                autotext.beforeString = mBeforeSubString;
-                autotext.afterString = mAfterSubString.toString();*/
                 autotext.update(mStart - offsetBefore, mStart - offsetBefore + autotextString.length(), inputString, autotextString.toString(), Autotext.AFTER);
 
                 // 第三，构建用于替换的文本，看是否要加上空格
@@ -439,20 +429,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             }
 
-            /*// 如果 条件1:替换块不能为空  不满足
-            if (TextUtils.isEmpty(autotext.getAfterString()) || TextUtils.isEmpty(autotext.getBeforeString())) {
-                mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
-                mConnection.deleteSurroundingText(1, 0);
-                return true;
-            }
-
-            // 如果 条件2 当前光标前的字符与替换块的完全相同，并且光标的位置与替换块的结束标记相同 不满足
-            String rawInput = mConnection.getTextBeforeCursor(autotext.getAfterString().length(), 0).toString();
-            if (mEnd != autotext.getEnd() || !rawInput.equals(autotext.getAfterString())) {
-                mUndoSubString = mConnection.getTextBeforeCursor(1, 0).toString();
-                mConnection.deleteSurroundingText(1, 0);
-                return true;
-            }*/
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_SELECTALL) {
             // 全选
             isSelectModel = true;
@@ -524,25 +500,25 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 // 选上一行
                 final CharSequence preLine = this.curOper.getPreLine(this.mFromWhichEnd);
                 if (!preLine.toString().equals("")) {
-                    selectedMethodPostion = this.curOper.getInvisibleCharsNumber(preLine);
+                    int tempNum = this.curOper.getInvisibleCharsNumber(preLine);
                     final int length2 = preLine.length();
                     final int length3 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
                     if (this.mFromWhichEnd == this.FROMSTART) {
-                        if (length2 - selectedMethodPostion < length3) {
-                            this.mStart = this.mStart - length3 - selectedMethodPostion;
+                        if (length2 - tempNum < length3) {
+                            this.mStart = this.mStart - length3 - tempNum;
                         } else {
                             this.mStart -= length2;
                         }
                     } else if (this.mFromWhichEnd == this.FROMEND) {
-                        if (length2 - selectedMethodPostion < length3) {
-                            this.mEnd = this.mEnd - length3 - selectedMethodPostion;
+                        if (length2 - tempNum < length3) {
+                            this.mEnd = this.mEnd - length3 - tempNum;
                         } else {
                             this.mEnd -= length2;
                         }
                         if (this.mEnd < this.mStart) {
-                            selectedMethodPostion = this.mStart;
+                            tempNum = this.mStart;
                             this.mStart = this.mEnd;
-                            this.mEnd = selectedMethodPostion;
+                            this.mEnd = tempNum;
                             this.mFromWhichEnd = this.FROMSTART;
                         }
                     }
@@ -553,26 +529,26 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 // 选下一行
                 final CharSequence nextLine = this.curOper.getNextLine(this.mFromWhichEnd);
                 if (!nextLine.toString().equals("")) {
-                    selectedMethodPostion = this.curOper.getInvisibleCharsNumber(nextLine);
+                    int tempNum = this.curOper.getInvisibleCharsNumber(nextLine);
                     final int length4 = nextLine.length();
                     final int length5 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
                     final int length6 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
                     if (this.mFromWhichEnd == this.FROMEND) {
-                        if (length4 - selectedMethodPostion < length6) {
-                            this.mEnd = this.mEnd + length5 + length4 - selectedMethodPostion;
+                        if (length4 - tempNum < length6) {
+                            this.mEnd = this.mEnd + length5 + length4 - tempNum;
                         } else {
                             this.mEnd = this.mEnd + length5 + length6;
                         }
                     } else if (this.mFromWhichEnd == this.FROMSTART) {
-                        if (length4 - selectedMethodPostion < length6) {
-                            this.mStart = this.mStart + length5 + length4 - selectedMethodPostion;
+                        if (length4 - tempNum < length6) {
+                            this.mStart = this.mStart + length5 + length4 - tempNum;
                         } else {
                             this.mStart = this.mStart + length5 + length6;
                         }
                         if (this.mStart > this.mEnd) {
-                            selectedMethodPostion = this.mEnd;
+                            tempNum = this.mEnd;
                             this.mEnd = this.mStart;
-                            this.mStart = selectedMethodPostion;
+                            this.mStart = tempNum;
                             this.mFromWhichEnd = this.FROMEND;
                         }
                     }
@@ -654,19 +630,19 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // + "|");
             final CharSequence preLine2 = this.curOper.getPreLine(this.mFromWhichEnd);
             if (!preLine2.toString().equals("")) {
-                selectedMethodPostion = this.curOper.getInvisibleCharsNumber(preLine2);
+                int tempNum = this.curOper.getInvisibleCharsNumber(preLine2);
                 final int length7 = preLine2.length();
                 final int length8 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
                 if (this.mFromWhichEnd == this.FROMSTART) {
-                    if (length7 - selectedMethodPostion < length8) {
-                        this.mStart = this.mStart - length8 - selectedMethodPostion;
+                    if (length7 - tempNum < length8) {
+                        this.mStart = this.mStart - length8 - tempNum;
                     } else {
                         this.mStart -= length7;
                     }
                     this.mConnection.setSelection(this.mStart, this.mStart);
                 } else if (this.mFromWhichEnd == this.FROMEND) {
-                    if (length7 - selectedMethodPostion < length8) {
-                        this.mEnd = this.mEnd - length8 - selectedMethodPostion;
+                    if (length7 - tempNum < length8) {
+                        this.mEnd = this.mEnd - length8 - tempNum;
                     } else {
                         this.mEnd -= length7;
                     }
@@ -680,20 +656,20 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             isSelectModel = false;
             final CharSequence nextLine2 = this.curOper.getNextLine(this.mFromWhichEnd);
             if (!nextLine2.toString().equals("")) {
-                selectedMethodPostion = this.curOper.getInvisibleCharsNumber(nextLine2);
+                int tempNum = this.curOper.getInvisibleCharsNumber(nextLine2);
                 final int length9 = nextLine2.length();
                 final int length10 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
                 final int length11 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
                 if (this.mFromWhichEnd == this.FROMEND) {
-                    if (length9 - selectedMethodPostion < length11) {
-                        this.mEnd = this.mEnd + length10 + length9 - selectedMethodPostion;
+                    if (length9 - tempNum < length11) {
+                        this.mEnd = this.mEnd + length10 + length9 - tempNum;
                     } else {
                         this.mEnd = this.mEnd + length10 + length11;
                     }
                     this.mConnection.setSelection(this.mEnd, this.mEnd);
                 } else if (this.mFromWhichEnd == this.FROMSTART) {
-                    if (length9 - selectedMethodPostion < length11) {
-                        this.mStart = this.mStart + length10 + length9 - selectedMethodPostion;
+                    if (length9 - tempNum < length11) {
+                        this.mStart = this.mStart + length10 + length9 - tempNum;
                     } else {
                         this.mStart = this.mStart + length10 + length11;
                     }
@@ -721,14 +697,14 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINESTART) {
             // 移到行头
             isSelectModel = false;
-            selectedMethodPostion = this.curOper.getToLineStart(this.FROMSTART).length();
-            this.mConnection.setSelection(this.mStart - selectedMethodPostion, this.mStart - selectedMethodPostion);
+            int tempNum = this.curOper.getToLineStart(this.FROMSTART).length();
+            this.mConnection.setSelection(this.mStart - tempNum, this.mStart - tempNum);
             this.mFromWhichEnd = this.FROMEND;
             return true;
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_TOLINEEND) {
             // 移到行尾
-            selectedMethodPostion = this.curOper.getToLineEnd(this.FROMEND).length();
-            this.mEnd = this.mEnd + selectedMethodPostion - this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND));
+            int tempNum = this.curOper.getToLineEnd(this.FROMEND).length();
+            this.mEnd = this.mEnd + tempNum - this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND));
             this.mConnection.setSelection(this.mEnd, this.mEnd);
             this.mFromWhichEnd = this.FROMEND;
             isSelectModel = false;
@@ -760,12 +736,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETELINE) {
             // 删除行
             isSelectModel = false;
-            selectedMethodPostion = this.curOper.getToLineStart(this.FROMSTART).length();
-            this.mConnection.setSelection(this.mStart - selectedMethodPostion, this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length());
+            int tempNum = this.curOper.getToLineStart(this.FROMSTART).length();
+            this.mConnection.setSelection(this.mStart - tempNum, this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length());
             if (this.mConnection.getSelectedText(0) == null) {
                 this.isSelectModel = false;
             } else {
                 mUndoSubString = (String) mConnection.getSelectedText(0);
+                mConnection.commitText("",1);
             }
             return true;
         } else if (isCtrlPressed && keyCode == ConstantList.EDIT_DELETEFORWARD) {
@@ -830,15 +807,14 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             return true;
         } else if (isCtrlPressed && keyCode == ConstantList.SWITCH_INPUTMETHOD) {
             //c-enter 切换输入词库
-			selectedMethodPostion = selectedMethodPostion + 1 < methodItemList.size() ? selectedMethodPostion + 1 : 0;
-			defaultMethodId = methodItemList.get(selectedMethodPostion).getId();
-			dboper.addOrUpdateMethodItem(methodItemList.get(selectedMethodPostion).getName(), MethodItem.DEFAULT, defaultMethodId);
-            inputMethodName.setText(methodItemList.get(selectedMethodPostion).getName());
+            defaultMethodId = defaultMethodId + 1 < methodItemList.size() ? defaultMethodId + 1 : 0;
+			defaultMethodId = methodItemList.get(defaultMethodId).getId();
+			dboper.addOrUpdateMethodItem(methodItemList.get(defaultMethodId).getName(), MethodItem.DEFAULT, defaultMethodId);
+            inputMethodName.setText(methodItemList.get(defaultMethodId).getName());
 			return true;
         }
         // ////////其他快捷键结束//////////////////
         else if (isSymPressed) {//用于表情键盘的往前翻页
-            // Log.d("Here", "sym pressed there");
 
             isSelectModel = false;
             if (keyCode == KeyEvent.KEYCODE_0) {// 往前翻页
@@ -906,8 +882,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     // ///////////////////////////////////////////////////////////////////////
     @Override
     public void onUpdateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd) {
-        //Log.d("Here", "newSelS = " + String.valueOf(newSelStart) + " | newSelE = " + String.valueOf(newSelEnd));
-        //Log.d("Here", "oldSelS = " + String.valueOf(oldSelStart) + " | oldSelE = " + String.valueOf(oldSelEnd));
         currentCursorStart = newSelStart;
         currentCursorEnd = newSelEnd;
 
