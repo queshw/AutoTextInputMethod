@@ -307,7 +307,6 @@ public class MethodsListActivity extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// 
 				isDefault = isChecked ? MethodItem.DEFAULT : MethodItem.NOTDEFAULT;
-				// Log.d("Here", "isDefault=" + String.valueOf(isDefault));
 			}
 		});
 
