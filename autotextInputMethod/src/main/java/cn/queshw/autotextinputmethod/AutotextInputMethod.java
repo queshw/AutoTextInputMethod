@@ -5,9 +5,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.hardware.input.InputManager;
 import android.inputmethodservice.InputMethodService;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,7 +28,7 @@ import cn.queshw.autotextsetting.DBOperations;
 import cn.queshw.autotextsetting.MethodItem;
 
 @SuppressLint("SimpleDateFormat")
-public class AutotextInputMethod extends InputMethodService implements View.OnClickListener,View.OnLongClickListener{
+public class AutotextInputMethod extends InputMethodService implements View.OnClickListener,View.OnLongClickListener {
     private final int FROMEND = 1;
     private final int FROMSTART = 0;
 
@@ -76,7 +78,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     private boolean PRE = false;
 
     // 用于软健盘
-    private View bb_keyboard;//整个软键盘，包括按键和状态样栏
+    private View bb_keyboard;//整个软键盘，包括按键和状态栏
+    View bb_keyboard_only;//键盘的按键部分，不包括状态栏
     private ImageView metakey_staus;//状态栏上的功能键状态显示图标
     private TextView inputMethodName;//状态栏上的当前使用的输入词库名称
     private ImageView setting;//状态栏上的设置按纽，直接进入词库设置界面
@@ -123,16 +126,28 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         });
         this.setInputView(bb_keyboard);
 
+        //判断手机上有没有带物理键盘
+        InputManager mIm = (InputManager) this.getSystemService(INPUT_SERVICE);
+        final int[] devices = InputDevice.getDeviceIds();
+        for (int i = 0; i < devices.length; i++) {
+            InputDevice device = InputDevice.getDevice(devices[i]);
+            if (device != null && !device.isVirtual() && ((device.getSources() & InputDevice.SOURCE_KEYBOARD) != 0) && (device.getKeyboardType() == InputDevice.KEYBOARD_TYPE_ALPHABETIC)) {
+                hasHardKeyboard = true;
+            }
+        }
+
+        bb_keyboard_only = (LinearLayout) bb_keyboard.findViewById(R.id.bb_keyboard_keyonly);
+        if(hasHardKeyboard) bb_keyboard_only.setVisibility(View.GONE);
+        else bb_keyboard_only.setVisibility(View.VISIBLE);
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
-        View bb_keyboard_only = (LinearLayout) bb_keyboard.findViewById(R.id.bb_keyboard_keyonly);
-        if(newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES){//没有物理键盘
-            bb_keyboard_only.setVisibility(View.VISIBLE);
-            hasHardKeyboard = false;
-        }else{//有物理健盘
+        if(newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO){//有物理键盘
             bb_keyboard_only.setVisibility(View.GONE);
             hasHardKeyboard = true;
+        }else{//没有物理健盘
+            bb_keyboard_only.setVisibility(View.VISIBLE);
+            hasHardKeyboard = false;
         }
         this.updateInputViewShown();
     }
@@ -998,4 +1013,5 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         if( tag == 60) metaState = KeyEvent.META_SHIFT_RIGHT_ON;
         return metaState;
     }
+
 }
