@@ -1,0 +1,27 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:16:1-20:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:16:1-20:12
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:16:1-20:12
+	package
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:17:11-43
+		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:16:11-69
+uses-sdk
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:5-42
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:5-42
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:5-42
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:5-42
+INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:5-42
+	android:targetSdkVersion
+		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:5-42
+		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:18:15-40
+		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml
+application
+ADDED from D:\AndroidStudioProjects\AutotextInputMethod\design\src\main\AndroidManifest.xml:19:5-20
