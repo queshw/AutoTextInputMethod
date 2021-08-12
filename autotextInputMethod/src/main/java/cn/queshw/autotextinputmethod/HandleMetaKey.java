@@ -10,57 +10,52 @@ import android.view.KeyEvent;
 //4、如果此时再按该功能键，如果之前是released状态，则变成locked状态。如果之前是locked状态，再按该键，则清空状态
 //按一个其他的非功能键，如果之前是pressed则变成used状态。如果之前是released，那就清空
 //pressed和used状态都表示一直按着功能键没有松开呢。used表示的是在一直按着功能键的过程中，按了其他的非功能键。
-//sym键有特殊性，它没有locked状态，而且需要一个标记位来表示表情小键盘要翻页
+//sym键有特殊性，它被本app设计为emoji小键盘的功能键，一被按下就直接标记为locked状态，一直到非小键盘的前后翻页键被按下为止（往后翻是sym 往前翻是0）
 
 public class HandleMetaKey {
 
     public static final int META_CAP_ON = KeyEvent.META_SHIFT_RIGHT_ON;
     public static final int META_ALT_ON = KeyEvent.META_ALT_LEFT_ON;
     public static final int META_SYM_ON = KeyEvent.META_SYM_ON;
-    public static final int META_NEWSIM_ON = KeyEvent.META_SHIFT_LEFT_ON;// 自定义的ctrl键，也就是左shift键
+    public static final int META_CTRL_ON = KeyEvent.META_SHIFT_LEFT_ON;// 自定义的ctrl键，也就是左shift键
 
     public static final int META_CAP_LOCKED = 0x100;
     public static final int META_ALT_LOCKED = 0x200;
     public static final int META_SYM_LOCKED = 0x400;
-    public static final int META_NEWSIM_LOCKED = 0x800;
+    public static final int META_CTRL_LOCKED = 0x800;
 
     private static final long META_CAP_USED = 1L << 32;
     private static final long META_ALT_USED = 1L << 33;
     private static final long META_SYM_USED = 1L << 34;
-    private static final long META_NEWSIM_USED = 1L << 35;
+    private static final long META_CTRL_USED = 1L << 35;
 
     private static final long META_CAP_LOCK_RELEASED = 1L << 36;
     private static final long META_ALT_LOCK_RELEASED = 1L << 37;
     private static final long META_SYM_LOCK_RELEASED = 1L << 38;
-    private static final long META_NEWSIM_LOCK_RELEASED = 1L << 39;
+    private static final long META_CTRL_LOCK_RELEASED = 1L << 39;
 
     private static final long META_CAP_PRESSED = 1L << 40;
     private static final long META_ALT_PRESSED = 1L << 41;
     private static final long META_SYM_PRESSED = 1L << 42;
-    private static final long META_NEWSIM_PRESSED = 1L << 43;
+    private static final long META_CTRL_PRESSED = 1L << 43;
 
     private static final long META_CAP_RELEASED = 1L << 48;
     private static final long META_ALT_RELEASED = 1L << 49;
     public static final long META_SYM_RELEASED = 1L << 50;
-    private static final long META_NEWSIM_RELEASED = 1L << 51;
-
-    public static final long META_SYM_TURNPAGE = 1L << 52;// 用于标记表情小键盘要翻页，在翻页后清空
+    private static final long META_CTRL_RELEASED = 1L << 51;
 
 
     private static final long META_ALL = META_CAP_ON | META_CAP_LOCKED | META_CAP_USED | META_CAP_PRESSED | META_CAP_RELEASED |
             META_ALT_ON | META_ALT_LOCKED | META_ALT_USED | META_ALT_PRESSED | META_ALT_RELEASED |
             META_SYM_ON | META_SYM_LOCKED | META_SYM_USED | META_SYM_PRESSED | META_SYM_RELEASED |
-            META_NEWSIM_ON | META_NEWSIM_LOCKED | META_NEWSIM_USED | META_NEWSIM_PRESSED | META_NEWSIM_RELEASED |
-            META_SYM_TURNPAGE | META_CAP_LOCK_RELEASED | META_ALT_LOCK_RELEASED | META_SYM_LOCK_RELEASED | META_NEWSIM_LOCK_RELEASED;
+            META_CTRL_ON | META_CTRL_LOCKED | META_CTRL_USED | META_CTRL_PRESSED | META_CTRL_RELEASED |
+            META_CAP_LOCK_RELEASED | META_ALT_LOCK_RELEASED | META_SYM_LOCK_RELEASED | META_CTRL_LOCK_RELEASED;
 
     private static final long META_CAP_MASK = META_ALL;
     private static final long META_ALT_MASK = META_ALL;
     private static final long META_SYM_MASK = META_ALL;
     private static final long META_NEWSIM_MASK = META_ALL;
 
-//	private static final int CLEAR_RETURN_VALUE = 0;
-//	private static final int PRESSED_RETURN_VALUE = 1;
-//	private static final int LOCKED_RETURN_VALUE = 2;
 
     // 用于从state中获得metastate，这个metastate与当前的键盘事件中带的metastate不同，它们的综合效果者是最终的metastate。应该这样用：
     // mMetaState = event.getMetaState() | listener.getMetaState()
@@ -86,75 +81,43 @@ public class HandleMetaKey {
             result |= META_SYM_ON;
         }
 
-        if ((state & (META_NEWSIM_LOCKED | META_NEWSIM_LOCK_RELEASED)) != 0) {
-            result |= META_NEWSIM_LOCKED | META_NEWSIM_ON;
-        } else if ((state & META_NEWSIM_ON) != 0) {
-            result |= META_NEWSIM_ON;
-        }
-
-        if ((state & META_SYM_TURNPAGE) != 0) {//用于获取表情键盘翻页的状态
-            result |= META_SYM_TURNPAGE;
+        if ((state & (META_CTRL_LOCKED | META_CTRL_LOCK_RELEASED)) != 0) {
+            result |= META_CTRL_LOCKED | META_CTRL_ON;
+        } else if ((state & META_CTRL_ON) != 0) {
+            result |= META_CTRL_ON;
         }
 
         return result;
     }
 
-//	// 用于判断在state中，某个键的状态。是锁定状态，还是已经按下的状态，还是已经清空了
-//	// 注意：只能检测四种键CAP ALT SYM NEWSIM
-//	public static final int getMetaState(long state, int meta) {
-//		switch (meta) {
-//		case META_CAP_ON:
-//			if ((state & META_CAP_LOCKED) != 0)
-//				return LOCKED_RETURN_VALUE;
-//			if ((state & META_CAP_ON) != 0)
-//				return PRESSED_RETURN_VALUE;
-//			return CLEAR_RETURN_VALUE;
-//
-//		case META_ALT_ON:
-//			if ((state & META_ALT_LOCKED) != 0)
-//				return LOCKED_RETURN_VALUE;
-//			if ((state & META_ALT_ON) != 0)
-//				return PRESSED_RETURN_VALUE;
-//			return CLEAR_RETURN_VALUE;
-//
-//		case META_SYM_ON:
-//			if ((state & META_SYM_LOCKED) != 0)
-//				return LOCKED_RETURN_VALUE;
-//			if ((state & META_SYM_ON) != 0)
-//				return PRESSED_RETURN_VALUE;
-//			return CLEAR_RETURN_VALUE;
-//
-//		case META_NEWSIM_ON:
-//			if ((state & META_NEWSIM_LOCKED) != 0)
-//				return LOCKED_RETURN_VALUE;
-//			if ((state & META_NEWSIM_ON) != 0)
-//				return PRESSED_RETURN_VALUE;
-//			return CLEAR_RETURN_VALUE;
-//
-//		default:
-//			return CLEAR_RETURN_VALUE;
-//		}
-//	}
-
     // 这个是一个主要的函数，用于处理当CAP ALT SYM NEWSIM被按下后，state状态的调整
-    public static long handleKeyDown(long state, int keyCode, KeyEvent event) {
+    // 如果按下的不是一个功能键，那么就用adjustMetaAfterKeypress函数来调整功能键秀状态
+    public static long handleKeyDown(long state, int keyCode) {
+        //首先清空除了keycode外的其他功能键的状态，但是也不是全部清除，pressed和locked是属于一直按着才会设置的，可以保留
+        // released 和 lock released 两种状态表明，其他功能键 已经被按下，并且释放了，现在又按了不同的功能键，其他功能键的状态的这两个状态就要清空
         // 如果当前的键盘事件是右shift被按下
         if (keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+            state = state & (META_CAP_ON | META_CAP_LOCKED | META_CAP_PRESSED | META_CAP_RELEASED | META_CAP_LOCK_RELEASED | META_CAP_USED |
+                    META_SYM_PRESSED | META_SYM_LOCKED | META_ALT_PRESSED | META_ALT_LOCKED | META_CTRL_PRESSED | META_CTRL_LOCKED);
+
             return press(state, META_CAP_ON, META_CAP_MASK, META_CAP_LOCKED, META_CAP_PRESSED, META_CAP_RELEASED, META_CAP_LOCK_RELEASED, META_CAP_USED);
         }
         // 如果当前的键盘事件是alt被按下
-        if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT || keyCode == KeyEvent.KEYCODE_NUM) {
+        else if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT || keyCode == KeyEvent.KEYCODE_NUM) {
             return press(state, META_ALT_ON, META_ALT_MASK, META_ALT_LOCKED, META_ALT_PRESSED, META_ALT_RELEASED, META_ALT_LOCK_RELEASED, META_ALT_USED);
         }
         // 如果当前的键盘事件是sym被按下
-        if (keyCode == KeyEvent.KEYCODE_SYM) {
+        else if (keyCode == KeyEvent.KEYCODE_SYM) {
             return press(state, META_SYM_ON, META_SYM_MASK, META_SYM_LOCKED, META_SYM_PRESSED, META_SYM_RELEASED, META_SYM_LOCK_RELEASED, META_SYM_USED);
         }
         // 如果当前的键盘事件是左shift被按下，当作ctrl
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
-            return press(state, META_NEWSIM_ON, META_NEWSIM_MASK, META_NEWSIM_LOCKED, META_NEWSIM_PRESSED, META_NEWSIM_RELEASED, META_NEWSIM_LOCK_RELEASED, META_NEWSIM_USED);
+        else if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
+            return press(state, META_CTRL_ON, META_NEWSIM_MASK, META_CTRL_LOCKED, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
         }
-
+        // 如果是其他非功能键被按下
+        else{
+            state = adjustMetaAfterKeypress(state);
+        }
         return state;
     }
 
@@ -167,88 +130,73 @@ public class HandleMetaKey {
         if ((state & pressed) != 0) {
             // 表示之前已经标记这个功能键被按下了，也就是说现在只是重复事件，也就是操作者按着这个功能键不放。
             // 不需要操作，仍然是标记这个功能键被按下了，即pressed
-            // repeat before use
-            //Log.d("Here", "pressed Repeating……");
         } else if ((state & released) != 0) {
             // 如果之前的标记此功能键被按下之后又释放了，现在又按下，说明操作者是按一下之后又按了一下，那就是锁定了
             // 同时清空其他功能键的状态
-            if (what == META_SYM_ON) {//sym键没有锁定状态，只标记要表情键盘要翻页
-                //state = (state & ~mask) | what | pressed | META_SYM_TURNPAGE;
-                state = (state & ~mask) | what | released;
-            } else {
-                state = (state & ~mask) | what | locked;
-                //Log.d("Here", "released to locked!");
-                //Log.d("Here", "released to locked! = " + String.valueOf(state));
-            }
+            state = (state & ~mask) | what | locked;
         } else if ((state & used) != 0) {
             // 如果之前标记功能键已经使用过了，但是操作者还是按着功能键
-            // repeat after use
-            //Log.d("Here", " Repeating after used……!");
         } else if ((state & locked) != 0) {
             // 如果之前的标记显示此功能键已经锁定，那么再按此功能键仍然是锁定状态
-            //Log.d("Here", "locked repeating……!");
         } else if ((state & lock_released) != 0) {
             // 如果之前的标记显示此功能键已经锁定，并且已松开，那么再按此功能键就是解锁了
-            //Log.d("Here", " lock_released to clear!");
             state &= ~mask;
         } else {
             // 如果是其他情况，那就是标记功能键被按下了，同时把what也存储起来，往下传
-            //Log.d("Here", " clear to pressed!");
             state &= ~mask;
             state |= what | pressed;
             if (what == META_SYM_ON) {
-                //Log.d("Here", "turn on META_SYM_TURNPAGE");
-                state |= META_SYM_TURNPAGE;
+                state |= what | META_SYM_LOCKED;//sym一按下就变成locked状态
             }
         }
         return state;
     }
 
-    // 这也是一个主要函数，用于处理当CAP ALT SYM NEWSIM释放后，state状态的调整
-    public static long handleKeyUp(long state, int keyCode, KeyEvent event) {
+    // 这也是一个主要函数，用于处理当CAP ALT SYM NEWSIM弹起后，state状态的调整
+    // 当是非功能键弹起的时候，由于功能键的状态已经在按下的时候调整过，这里就不作变动了
+    public static long handleKeyUp(long state, int keyCode) {
         if (keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-            return release(state, META_CAP_ON, META_CAP_MASK, META_CAP_PRESSED, META_CAP_RELEASED, META_CAP_LOCKED, META_CAP_LOCK_RELEASED, META_CAP_USED, event);
+            return release(state, META_CAP_ON, META_CAP_MASK, META_CAP_PRESSED, META_CAP_RELEASED, META_CAP_LOCKED, META_CAP_LOCK_RELEASED, META_CAP_USED);
         }
 
-        if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT || keyCode == KeyEvent.KEYCODE_NUM) {
-            return release(state, META_ALT_ON, META_ALT_MASK, META_ALT_PRESSED, META_ALT_RELEASED, META_ALT_LOCKED, META_ALT_LOCK_RELEASED, META_ALT_USED, event);
+        else if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT || keyCode == KeyEvent.KEYCODE_NUM) {
+            return release(state, META_ALT_ON, META_ALT_MASK, META_ALT_PRESSED, META_ALT_RELEASED, META_ALT_LOCKED, META_ALT_LOCK_RELEASED, META_ALT_USED);
         }
 
-        if (keyCode == KeyEvent.KEYCODE_SYM) {
-            return release(state, META_SYM_ON, META_SYM_MASK, META_SYM_PRESSED, META_SYM_RELEASED, META_SYM_LOCKED, META_SYM_LOCK_RELEASED, META_SYM_USED, event);
+        else if (keyCode == KeyEvent.KEYCODE_SYM) {
+            return release(state, META_SYM_ON, META_SYM_MASK, META_SYM_PRESSED, META_SYM_RELEASED, META_SYM_LOCKED, META_SYM_LOCK_RELEASED, META_SYM_USED);
         }
 
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
-            return release(state, META_NEWSIM_ON, META_NEWSIM_MASK, META_NEWSIM_PRESSED, META_NEWSIM_RELEASED, META_NEWSIM_LOCKED, META_NEWSIM_LOCK_RELEASED, META_NEWSIM_USED, event);
+        else if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
+            return release(state, META_CTRL_ON, META_NEWSIM_MASK, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCKED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
         }
 
         return state;
     }
 
-    private static long release(long state, int what, long mask, long pressed, long released, long locked, long lock_released, long used, KeyEvent event) {
+    private static long release(long state, int what, long mask, long pressed, long released, long locked, long lock_released, long used) {
         //Log.d("Here", "before release state = " + String.valueOf(state));
         if ((state & used) != 0) {
             // 如果之前标记显示此功能键已经使用过了，现在释放则清空状态
-            //Log.d("Here", " used to clear!");
             state &= ~mask;
         } else if ((state & pressed) != 0) {
             // 如果之前标记被按下的状态，现在释放则表示是第一次按下些功能键，则标记为释放，同时把what传下去
-            //Log.d("Here", " pressed to released!");
             state &= ~mask;
             state |= what | released;
         } else if ((state & locked) != 0) {
             // 如果之前标记被按下的状态，现在释放则表示是第一次按下些功能键，则标记为释放，同时把what传下去
-            //Log.d("Here", " locked to lock_released!");
+            // 对于sym键来说，locked状态后，一直不变，除非按了其他的非功能键，在自定义的小表情键盘中去改变状态
             state &= ~mask;
-            state |= what | lock_released;
-        } else if ((state & released) != 0) {
-            if (what == META_SYM_ON) {
-                //Log.d("Here", "turn on META_SYM_TURNPAGE");
-                state |= META_SYM_TURNPAGE;
+            if(what == META_SYM_ON){
+                state |= what | locked;
             }
+            else{
+                state |= what | lock_released;
+            }
+        } else if ((state & released) != 0) {
+            //表示功能键被按下后，已经轮松开了，不可能再松一次，所以这个地方是不会被运行的
         } else {
             state &= ~mask;
-            //Log.d("Here", " default to clear!");
         }
         return state;
     }
@@ -258,53 +206,29 @@ public class HandleMetaKey {
         if ((state & META_CAP_PRESSED) != 0) {
             // 表示之前功能键已经被按下了，并且没有释放，说明操作者一直按着功能键，那么就标记此功能键已经使用，同时还按着
             state = (state & ~META_CAP_MASK) | META_CAP_ON | META_CAP_USED;
-            // Log.d("Here", "CAP pressed to used!");
         } else if ((state & META_CAP_RELEASED) != 0) {
             // 表示之前功能键已经按了然后又被释放，现在有了其他按键的事件，说明此功能键的状态已经要清空了。
             state &= ~META_CAP_MASK;
-            // Log.d("Here", "CAP released to clear!");
         }
 
         if ((state & META_ALT_PRESSED) != 0) {
             state = (state & ~META_ALT_MASK) | META_ALT_ON | META_ALT_USED;
-            // Log.d("Here", "ALT pressed to used!");
         } else if ((state & META_ALT_RELEASED) != 0) {
             state &= ~META_ALT_MASK;
-            // Log.d("Here", "ALT released to clear!");
         }
 
         if ((state & META_SYM_PRESSED) != 0) {
             state = (state & ~META_SYM_MASK) | META_SYM_ON | META_SYM_USED;
-            // Log.d("Here", "SYM pressed to used!");
         } else if ((state & META_SYM_RELEASED) != 0) {
-            // Log.d("Here", "SYM released to clear!");
             state &= ~META_SYM_MASK;
         }
 
-        if ((state & META_NEWSIM_PRESSED) != 0) {
-            state = (state & ~META_NEWSIM_MASK) | META_NEWSIM_ON | META_NEWSIM_USED;
-            // Log.d("Here", "NEWSIM pressed to used!");
-        } else if ((state & META_NEWSIM_RELEASED) != 0) {
-            state &= ~META_NEWSIM_MASK;
-            // Log.d("Here", "NEWSIM released to clear!");
-        }
-        return state;
-    }
-
-    // 清除state中的某些键的状态值
-    public static long clearMetaKeyState(long state, int which) {
-        if ((which & META_CAP_ON) != 0 && (state & META_CAP_LOCKED) != 0) {
-            state &= ~META_CAP_MASK;
-        }
-        if ((which & META_ALT_ON) != 0 && (state & META_ALT_LOCKED) != 0) {
-            state &= ~META_ALT_MASK;
-        }
-        if ((which & META_SYM_ON) != 0 && (state & META_SYM_LOCKED) != 0) {
-            state &= ~META_SYM_MASK;
-        }
-        if ((which & META_NEWSIM_ON) != 0 && (state & META_NEWSIM_LOCKED) != 0) {
+        if ((state & META_CTRL_PRESSED) != 0) {
+            state = (state & ~META_NEWSIM_MASK) | META_CTRL_ON | META_CTRL_USED;
+        } else if ((state & META_CTRL_RELEASED) != 0) {
             state &= ~META_NEWSIM_MASK;
         }
         return state;
     }
+
 }

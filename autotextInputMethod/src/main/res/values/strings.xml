@@ -40,7 +40,11 @@
     <string name="code_search">五笔编码查询</string>
     
     <string name="copyed">复制成功！</string>
-    
+
+    <string name="ctrl_mode">命令模式</string>
+    <string name="select_mode">选择模式</string>
+    <string name="cap_mode">大写模式</string>
+    <string name="alt_mode">数字符号</string>
 
 
 
