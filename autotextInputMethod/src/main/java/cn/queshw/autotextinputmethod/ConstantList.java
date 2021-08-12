@@ -32,12 +32,12 @@ public class ConstantList {
 	
 	static final int EDIT_SELECTMODEL = KeyEvent.KEYCODE_S;
 	static final int EDIT_SELECTALL = KeyEvent.KEYCODE_A;
-	static final int EDIT_SELECTLINE = KeyEvent.KEYCODE_H;
-	
-	static final int EDIT_UP = KeyEvent.KEYCODE_I;
-    static final int EDIT_DOWN = KeyEvent.KEYCODE_K;
-    static final int EDIT_BACK = KeyEvent.KEYCODE_J;
-    static final int EDIT_FORWARD = KeyEvent.KEYCODE_L;    
+	static final int EDIT_SELECTLINE = KeyEvent.KEYCODE_F;
+
+	static final int EDIT_BACK = KeyEvent.KEYCODE_H;
+	static final int EDIT_DOWN = KeyEvent.KEYCODE_J;
+	static final int EDIT_UP = KeyEvent.KEYCODE_K;
+	static final int EDIT_FORWARD = KeyEvent.KEYCODE_L;
 
     static final int EDIT_TOLINESTART = KeyEvent.KEYCODE_U;
     static final int EDIT_TOLINEEND = KeyEvent.KEYCODE_O;    
