@@ -1,5 +1,6 @@
 package cn.queshw.autotextinputmethod;
 
+import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -8,91 +9,112 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EmojiBoard {
-    View candidateView;
-    ArrayList<TextView> keyboardTextViewList;
-    HashMap<Integer, String> stickerStringMap;
-    int[] keys;
-    int emojiNumbers;
-    int stickerNumbersPerPage;
+    final public static int TURN_DOWN = 1;//表示向下翻页
+    final public static int TURN_UP = 2;//表示向上翻页
 
-    public EmojiBoard(View candidateView) {
-        this.candidateView = candidateView;
-        emojiNumbers = EMOJI_LIST.length;
+    private Context con;
+    private View emojiKeyboard;//emoji表情键盘
+    private HashMap<Integer, String> emojiKeyboardMap;//按键与emoji表情的对应表
+
+    private ArrayList<TextView> keyboardTextViewList;//emoji键盘上按键的控件列表
+    private int[] keyCodes;//按键的keycode列表
+    private int emojiNumbers;//总共有多少个emoji表情
+    private int stickerNumbersPerPage;//每页有多少个表情
+    private int stickerStartPosition; //这一页从emoji表情列表的第几位开始
+
+
+    EmojiBoard(Context con){
+        this.con = con;
+        emojiKeyboard = View.inflate(con, R.layout.emoji_keyboard_layout, null);
+
         keyboardTextViewList = new ArrayList<TextView>();
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.q_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.w_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.e_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.r_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.t_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.y_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.u_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.i_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.o_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.p_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.a_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.s_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.d_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.f_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.g_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.h_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.j_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.k_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.l_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.z_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.x_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.c_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.v_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.b_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.n_sticker_textview));
-        keyboardTextViewList.add((TextView) candidateView.findViewById(R.id.m_sticker_textview));
-        // keyboardTextViewList.add((TextView)
-        // candidateView.findViewById(R.id.zero_sticker_textview));
-        stickerNumbersPerPage = keyboardTextViewList.size();
-        stickerStringMap = new HashMap<Integer, String>();
-        keys = new int[]{KeyEvent.KEYCODE_Q, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_E, KeyEvent.KEYCODE_R, KeyEvent.KEYCODE_T, KeyEvent.KEYCODE_Y,
-                KeyEvent.KEYCODE_U, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_P, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_S,
-                KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_F, KeyEvent.KEYCODE_G, KeyEvent.KEYCODE_H, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_K,
-                KeyEvent.KEYCODE_L, KeyEvent.KEYCODE_Z, KeyEvent.KEYCODE_X, KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_V, KeyEvent.KEYCODE_B,
-                KeyEvent.KEYCODE_N, KeyEvent.KEYCODE_M
-                // ,KeyEvent.KEYCODE_0
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.q_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.w_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.e_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.r_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.t_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.y_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.u_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.i_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.o_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.p_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.a_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.s_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.d_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.f_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.g_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.h_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.j_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.k_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.l_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.z_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.x_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.c_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.v_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.b_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.n_sticker_textview));
+        keyboardTextViewList.add((TextView) emojiKeyboard.findViewById(R.id.m_sticker_textview));
+
+        keyCodes = new int[]{
+                KeyEvent.KEYCODE_Q, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_E, KeyEvent.KEYCODE_R, KeyEvent.KEYCODE_T,
+                KeyEvent.KEYCODE_Y, KeyEvent.KEYCODE_U, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_P,
+
+                KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_F, KeyEvent.KEYCODE_G,
+                KeyEvent.KEYCODE_H, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_K, KeyEvent.KEYCODE_L,
+
+                KeyEvent.KEYCODE_Z, KeyEvent.KEYCODE_X, KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_V,
+                KeyEvent.KEYCODE_B, KeyEvent.KEYCODE_N, KeyEvent.KEYCODE_M
         };
+
+        stickerNumbersPerPage = keyCodes.length;
+        stickerStartPosition = -stickerNumbersPerPage;
+        emojiKeyboardMap = new HashMap<Integer, String>();
+        emojiNumbers = EMOJI_LIST.length;
     }
 
+    public View getEmojiboardView(){
+        return emojiKeyboard;
+    }
+
+    //emoji键盘翻页
+    public void turnEmojiKeyboard(int direction){
+        if (direction == TURN_UP) {// 往前翻页
+            stickerStartPosition -= stickerNumbersPerPage;
+            if (stickerStartPosition < 0)
+                stickerStartPosition = 0;
+        }
+        else {//住后翻页
+            stickerStartPosition += stickerNumbersPerPage;
+            if (stickerStartPosition >= emojiNumbers)
+                stickerStartPosition = 0;
+        }
+        setStickerKeyboard(stickerStartPosition);
+    }
     // 更新键盘上的表情
-    public void setStickerKeyboard(int stickerStartPosition) {
+    private void setStickerKeyboard(int stickerStartPosition) {
         int emojiCode;
         for (int i = stickerStartPosition; i < stickerStartPosition + stickerNumbersPerPage; i++) {
             if (i >= emojiNumbers) {
-                keyboardTextViewList.get(i % stickerNumbersPerPage).setEnabled(false);
+                keyboardTextViewList.get(i % stickerNumbersPerPage).setVisibility(View.INVISIBLE);
             } else {
                 emojiCode = EMOJI_LIST[i];
                 String temp = new String(Character.toChars(emojiCode));
                 keyboardTextViewList.get(i % stickerNumbersPerPage).setText(temp);
-                keyboardTextViewList.get(i % stickerNumbersPerPage).setEnabled(true);
-                stickerStringMap.put(keys[i % stickerNumbersPerPage], temp);
+                keyboardTextViewList.get(i % stickerNumbersPerPage).setVisibility(View.VISIBLE);
+                emojiKeyboardMap.put(keyCodes[i % stickerNumbersPerPage], temp);
             }
         }
     }
 
-    // 返回总共有多少个表情
-    public int getEmojiNumbers() {
-        return emojiNumbers;
-    }
-
-    // 返回总一页有多少个表情
-    public int getStickerNumbersPerPage() {
-        return stickerNumbersPerPage;
-    }
-
     // 返回当前表情键盘的某个键对应的表情字符
     public String getSticker(int keyCode) {
-        String result = "NONE";
-        if (stickerStringMap.containsKey(keyCode))
-            return stickerStringMap.get(keyCode);
+        String result = "";
+        if (emojiKeyboardMap.containsKey(keyCode))
+            return emojiKeyboardMap.get(keyCode);
         return result;
     }
 
-    public static int[] EMOJI_LIST = {
+    int[] EMOJI_LIST = {
             /////////////////////表情////////////////////////////
             ///////////////////手势////////////////////
             0x270C, //胜利

@@ -41,20 +41,21 @@ public class HandleMetaKey {
 
     private static final long META_CAP_RELEASED = 1L << 48;
     private static final long META_ALT_RELEASED = 1L << 49;
-    public static final long META_SYM_RELEASED = 1L << 50;
+    private static final long META_SYM_RELEASED = 1L << 50;
     private static final long META_CTRL_RELEASED = 1L << 51;
 
+    public static final long META_CAP_ALL = META_CAP_ON | META_CAP_PRESSED | META_CAP_RELEASED | META_CAP_LOCKED |  META_CAP_LOCK_RELEASED | META_CAP_USED;
+    public static final long META_ALT_ALL = META_ALT_ON | META_ALT_PRESSED | META_ALT_RELEASED | META_ALT_LOCKED |  META_ALT_LOCK_RELEASED | META_ALT_USED;
+    public static final long META_SYM_ALL = META_SYM_ON | META_SYM_PRESSED | META_SYM_RELEASED | META_SYM_LOCKED |  META_SYM_LOCK_RELEASED | META_SYM_USED;
+    public static final long META_CTRL_ALL = META_CTRL_ON | META_CTRL_PRESSED | META_CTRL_RELEASED | META_CTRL_LOCKED |  META_CTRL_LOCK_RELEASED | META_CTRL_USED;
 
-    private static final long META_ALL = META_CAP_ON | META_CAP_LOCKED | META_CAP_USED | META_CAP_PRESSED | META_CAP_RELEASED |
-            META_ALT_ON | META_ALT_LOCKED | META_ALT_USED | META_ALT_PRESSED | META_ALT_RELEASED |
-            META_SYM_ON | META_SYM_LOCKED | META_SYM_USED | META_SYM_PRESSED | META_SYM_RELEASED |
-            META_CTRL_ON | META_CTRL_LOCKED | META_CTRL_USED | META_CTRL_PRESSED | META_CTRL_RELEASED |
-            META_CAP_LOCK_RELEASED | META_ALT_LOCK_RELEASED | META_SYM_LOCK_RELEASED | META_CTRL_LOCK_RELEASED;
+
+    private static final long META_ALL = META_ALT_ALL | META_CTRL_ALL | META_SYM_ALL | META_CAP_ALL;
 
     private static final long META_CAP_MASK = META_ALL;
     private static final long META_ALT_MASK = META_ALL;
     private static final long META_SYM_MASK = META_ALL;
-    private static final long META_NEWSIM_MASK = META_ALL;
+    private static final long META_CTRL_MASK = META_ALL;
 
 
     // 用于从state中获得metastate，这个metastate与当前的键盘事件中带的metastate不同，它们的综合效果者是最终的metastate。应该这样用：
@@ -65,25 +66,25 @@ public class HandleMetaKey {
 
         if ((state & (META_CAP_LOCKED | META_CAP_LOCK_RELEASED)) != 0) {
             result |= META_CAP_LOCKED | META_CAP_ON;
-        } else if ((state & META_CAP_ON) != 0) {
+        } else if ((state & (META_CAP_ON | META_CAP_PRESSED | META_CAP_RELEASED)) != 0) {
             result |= META_CAP_ON;
         }
 
         if ((state & (META_ALT_LOCKED | META_ALT_LOCK_RELEASED)) != 0) {
             result |= META_ALT_LOCKED | META_ALT_ON;
-        } else if ((state & META_ALT_ON) != 0) {
+        } else if ((state & (META_ALT_ON | META_ALT_PRESSED | META_ALT_RELEASED)) != 0) {
             result |= META_ALT_ON;
         }
 
         if ((state & (META_SYM_LOCKED | META_SYM_LOCK_RELEASED)) != 0) {
             result |= META_SYM_LOCKED | META_SYM_ON;
-        } else if ((state & META_SYM_ON) != 0) {
+        } else if ((state & (META_SYM_ON | META_SYM_PRESSED | META_SYM_RELEASED)) != 0) {
             result |= META_SYM_ON;
         }
 
         if ((state & (META_CTRL_LOCKED | META_CTRL_LOCK_RELEASED)) != 0) {
             result |= META_CTRL_LOCKED | META_CTRL_ON;
-        } else if ((state & META_CTRL_ON) != 0) {
+        } else if ((state & (META_CTRL_ON | META_CTRL_PRESSED | META_CTRL_RELEASED)) != 0) {
             result |= META_CTRL_ON;
         }
 
@@ -97,22 +98,29 @@ public class HandleMetaKey {
         // released 和 lock released 两种状态表明，其他功能键 已经被按下，并且释放了，现在又按了不同的功能键，其他功能键的状态的这两个状态就要清空
         // 如果当前的键盘事件是右shift被按下
         if (keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-            state = state & (META_CAP_ON | META_CAP_LOCKED | META_CAP_PRESSED | META_CAP_RELEASED | META_CAP_LOCK_RELEASED | META_CAP_USED |
+            state = state & (META_CAP_ALL |
                     META_SYM_PRESSED | META_SYM_LOCKED | META_ALT_PRESSED | META_ALT_LOCKED | META_CTRL_PRESSED | META_CTRL_LOCKED);
 
             return press(state, META_CAP_ON, META_CAP_MASK, META_CAP_LOCKED, META_CAP_PRESSED, META_CAP_RELEASED, META_CAP_LOCK_RELEASED, META_CAP_USED);
         }
         // 如果当前的键盘事件是alt被按下
         else if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT || keyCode == KeyEvent.KEYCODE_NUM) {
+            state = state & (META_ALT_ALL |
+                    META_SYM_PRESSED | META_SYM_LOCKED | META_CAP_PRESSED | META_CAP_LOCKED | META_CTRL_PRESSED | META_CTRL_LOCKED);
+
             return press(state, META_ALT_ON, META_ALT_MASK, META_ALT_LOCKED, META_ALT_PRESSED, META_ALT_RELEASED, META_ALT_LOCK_RELEASED, META_ALT_USED);
         }
         // 如果当前的键盘事件是sym被按下
         else if (keyCode == KeyEvent.KEYCODE_SYM) {
+            state = state & (META_SYM_ALL |
+                    META_ALT_PRESSED | META_ALT_LOCKED | META_CAP_PRESSED | META_CAP_LOCKED | META_CTRL_PRESSED | META_CTRL_LOCKED);
             return press(state, META_SYM_ON, META_SYM_MASK, META_SYM_LOCKED, META_SYM_PRESSED, META_SYM_RELEASED, META_SYM_LOCK_RELEASED, META_SYM_USED);
         }
         // 如果当前的键盘事件是左shift被按下，当作ctrl
         else if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
-            return press(state, META_CTRL_ON, META_NEWSIM_MASK, META_CTRL_LOCKED, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
+            state = state & (META_CTRL_ALL |
+                    META_ALT_PRESSED | META_ALT_LOCKED | META_CAP_PRESSED | META_CAP_LOCKED | META_SYM_PRESSED | META_SYM_LOCKED);
+            return press(state, META_CTRL_ON, META_CTRL_MASK, META_CTRL_LOCKED, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
         }
         // 如果是其他非功能键被按下
         else{
@@ -168,7 +176,7 @@ public class HandleMetaKey {
         }
 
         else if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
-            return release(state, META_CTRL_ON, META_NEWSIM_MASK, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCKED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
+            return release(state, META_CTRL_ON, META_CTRL_MASK, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCKED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
         }
 
         return state;
@@ -224,9 +232,9 @@ public class HandleMetaKey {
         }
 
         if ((state & META_CTRL_PRESSED) != 0) {
-            state = (state & ~META_NEWSIM_MASK) | META_CTRL_ON | META_CTRL_USED;
+            state = (state & ~META_CTRL_MASK) | META_CTRL_ON | META_CTRL_USED;
         } else if ((state & META_CTRL_RELEASED) != 0) {
-            state &= ~META_NEWSIM_MASK;
+            state &= ~META_CTRL_MASK;
         }
         return state;
     }

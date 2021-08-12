@@ -3,7 +3,6 @@ package cn.queshw.autotextinputmethod;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.hardware.input.InputManager;
 import android.inputmethodservice.InputMethodService;
@@ -15,9 +14,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -38,9 +34,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     private int currentCursorEnd = -1;// 当前光标结束位置，用于从onUpdateSelection中获最新光标位置
     private int offsetBefore;// 相对当前光标
 
-    private int mMetaState = 0;
-    private long state = 0; // for metakeylistener
-
     private String inputString;// 要被替换的文本，不一定是编码，比如有%b这些宏的时候，可能是删除前面的字符
     private StringBuilder autotextString;// 用于替换的文本
     private int mEnd;// 用于保存某个光标位置
@@ -55,35 +48,26 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     private DBOperations dboper;// 用于数据库操作
     private int defaultMethodId;// 默认输入法的id
 
+    //词库相关
     private ArrayList<MethodItem> methodItemList;//保存着所有词库的数据
     private int methodItemNum;//现有词库在methodItemList中的序号
     private String methodName;//现有词库的名字
 
     // 用于标记功能键是否按下，其实其状态可以使用meatstate的标记位来判断，但是为了方便设置了以下的变量
-    private boolean isCtrlOn;
-    private boolean isAltOn;
-    private boolean isCapOn;
-    private boolean isSymOn;
     private boolean switchToFullScreen = false;// 是否切换到全屏模式
     private boolean isInputStarted = false;// 输入是否已经开始
     private boolean isSelectModel = false;
 
+    //键盘相关
+    BbKeyBoard bbKeyboard;//软键盘
+    boolean hasHardKeyboard = false;//手机是否有物理键盘
+    private int mMetaState = 0;//功能键状态码
+    private long state = 0; // 长状态码 for metakeylistener
+
     // 用于emoji表情的输入
     private int stickerStartPosition = 0;
     private EmojiBoard emojiBoard;
-    private View emojiKeyboard;
-    private boolean NEXT = true;
-    private boolean PRE = false;
 
-    // 用于软健盘
-    private View bb_keyboard;//整个软键盘，包括按键和状态栏
-    View bb_keyboard_only;//键盘的按键部分，不包括状态栏
-    View status_line_view;//键盘的状态栏部V分
-    private ImageView metakey_staus;//状态栏上的功能键状态显示图标
-    private TextView inputMethodName;//状态栏上的当前使用的输入词库名称
-    private ImageView setting;//状态栏上的设置按纽，直接进入词库设置界面
-    boolean hasHardKeyboard = false;//手机是否有物理键盘
-    BBkeyboardMap BBsoftKeyboardMap;//用于对应软键盘
 
     // /////////////////////////////////////////////////////////////////////////
     /*
@@ -99,35 +83,12 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);// 获得系统剪贴板
 
         //设置emoji键盘
-        emojiKeyboard = this.getLayoutInflater().inflate(R.layout.emoji_keyboard_layout, null);
-        this.setCandidatesView(emojiKeyboard);
-        emojiBoard = new EmojiBoard(emojiKeyboard);
+        emojiBoard = new EmojiBoard(this);
+        this.setCandidatesView(emojiBoard.getEmojiboardView());
 
-        //初始化软键盘和字符映射表
-        BBsoftKeyboardMap = new BBkeyboardMap();
-        bb_keyboard = this.getLayoutInflater().inflate(R.layout.bb_keyboard, null);
-
-        //设置软键盘上按键的监听器
-        BbKeyBoard.initBbKeyboard(bb_keyboard, this, this);
-
-        //设置软键盘的状态栏
-        status_line_view = bb_keyboard.findViewById(R.id.status_line_view);
-        metakey_staus = (ImageView) bb_keyboard.findViewById(R.id.ImageView_status);
-        inputMethodName = (TextView) bb_keyboard.findViewById(R.id.textView_inputmethod);
-        setting = (ImageView) bb_keyboard.findViewById(R.id.ImageView_setting);
-        setting.setOnClickListener(new View.OnClickListener() {//设置按键监听器
-            @Override
-            public void onClick(View v) {
-                Intent intent = getPackageManager().getLaunchIntentForPackage("cn.queshw.autotextinputmethod");
-                if (intent != null) {
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }
-        });
-        this.setInputView(bb_keyboard);
-
-        //判断手机上有没有带物理键盘
+        //设置软键盘
+        bbKeyboard = new BbKeyBoard(this, this, this);
+        //判断手机上有没有带物理键盘，决定是否要显示软键盘的按键部分
         InputManager mIm = (InputManager) this.getSystemService(INPUT_SERVICE);
         final int[] devices = InputDevice.getDeviceIds();
         for (int i = 0; i < devices.length; i++) {
@@ -136,20 +97,18 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 hasHardKeyboard = true;
             }
         }
+        bbKeyboard.set_keyonly_view_visibile(hasHardKeyboard);
+        this.setInputView(bbKeyboard.getbbKeyboardView());
 
-        bb_keyboard_only = (LinearLayout) bb_keyboard.findViewById(R.id.bb_keyboard_keyonly);
-        if (hasHardKeyboard) bb_keyboard_only.setVisibility(View.GONE);
-        else bb_keyboard_only.setVisibility(View.VISIBLE);
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
         if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {//有物理键盘
-            bb_keyboard_only.setVisibility(View.GONE);
             hasHardKeyboard = true;
         } else {//没有物理健盘
-            bb_keyboard_only.setVisibility(View.VISIBLE);
             hasHardKeyboard = false;
         }
+        bbKeyboard.set_keyonly_view_visibile(hasHardKeyboard);
         this.updateInputViewShown();
     }
 
@@ -183,26 +142,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         curOper = new CursorOperator(mConnection);
         state = 0L;
 
-        // 处理EditorInfo的匹配
-        if (mEditInfo.inputType == InputType.TYPE_CLASS_NUMBER || mEditInfo.inputType == InputType.TYPE_CLASS_PHONE
-                || mEditInfo.inputType == InputType.TYPE_CLASS_DATETIME) {
-            state |= HandleMetaKey.META_ALT_LOCKED;
-            // handleStatusIcon(HandleMetaKey.getMetaState(state));
-        } else if (mEditInfo.inputType == InputType.TYPE_CLASS_TEXT && (mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0) {
-            state |= HandleMetaKey.META_CAP_LOCKED;
-            // handleStatusIcon(HandleMetaKey.getMetaState(state));
-        }
-        setStatusView(HandleMetaKey.getMetaState(this.state));
-
         // 获取默认的输入词库
         methodItemList = dboper.loadMethodsData();
         // 如果还没有词库，则提醒导入
         if (methodItemList.size() == 0) {
             Toast.makeText(this, this.getString(R.string.msg6), Toast.LENGTH_SHORT).show();
-            inputMethodName.setText(R.string.msg7);
             return;
         }
-
         //获得黙认词库的id
         methodItemNum = 0;//先把第一个词库的id作为默认词库
         for (int i = 0; i < methodItemList.size(); i++) {
@@ -211,17 +157,21 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         }
         defaultMethodId = methodItemList.get(methodItemNum).getId();
         methodName = methodItemList.get(methodItemNum).getName();
-        inputMethodName.setText(methodName);
 
-        return;
+        // 处理EditorInfo的匹配
+        if (mEditInfo.inputType == InputType.TYPE_CLASS_NUMBER || mEditInfo.inputType == InputType.TYPE_CLASS_PHONE
+                || mEditInfo.inputType == InputType.TYPE_CLASS_DATETIME) {
+            state |= HandleMetaKey.META_ALT_LOCKED;
+            // handleStatusIcon(HandleMetaKey.getMetaState(state));
+        } else if (mEditInfo.inputType == InputType.TYPE_CLASS_TEXT && (mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0) {
+            state |= HandleMetaKey.META_CAP_LOCKED;
+        }
+
+        //根据上面获得的信息设置软键盘状态栏
+        bbKeyboard.set_status_line_view(HandleMetaKey.getMetaState(this.state), methodName);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * android.inputmethodservice.InputMethodService#onEvaluateInputViewShown()
-     */
+
     @Override
     public boolean onEvaluateInputViewShown() {
         super.onEvaluateInputViewShown();
@@ -252,7 +202,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         //检测功能键的状态，并进行相应的设置，比如软件盘中的状态栏设置，emoji小键盘是否要打开等
         state = HandleMetaKey.handleKeyDown(state, keyCode);
         mMetaState = event.getMetaState() | HandleMetaKey.getMetaState(state);//获得最终的功能键状态码
-        setStatusView(mMetaState);//进行相应设置
+        bbKeyboard.set_status_line_view(mMetaState, methodName);
 
         if (currentCursorStart != -1) {// 说明当前光标的位置不是初始位置，那就使用
             mStart = currentCursorStart;// 把操作开始时的光标位置保存下来
@@ -260,35 +210,34 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         }
 
         //如果emoji键盘已经开始。要优先处理，要不然会先处理其他字符，比如space 和 backspace 键
-        if (isSymOn) {//用于表情键盘的往前翻页
-            isSelectModel = false;
+        if (bbKeyboard.isSymOn() && !bbKeyboard.isCapOn() && !bbKeyboard.isCtrlOn() && !bbKeyboard.isAltOn() & !isSelectModel) {//用于表情键盘的往前翻页
+            emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_DOWN);
+            this.setCandidatesViewShown(true);
             if (keyCode == KeyEvent.KEYCODE_0) {// 往前翻页
-                this.symBoardTurn(stickerStartPosition, PRE);
-                state |= KeyEvent.META_SYM_ON | HandleMetaKey.META_SYM_RELEASED;
-                return true;
-            }
-
-            String temp = emojiBoard.getSticker(keyCode);
-            if (!temp.equals("NONE")) {
-                mConnection.commitText(temp, 1);
+                emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_UP);
+            }else{//如果是其他键，刚获得对应的emoji表情
+                mConnection.commitText(emojiBoard.getSticker(keyCode), 1);
+                setCandidatesViewShown(false);
+                //清空sym状态
+                state = (state | HandleMetaKey.META_SYM_ALL)^state;
             }
             return true;
         }
 
         //如果进入命令模式
-        if(isCtrlOn){
+        if (!bbKeyboard.isSymOn() && !bbKeyboard.isCapOn() && bbKeyboard.isCtrlOn() && !bbKeyboard.isAltOn()) {
+            this.isSelectModel = false;//不管现在是不是在选择模式中，再按一次ctrl后，选择模式都将失效
             if (keyCode == ConstantList.EDIT_SELECTALL) {
                 // 全选
-                isSelectModel = true;
                 mConnection.setSelection(0, mEnd + curOper.getAfterLength());
                 if (this.mConnection.getSelectedText(0) == null) {
                     this.isSelectModel = false;
                 }
                 mFromWhichEnd = FROMEND;
                 return true;
-            } else if (keyCode == ConstantList.EDIT_SELECTLINE) {
+            }
+            else if (keyCode == ConstantList.EDIT_SELECTLINE) {
                 // 选一行
-                isSelectModel = true;
                 int toLineStart = this.curOper.getToLineStart(this.FROMSTART).length();
                 CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
                 this.mConnection.setSelection(mStart - toLineStart, mEnd + getToLineEnd.length() - curOper.getInvisibleCharsNumber(getToLineEnd));
@@ -297,7 +246,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 }
                 mFromWhichEnd = FROMEND;
                 return true;
-            } else if (keyCode == ConstantList.EDIT_SELECTMODEL) {
+            }
+            else if (keyCode == ConstantList.EDIT_SELECTMODEL) {
                 // 切换选择模式
                 if (isSelectModel) {// 退出选择模式
                     isSelectModel = false;
@@ -312,22 +262,23 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                     this.isSelectModel = true;
                 } else if (this.mStart == 0 && this.curOper.getAfterLength() == 0) {// 如果当前内容为空，则不进入选择状态
                     this.isSelectModel = false;
-                } else if (this.curOper.getAfterLength() == 0) {// 如果
-                    // 有内容，同时后面已经没有内容了，则往前选一格标志进入选择状态
+                } else if (this.curOper.getAfterLength() == 0) {// 如果后面没有内容
                     this.mConnection.setSelection(this.mEnd, this.mEnd);
                     this.mFromWhichEnd = this.FROMSTART;
                     this.isSelectModel = true;
-                } else {// 如果有内容，并且 光标不在最后
+                } else {// 如果后面有内容
                     this.mConnection.setSelection(this.mStart, this.mStart);
                     this.mFromWhichEnd = this.FROMEND;
                     this.isSelectModel = true;
                 }
+                state = 0L;
+                bbKeyboard.set_status_line_view(HandleMetaKey.getMetaState(state), methodName);
+                bbKeyboard.set_status_line_view_for_selectmode(isSelectModel, methodName);
                 return true;
             }
             // ////////移动快捷键///////////////////
             else if (keyCode == ConstantList.EDIT_UP) {
                 // 向上
-                isSelectModel = false;
                 final CharSequence preLine2 = this.curOper.getPreLine(this.mFromWhichEnd);
                 if (!preLine2.toString().equals("")) {
                     int tempNum = this.curOper.getInvisibleCharsNumber(preLine2);
@@ -353,7 +304,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_DOWN) {
                 // 向下
-                isSelectModel = false;
                 final CharSequence nextLine2 = this.curOper.getNextLine(this.mFromWhichEnd);
                 if (!nextLine2.toString().equals("")) {
                     int tempNum = this.curOper.getInvisibleCharsNumber(nextLine2);
@@ -381,14 +331,12 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_BACK) {
                 // 向左移
-                isSelectModel = false;
                 int pos = mStart != mEnd ? mStart : mStart - 1;
                 pos = Math.max(pos, 0);
                 mConnection.setSelection(pos, pos);
                 return true;
             } else if (keyCode == ConstantList.EDIT_FORWARD) {
                 // 往右移
-                isSelectModel = false;
                 int totalLength = mEnd + curOper.getAfterLength();
                 int pos = mStart != mEnd ? mEnd : mEnd + 1;
                 pos = Math.min(pos, totalLength);
@@ -396,7 +344,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_TOLINESTART) {
                 // 移到行头
-                isSelectModel = false;
                 int tempNum = this.curOper.getToLineStart(this.FROMSTART).length();
                 this.mConnection.setSelection(this.mStart - tempNum, this.mStart - tempNum);
                 this.mFromWhichEnd = this.FROMEND;
@@ -407,16 +354,13 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 this.mEnd = this.mEnd + tempNum - this.curOper.getInvisibleCharsNumber(this.curOper.getToLineEnd(this.FROMEND));
                 this.mConnection.setSelection(this.mEnd, this.mEnd);
                 this.mFromWhichEnd = this.FROMEND;
-                isSelectModel = false;
                 return true;
             } else if (keyCode == ConstantList.EDIT_TOSTART) {
                 // 移到头
-                isSelectModel = false;
                 mConnection.setSelection(0, 0);
                 return true;
             } else if (keyCode == ConstantList.EDIT_TOEND) {
                 // 移到尾
-                isSelectModel = false;
                 int totalLength = mEnd + curOper.getAfterLength();
                 mConnection.setSelection(totalLength, totalLength);
                 return true;
@@ -426,7 +370,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // ////////删除快捷键开始////////////////
             else if (keyCode == ConstantList.EDIT_DELETEALL) {
                 // // 删除全部内容OKKKKKKKKKKKKKK
-                isSelectModel = false;
                 mConnection.setSelection(mStart, mStart);// 这样可以确保光标不会处于选择状态
                 int afterLength = curOper.getAfterLength();
                 undoAutotext.update(0, 0, mConnection.getTextBeforeCursor(mStart + 1, 0).toString() + mConnection.getTextAfterCursor(afterLength, 0).toString(), "", Autotext.DEL);
@@ -435,7 +378,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_DELETELINE) {
                 // 删除行
-                isSelectModel = false;
                 int tempNum = this.curOper.getToLineStart(this.FROMSTART).length();
                 int ddd = this.curOper.getToLineEnd(this.FROMEND).length();
                 this.mConnection.setSelection(this.mStart - tempNum, this.mEnd + this.curOper.getToLineEnd(this.FROMEND).length());
@@ -448,7 +390,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_DELETEFORWARD) {
                 // 删除后面一个字符
-                isSelectModel = false;
                 undoAutotext.update(mEnd, mEnd,  mConnection.getTextAfterCursor(1, 0).toString(), "", Autotext.DEL);
                 mConnection.deleteSurroundingText(0, 1);
                 return true;
@@ -457,7 +398,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
 
             // ////////其他快捷键开始//////////////////
             else if (keyCode == ConstantList.EDIT_UNDO) {
-                isSelectModel = false;
                 // undo功能
                 // 其实现是把每次替换用一个Autotext对象“undoAutotext”记录下来
                 // 然后把unAutotext对象中的input字符按位置放回去
@@ -467,7 +407,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_COPY) {
                 // 复制OKKKKKKKKKKKKKKKKK
-                isSelectModel = false;
                 if (mStart != mEnd) {
                     clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("AutotextInputMethod", mConnection.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES));
@@ -477,9 +416,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                     Toast.makeText(this, this.getString(R.string.copyed), Toast.LENGTH_SHORT).show();
                 }
                 return true;
-            } else if (keyCode == ConstantList.EDIT_PASTE || isCtrlOn && keyCode == ConstantList.EDIT_UNDO) {
+            } else if (keyCode == ConstantList.EDIT_PASTE) {
                 // 粘贴功能
-                isSelectModel = false;
                 clipboard = (ClipboardManager) this.getSystemService(CLIPBOARD_SERVICE);
                 CharSequence pasteText = "";
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
@@ -493,7 +431,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_CUT) {
                 // 剪切OKKKKKKKKKKKKKKKKKK
-                isSelectModel = false;
                 if(mStart != mEnd){
                     undoAutotext.update(mStart, mStart, mConnection.getSelectedText(0).toString(), "", Autotext.DEL);
                     mConnection.performContextMenuAction(android.R.id.cut);
@@ -505,7 +442,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 defaultMethodId = methodItemList.get(methodItemNum).getId();
                 methodName = methodItemList.get(methodItemNum).getName();
                 dboper.addOrUpdateMethodItem(methodName, MethodItem.DEFAULT, defaultMethodId);
-                inputMethodName.setText(methodName);
+                bbKeyboard.setInputMethodName(methodName);
                 return true;
             }
             //如果是其他没有定议的快捷键，则什么都不做
@@ -513,7 +450,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         }
 
         //////选择模式////////////////
-        if (isSelectModel) {
+        if (!bbKeyboard.isSymOn() && !bbKeyboard.isCapOn() && !bbKeyboard.isCtrlOn() && !bbKeyboard.isAltOn() & isSelectModel) {
             if (keyCode == ConstantList.EDIT_SELECTALL) {
                 // 全选
                 mConnection.setSelection(0, mEnd + curOper.getAfterLength());
@@ -656,7 +593,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         if (keyCode == ConstantList.SUBSTITUTION_TRIGGER) {// 触发正向替换字符
             isSelectModel = false;// 退出选择模式
 
-            //处于选择模式的处理分为三部分
+            //一进入输入状态的时候光标就处于选择模式的处理分为三部分
             // 这里是第一部分，当输入空格的时候的处理
             // 第二部分，是输入backspace键时的处理
             // 第三部分，其他输入时候的处理
@@ -783,7 +720,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         }
         else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符，为"backspace"键
             isSelectModel = false;
-            //处于选择模式的处理分为三部分
+            //一进入输入状态的时候光标就处于选择模式的处理分为三部分
             // 第一部分，当输入空格的时候的处理
             // 这里是第二部分，是输入backspace键时的处理
             // 第三部分，其他输入时候的处理
@@ -849,26 +786,21 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         else {
             KeyCharacterMap kcm = event.getKeyCharacterMap();
 
-            if (kcm.isPrintingKey(keyCode)) {
-                if (isCtrlOn)// 说明正处于快捷命令模式中
-                    return true;
-
-                isSelectModel = false;
                 char c;
                 if (event.getRepeatCount() == 0) {// 短按
                     if (hasHardKeyboard == false)
-                        c = BBsoftKeyboardMap.getCharactor(keyCode, isAltOn, isCapOn);
+                        c = bbKeyboard.getCharactor(keyCode);
                     else c = (char) kcm.get(keyCode, mMetaState);
                 } else if (event.getRepeatCount() == 1) {// 长按大写
                     if (hasHardKeyboard == false)
-                        c = BBsoftKeyboardMap.getCharactor(keyCode, isAltOn, true);
+                        c = bbKeyboard.getCharactor(keyCode);
                     else c = (char) kcm.get(keyCode, KeyEvent.META_CAPS_LOCK_ON);
                     mConnection.deleteSurroundingText(1, 0);
                 } else {
                     return true;
                 }
 
-                //处于选择模式的处理分为三部分
+                //一进入输入状态时光标就处于选择模式的处理分为三部分
                 // 第一部分，当输入空格的时候的处理
                 // 第二部分，是输入backspace键时的处理
                 // 这里是第三部分，其他输入时候的处理
@@ -878,10 +810,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 }
                 mConnection.commitText(String.valueOf(c), 1);
                 return true;
-            }
         }
-
-        return super.onKeyDown(keyCode, event);
+        //return super.onKeyDown(keyCode, event);
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -889,7 +819,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         state = HandleMetaKey.handleKeyUp(state, keyCode);
         mMetaState = HandleMetaKey.getMetaState(state);
-        setStatusView(mMetaState);
+        bbKeyboard.set_status_line_view(mMetaState, methodName);
         return super.onKeyUp(keyCode, event);
     }
 
@@ -899,124 +829,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
         currentCursorStart = newSelStart;
         currentCursorEnd = newSelEnd;
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
-    }
-
-    // /////////////////////////////////////////////
-    private void setMetaKeyStatus(int mMetaState) {
-        if ((mMetaState & KeyEvent.META_ALT_LEFT_ON) != 0) {// 按了alt键
-            // Log.d("Here", "alt true");
-            isAltOn = true;
-        } else {
-            // Log.d("Here", "alt false");
-            isAltOn = false;
-        }
-        if ((mMetaState & KeyEvent.META_SHIFT_LEFT_ON) != 0) {// 按了左shift键，这里当作ctrl键
-            // Log.d("Here", "ctrl true");
-            isCtrlOn = true;
-        } else {
-            // Log.d("Here", "ctrl false");
-            isCtrlOn = false;
-        }
-        if ((mMetaState & KeyEvent.META_SHIFT_RIGHT_ON) != 0) {// 按了右shift键
-            // Log.d("Here", "cap true");
-            isCapOn = true;
-        } else {
-            // Log.d("Here", "cap false");
-            isCapOn = false;
-        }
-        if ((mMetaState & KeyEvent.META_SYM_ON) != 0) {// 按了sym键
-            // Log.d("Here", "sym true");
-            isSymOn = true;
-
-        } else {
-            // Log.d("Here", "sym false");
-            isSymOn = false;
-
-        }
-
-        if ((state & HandleMetaKey.META_SYM_TURNPAGE) != 0) {// 说明表情小键盘要翻页
-            this.symBoardTurn(stickerStartPosition, NEXT);
-        }
-    }
-
-    // 用于表情键盘的翻页
-    private void symBoardTurn(int stickerStartPosition2, boolean turnDirection) {
-        if (turnDirection == PRE) {// 往前翻页
-            stickerStartPosition -= 2 * emojiBoard.getStickerNumbersPerPage();
-            if (stickerStartPosition < 0)
-                stickerStartPosition = 0;
-        }
-
-        emojiBoard.setStickerKeyboard(stickerStartPosition);
-        stickerStartPosition += emojiBoard.getStickerNumbersPerPage();
-        if (stickerStartPosition >= emojiBoard.getEmojiNumbers())
-            stickerStartPosition = 0;
-
-        // 清空
-        state &= ~HandleMetaKey.META_SYM_TURNPAGE;
-    }
-
-    // /////////////////////////////////////////////
-    // 根据功能键的状态码，来设置输入的法的图标，背景颜色等等
-    private void setStatusView(int mMetaState) {
-        if ((mMetaState & KeyEvent.META_SYM_ON) != 0) {// sym on
-            this.setCandidatesViewShown(true);// 显示表情小键盘
-        } else {
-            this.setCandidatesViewShown(false);// 关闭表情小键盘
-            stickerStartPosition = 0;
-
-            if ((mMetaState & HandleMetaKey.META_CAP_LOCKED) != 0) {// cap locked
-                metakey_staus.setImageResource(R.drawable.status_cap_lock);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.myyellow, null));
-                inputMethodName.setText(R.string.cap_mode);
-            } else if ((mMetaState & KeyEvent.META_SHIFT_RIGHT_ON) != 0) {// cap on
-                metakey_staus.setImageResource(R.drawable.status_cap);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.myyellow, null));
-                inputMethodName.setText(R.string.cap_mode);
-
-            } else if ((mMetaState & HandleMetaKey.META_ALT_LOCKED) != 0) {// alt locked
-                metakey_staus.setImageResource(R.drawable.status_alt_lock);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightgreen, null));
-                inputMethodName.setText(R.string.alt_mode);
-            } else if ((mMetaState & KeyEvent.META_ALT_LEFT_ON) != 0) {// alt on
-                metakey_staus.setImageResource(R.drawable.status_alt);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightgreen, null));
-                inputMethodName.setText(R.string.alt_mode);
-
-            } else if ((mMetaState & HandleMetaKey.META_SYM_ON) != 0) {// sym locked
-                metakey_staus.setImageResource(R.drawable.status_sym_lock);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightGray, null));
-                inputMethodName.setText(methodName);
-            } else if ((mMetaState & HandleMetaKey.META_SYM_LOCKED) != 0) {// sym locked
-                metakey_staus.setImageResource(R.drawable.status_sym_lock);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightGray, null));
-                inputMethodName.setText(methodName);
-
-            } else if ((mMetaState & HandleMetaKey.META_CTRL_LOCKED) != 0) {// ctrl locked
-                metakey_staus.setImageResource(R.drawable.status_ctrl_lock);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightred, null));
-                inputMethodName.setText(R.string.ctrl_mode);
-            } else if ((mMetaState & KeyEvent.META_SHIFT_LEFT_ON) != 0) {// ctrl on
-                metakey_staus.setImageResource(R.drawable.status_ctrl);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightred, null));
-                inputMethodName.setText(R.string.ctrl_mode);
-
-            }
-            else if(isSelectModel){
-                    status_line_view.setBackgroundColor(getResources().getColor(R.color.lightblue, null));
-                    inputMethodName.setText(R.string.select_mode);
-                }
-            else if (!isSelectModel){
-                    status_line_view.setBackgroundColor(getResources().getColor(R.color.lightGray, null));
-                    inputMethodName.setText(methodName);
-            }
-
-            else {
-                metakey_staus.setImageResource(R.drawable.status_normal);
-                status_line_view.setBackgroundColor(getResources().getColor(R.color.lightGray, null));
-                inputMethodName.setText(methodName);
-            }
-        }
     }
 
     //处理软键盘输入事件
