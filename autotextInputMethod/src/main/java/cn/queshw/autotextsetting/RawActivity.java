@@ -367,9 +367,6 @@ public class RawActivity extends Activity {
 		//
 		if (resultCode == Activity.RESULT_OK) {
 			String result = data.getStringExtra("result");
-			// Log.d("Here", "RequestCode=" + String.valueOf(requestCode)
-			// + " | resultCode=" + String.valueOf(resultCode)
-			// + " | result=" + result);
 			resultFile = new File(result);
 			if (requestCode == FilePickerActivity.IMPORT) {// 导入操作
 				new Thread(new Runnable() {
