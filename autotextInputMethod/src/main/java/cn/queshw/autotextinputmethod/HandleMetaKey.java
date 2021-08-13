@@ -14,15 +14,15 @@ import android.view.KeyEvent;
 
 public class HandleMetaKey {
 
-    public static final int META_CAP_ON = KeyEvent.META_SHIFT_RIGHT_ON;
-    public static final int META_ALT_ON = KeyEvent.META_ALT_LEFT_ON;
-    public static final int META_SYM_ON = KeyEvent.META_SYM_ON;
-    public static final int META_CTRL_ON = KeyEvent.META_SHIFT_LEFT_ON;// 自定义的ctrl键，也就是左shift键
+    public static final int META_CAP_ON = KeyEvent.META_SHIFT_RIGHT_ON;//1L << 7
+    public static final int META_ALT_ON = KeyEvent.META_ALT_LEFT_ON;//1L << 4
+    public static final int META_SYM_ON = KeyEvent.META_SYM_ON;//1L << 2
+    public static final int META_CTRL_ON = KeyEvent.META_SHIFT_LEFT_ON;// 1L << 6 自定义的ctrl键，也就是左shift键
 
-    public static final int META_CAP_LOCKED = 0x100;
-    public static final int META_ALT_LOCKED = 0x200;
-    public static final int META_SYM_LOCKED = 0x400;
-    public static final int META_CTRL_LOCKED = 0x800;
+    public static final int META_CAP_LOCKED = 0x100;// 1L << 8
+    public static final int META_ALT_LOCKED = 0x200;// 1L << 9
+    public static final int META_SYM_LOCKED = 0x400;// 1L << 10
+    public static final int META_CTRL_LOCKED = 0x800;// 1L << 11
 
     private static final long META_CAP_USED = 1L << 32;
     private static final long META_ALT_USED = 1L << 33;
@@ -122,10 +122,6 @@ public class HandleMetaKey {
                     META_ALT_PRESSED | META_ALT_LOCKED | META_CAP_PRESSED | META_CAP_LOCKED | META_SYM_PRESSED | META_SYM_LOCKED);
             return press(state, META_CTRL_ON, META_CTRL_MASK, META_CTRL_LOCKED, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
         }
-        // 如果是其他非功能键被按下
-        else{
-            state = adjustMetaAfterKeypress(state);
-        }
         return state;
     }
 
@@ -152,9 +148,10 @@ public class HandleMetaKey {
         } else {
             // 如果是其他情况，那就是标记功能键被按下了，同时把what也存储起来，往下传
             state &= ~mask;
-            state |= what | pressed;
             if (what == META_SYM_ON) {
                 state |= what | META_SYM_LOCKED;//sym一按下就变成locked状态
+            }else{
+                state |= what | pressed;
             }
         }
         return state;
@@ -179,6 +176,10 @@ public class HandleMetaKey {
             return release(state, META_CTRL_ON, META_CTRL_MASK, META_CTRL_PRESSED, META_CTRL_RELEASED, META_CTRL_LOCKED, META_CTRL_LOCK_RELEASED, META_CTRL_USED);
         }
 
+        //如果是其他普通键被释放，则调用adjustMetaAfterKeypress来调整功能键状态码
+        else {
+            state = adjustMetaAfterKeypress(state);
+        }
         return state;
     }
 

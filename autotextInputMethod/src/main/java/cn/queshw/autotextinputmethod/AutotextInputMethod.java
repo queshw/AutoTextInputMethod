@@ -211,22 +211,28 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
 
         //如果emoji键盘已经开始。要优先处理，要不然会先处理其他字符，比如space 和 backspace 键
         if (bbKeyboard.isSymOn() && !bbKeyboard.isCapOn() && !bbKeyboard.isCtrlOn() && !bbKeyboard.isAltOn() & !isSelectModel) {//用于表情键盘的往前翻页
-            emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_DOWN);
-            this.setCandidatesViewShown(true);
-            if (keyCode == KeyEvent.KEYCODE_0) {// 往前翻页
-                emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_UP);
-            } else {//如果是其他键，刚获得对应的emoji表情
-                mConnection.commitText(emojiBoard.getSticker(keyCode), 1);
-                setCandidatesViewShown(false);
-                //清空sym状态
-                state = (state | HandleMetaKey.META_SYM_ALL) ^ state;
+            if (keyCode == KeyEvent.KEYCODE_SYM) {
+                setCandidatesViewShown(true);
+                emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_DOWN);
+            }
+            else{
+                if (keyCode == KeyEvent.KEYCODE_0) {// 往前翻页
+                    emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_UP);
+                } else {//如果是其他键，刚获得对应的emoji表情
+                    mConnection.commitText(emojiBoard.getSticker(keyCode), 1);
+                    //清空sym状态
+                    state = state & ~HandleMetaKey.META_SYM_ALL;
+                    setCandidatesViewShown(false);
+                    emojiBoard.resetStickerStartPosition();
+                }
             }
             return true;
+        }else{
+            setCandidatesViewShown(false);
         }
 
         //如果进入命令模式
         if (!bbKeyboard.isSymOn() && !bbKeyboard.isCapOn() && bbKeyboard.isCtrlOn() && !bbKeyboard.isAltOn()) {
-            this.isSelectModel = false;//不管现在是不是在选择模式中，再按一次ctrl后，选择模式都将失效
             if (keyCode == ConstantList.EDIT_SELECTALL) {
                 // 全选
                 mConnection.setSelection(0, mEnd + curOper.getAfterLength());
@@ -244,34 +250,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                     this.isSelectModel = false;
                 }
                 mFromWhichEnd = FROMEND;
-                return true;
-            } else if (keyCode == ConstantList.EDIT_SELECTMODEL) {
-                // 切换选择模式
-                if (isSelectModel) {// 退出选择模式
-                    isSelectModel = false;
-                    if (mFromWhichEnd == FROMSTART) {
-                        mConnection.setSelection(mEnd, mEnd);
-                    } else {
-                        mConnection.setSelection(mStart, mStart);
-                    }
-                }// 接下来是进入选择模式
-                else if (this.mStart != this.mEnd) {// 如果已经处于选择状态
-                    this.mFromWhichEnd = this.FROMEND;
-                    this.isSelectModel = true;
-                } else if (this.mStart == 0 && this.curOper.getAfterLength() == 0) {// 如果当前内容为空，则不进入选择状态
-                    this.isSelectModel = false;
-                } else if (this.curOper.getAfterLength() == 0) {// 如果后面没有内容
-                    this.mConnection.setSelection(this.mEnd, this.mEnd);
-                    this.mFromWhichEnd = this.FROMSTART;
-                    this.isSelectModel = true;
-                } else {// 如果后面有内容
-                    this.mConnection.setSelection(this.mStart, this.mStart);
-                    this.mFromWhichEnd = this.FROMEND;
-                    this.isSelectModel = true;
-                }
-                state = 0L;
-                bbKeyboard.set_status_line_view(HandleMetaKey.getMetaState(state), methodName);
-                bbKeyboard.set_status_line_view_for_selectmode(isSelectModel, methodName);
                 return true;
             }
             // ////////移动快捷键///////////////////
@@ -443,6 +421,36 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 bbKeyboard.setInputMethodName(methodName);
                 return true;
             }
+            //进入选择模式
+            else if (keyCode == ConstantList.EDIT_SELECTMODEL) {
+                // 切换选择模式
+                if (isSelectModel) {// 退出选择模式
+                    isSelectModel = false;
+                    if (mFromWhichEnd == FROMSTART) {
+                        mConnection.setSelection(mEnd, mEnd);
+                    } else {
+                        mConnection.setSelection(mStart, mStart);
+                    }
+                }// 接下来是进入选择模式
+                else if (this.mStart != this.mEnd) {// 如果已经处于选择状态
+                    this.mFromWhichEnd = this.FROMEND;
+                    this.isSelectModel = true;
+                } else if (this.mStart == 0 && this.curOper.getAfterLength() == 0) {// 如果当前内容为空，则不进入选择状态
+                    this.isSelectModel = false;
+                } else if (this.curOper.getAfterLength() == 0) {// 如果后面没有内容
+                    this.mConnection.setSelection(this.mEnd, this.mEnd);
+                    this.mFromWhichEnd = this.FROMSTART;
+                    this.isSelectModel = true;
+                } else {// 如果后面有内容
+                    this.mConnection.setSelection(this.mStart, this.mStart);
+                    this.mFromWhichEnd = this.FROMEND;
+                    this.isSelectModel = true;
+                }
+                state = 0L;//进入摆选择模式的话，就清空其他功能键的状态
+                mMetaState = HandleMetaKey.getMetaState(state);
+                bbKeyboard.set_status_line_view(mMetaState, methodName);
+                return true;
+            }
             //如果是其他没有定议的快捷键，则什么都不做
             return true;
         }
@@ -589,8 +597,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
 
         //核心功能，准备替换
         if (keyCode == ConstantList.SUBSTITUTION_TRIGGER) {// 触发正向替换字符
-            isSelectModel = false;// 退出选择模式
-
             //一进入输入状态的时候光标就处于选择模式的处理分为三部分
             // 这里是第一部分，当输入空格的时候的处理
             // 第二部分，是输入backspace键时的处理
@@ -718,7 +724,6 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             }
             // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符，为"backspace"键
-            isSelectModel = false;
             //一进入输入状态的时候光标就处于选择模式的处理分为三部分
             // 第一部分，当输入空格的时候的处理
             // 这里是第二部分，是输入backspace键时的处理
@@ -772,39 +777,31 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
 
         }
         // ////////其他快捷键结束//////////////////
-        else {
-            if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
-                isSelectModel = false;
-                //如果是多行的输入框，刚回车表示换行
-                if ((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0) {
-                    mConnection.commitText("\n", 1);
-                } else {//如果是单行的输入框，回车表示执行输入框定义的动作，比如go search等
-                    mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
-                }
+        else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
+            //如果是多行的输入框，刚回车表示换行
+            if ((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0) {
+                mConnection.commitText("\n", 1);
+            } else {//如果是单行的输入框，回车表示执行输入框定义的动作，比如go search等
+                mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
             }
-            else {
-                KeyCharacterMap kcm = event.getKeyCharacterMap();
+        } else {
+            KeyCharacterMap kcm = event.getKeyCharacterMap();
+            if (kcm.isPrintingKey(keyCode)) {
                 char c;
-                if (event.getRepeatCount() == 0) {// 短按 的处理
-                    if (!hasHardKeyboard && bbKeyboard.getCharactor(keyCode, false, false) != '\0'){
-                        c = bbKeyboard.getCharactor(keyCode, false, false);
-                    }
-                    else if(hasHardKeyboard && kcm.isPrintingKey(keyCode)){
-                        c = (char) kcm.get(keyCode, mMetaState);
-                    }
-                } else if (event.getRepeatCount() == 1) {//长按 的处理
-                    if (!hasHardKeyboard && bbKeyboard.getCharactor(keyCode, false, true) != '\0') {
-                        c = bbKeyboard.getCharactor(keyCode, false, true);
-                    }
-                    else if(hasHardKeyboard && kcm.isPrintingKey(keyCode)){
-                        c = (char) kcm.get(keyCode, KeyEvent.META_CAPS_LOCK_ON);
-                    }
+                if (event.getRepeatCount() == 0) {// 短按
+                    if (!hasHardKeyboard)
+                        c = bbKeyboard.getCharactor(keyCode, bbKeyboard.isAltOn(), bbKeyboard.isCapOn());
+                    else c = (char) kcm.get(keyCode, mMetaState);
+                } else if (event.getRepeatCount() == 1) {// 长按大写
+                    if (!hasHardKeyboard)
+                        c = bbKeyboard.getCharactor(keyCode, bbKeyboard.isAltOn(), true);
+                    else c = (char) kcm.get(keyCode, KeyEvent.META_CAPS_LOCK_ON);
                     mConnection.deleteSurroundingText(1, 0);
                 } else {
                     return true;
                 }
 
-                //一进入输入状态时光标就处于选择模式的处理分为三部分
+                //处于选择模式的处理分为三部分
                 // 第一部分，当输入空格的时候的处理
                 // 第二部分，是输入backspace键时的处理
                 // 这里是第三部分，其他输入时候的处理
@@ -813,9 +810,10 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                     undoAutotext.update(mStart, mStart + 1, mConnection.getSelectedText(0).toString(), String.valueOf(c), Autotext.SELECT_DEL);
                 }
                 mConnection.commitText(String.valueOf(c), 1);
-            } return true;
+                return true;
+            }
         }
-        //return super.onKeyDown(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -823,7 +821,11 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         state = HandleMetaKey.handleKeyUp(state, keyCode);
         mMetaState = HandleMetaKey.getMetaState(state);
-        bbKeyboard.set_status_line_view(mMetaState, methodName);
+        //如果选择模式下，就不再需要设置其他功能键对应的颜色等，因为在进入选择模式的时候已经设置过了
+        if (isSelectModel)
+            bbKeyboard.set_status_line_view_for_selectmode(true, methodName);
+        else
+            bbKeyboard.set_status_line_view(mMetaState, methodName);
         return super.onKeyUp(keyCode, event);
     }
 

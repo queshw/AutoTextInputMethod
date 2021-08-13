@@ -23,7 +23,7 @@ public class EmojiBoard {
     private int stickerStartPosition; //这一页从emoji表情列表的第几位开始
 
 
-    EmojiBoard(Context con){
+    EmojiBoard(Context con) {
         this.con = con;
         emojiKeyboard = View.inflate(con, R.layout.emoji_keyboard_layout, null);
 
@@ -72,37 +72,38 @@ public class EmojiBoard {
         emojiNumbers = EMOJI_LIST.length;
     }
 
-    public View getEmojiboardView(){
+    public View getEmojiboardView() {
         return emojiKeyboard;
     }
 
+    //设置emoji小键盘开始位置
+    public void resetStickerStartPosition() {
+        stickerStartPosition = -stickerNumbersPerPage;
+    }
+
     //emoji键盘翻页
-    public void turnEmojiKeyboard(int direction){
+    public void turnEmojiKeyboard(int direction) {
         if (direction == TURN_UP) {// 往前翻页
             stickerStartPosition -= stickerNumbersPerPage;
             if (stickerStartPosition < 0)
                 stickerStartPosition = 0;
-        }
-        else {//住后翻页
+        } else {//住后翻页
             stickerStartPosition += stickerNumbersPerPage;
             if (stickerStartPosition >= emojiNumbers)
                 stickerStartPosition = 0;
         }
         setStickerKeyboard(stickerStartPosition);
     }
+
     // 更新键盘上的表情
     private void setStickerKeyboard(int stickerStartPosition) {
-        int emojiCode;
-        for (int i = stickerStartPosition; i < stickerStartPosition + stickerNumbersPerPage; i++) {
-            if (i >= emojiNumbers) {
-                keyboardTextViewList.get(i % stickerNumbersPerPage).setVisibility(View.INVISIBLE);
-            } else {
-                emojiCode = EMOJI_LIST[i];
-                String temp = new String(Character.toChars(emojiCode));
-                keyboardTextViewList.get(i % stickerNumbersPerPage).setText(temp);
-                keyboardTextViewList.get(i % stickerNumbersPerPage).setVisibility(View.VISIBLE);
-                emojiKeyboardMap.put(keyCodes[i % stickerNumbersPerPage], temp);
-            }
+        int position;
+        for (int i = 0; i < stickerNumbersPerPage; i++) {
+            position = stickerStartPosition + i;
+            if(position >= emojiNumbers) position -= emojiNumbers;
+            String temp = new String(Character.toChars(EMOJI_LIST[position]));
+            keyboardTextViewList.get(i).setText(temp);
+            emojiKeyboardMap.put(keyCodes[i], temp);
         }
     }
 

@@ -130,10 +130,10 @@ public class BbKeyBoard {
         //设置ctrl
         if ((metastate & HandleMetaKey.META_CTRL_LOCKED) != 0) {// ctrl locked
             set_Imageviews_status(imageView_ctrl_status, R.drawable.status_ctrl_lock, R.color.lightred, R.string.ctrl_mode);
-            isCapOn = true;
+            isCtrlOn = true;
         } else if ((metastate & KeyEvent.META_SHIFT_LEFT_ON) != 0) {// ctrl on
             set_Imageviews_status(imageView_ctrl_status, R.drawable.status_ctrl, R.color.lightred, R.string.ctrl_mode);
-            isCapOn = true;
+            isCtrlOn = true;
         }
     }
     private void clear_ImageViews_status(){
