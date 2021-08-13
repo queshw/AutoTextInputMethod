@@ -81,7 +81,7 @@ public class BbKeyBoard {
     }
 
     //根据keycode 和 功能键状态获得字符
-    char getCharactor(int keyCode){
+    char getCharactor(int keyCode, boolean isAlton, boolean isCapOn){
         return BBsoftKeyboardMap.getCharactor(keyCode, isAltOn, isCapOn);
     }
 
@@ -137,10 +137,11 @@ public class BbKeyBoard {
         }
     }
     private void clear_ImageViews_status(){
-        imageView_cap_status.setVisibility(View.INVISIBLE);
-        imageView_cap_status.setVisibility(View.INVISIBLE);
-        imageView_cap_status.setVisibility(View.INVISIBLE);
-        imageView_cap_status.setVisibility(View.INVISIBLE);
+        if(imageView_cap_status.getVisibility() != View.INVISIBLE) imageView_cap_status.setVisibility(View.INVISIBLE);
+        if(imageView_ctrl_status.getVisibility() != View.INVISIBLE) imageView_ctrl_status.setVisibility(View.INVISIBLE);
+        if(imageView_sym_status.getVisibility() != View.INVISIBLE) imageView_sym_status.setVisibility(View.INVISIBLE);
+        if(imageView_alt_status.getVisibility() != View.INVISIBLE) imageView_alt_status.setVisibility(View.INVISIBLE);
+        status_line_view.setBackgroundColor(con.getResources().getColor(R.color.lightGray, null));
     }
     private void set_Imageviews_status(ImageView button, int image, int color, int name){
         button.setImageResource(image);

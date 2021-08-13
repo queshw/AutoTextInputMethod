@@ -105,7 +105,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/key_q"
                 android:tag="45"
-                tools:ignore="TouchTargetSizeCheck" />
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_w"
@@ -157,7 +157,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_t"
-                android:tag="48" />
+                android:tag="48"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_y"
@@ -196,7 +197,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_i"
-                android:tag="37" />
+                android:tag="37"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_o"
@@ -263,7 +265,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_s"
-                android:tag="47" />
+                android:tag="47"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_d"
@@ -354,7 +357,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_l"
-                android:tag="40" />
+                android:tag="40"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_delete"
@@ -473,7 +477,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_n"
-                android:tag="42" />
+                android:tag="42"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_m"
@@ -486,7 +491,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_m"
-                android:tag="41" />
+                android:tag="41"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_dolla"
@@ -498,7 +504,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_dolla"
-                android:tag="71" />
+                android:tag="71"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/button_enter"
@@ -514,7 +521,8 @@
                 android:padding="@dimen/bb_keyboard_key_padding"
                 android:scaleType="centerInside"
                 android:src="@drawable/key_enter"
-                android:tag="66" />
+                android:tag="66"
+                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
 
         <LinearLayout
@@ -600,7 +608,8 @@
                     android:padding="@dimen/bb_keyboard_key_padding"
                     android:scaleType="centerInside"
                     android:src="@drawable/key_0"
-                    android:tag="7" />
+                    android:tag="7"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
                 <ImageButton
                     android:id="@+id/tab_under_0"

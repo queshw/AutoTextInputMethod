@@ -215,11 +215,11 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             this.setCandidatesViewShown(true);
             if (keyCode == KeyEvent.KEYCODE_0) {// 往前翻页
                 emojiBoard.turnEmojiKeyboard(EmojiBoard.TURN_UP);
-            }else{//如果是其他键，刚获得对应的emoji表情
+            } else {//如果是其他键，刚获得对应的emoji表情
                 mConnection.commitText(emojiBoard.getSticker(keyCode), 1);
                 setCandidatesViewShown(false);
                 //清空sym状态
-                state = (state | HandleMetaKey.META_SYM_ALL)^state;
+                state = (state | HandleMetaKey.META_SYM_ALL) ^ state;
             }
             return true;
         }
@@ -235,8 +235,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 }
                 mFromWhichEnd = FROMEND;
                 return true;
-            }
-            else if (keyCode == ConstantList.EDIT_SELECTLINE) {
+            } else if (keyCode == ConstantList.EDIT_SELECTLINE) {
                 // 选一行
                 int toLineStart = this.curOper.getToLineStart(this.FROMSTART).length();
                 CharSequence getToLineEnd = curOper.getToLineEnd(FROMEND);
@@ -246,8 +245,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 }
                 mFromWhichEnd = FROMEND;
                 return true;
-            }
-            else if (keyCode == ConstantList.EDIT_SELECTMODEL) {
+            } else if (keyCode == ConstantList.EDIT_SELECTMODEL) {
                 // 切换选择模式
                 if (isSelectModel) {// 退出选择模式
                     isSelectModel = false;
@@ -390,7 +388,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 return true;
             } else if (keyCode == ConstantList.EDIT_DELETEFORWARD) {
                 // 删除后面一个字符
-                undoAutotext.update(mEnd, mEnd,  mConnection.getTextAfterCursor(1, 0).toString(), "", Autotext.DEL);
+                undoAutotext.update(mEnd, mEnd, mConnection.getTextAfterCursor(1, 0).toString(), "", Autotext.DEL);
                 mConnection.deleteSurroundingText(0, 1);
                 return true;
             }
@@ -422,16 +420,16 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 CharSequence pasteText = "";
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 pasteText = item.getText();
-                if(mStart != mEnd){
+                if (mStart != mEnd) {
                     undoAutotext.update(mStart, mStart + pasteText.length(), mConnection.getSelectedText(0).toString(), pasteText.toString(), Autotext.DEL);
-                }else{
+                } else {
                     undoAutotext.update(mStart, mStart + pasteText.length(), "", pasteText.toString(), Autotext.DEL);
                 }
                 mConnection.commitText(pasteText, 1);
                 return true;
             } else if (keyCode == ConstantList.EDIT_CUT) {
                 // 剪切OKKKKKKKKKKKKKKKKKK
-                if(mStart != mEnd){
+                if (mStart != mEnd) {
                     undoAutotext.update(mStart, mStart, mConnection.getSelectedText(0).toString(), "", Autotext.DEL);
                     mConnection.performContextMenuAction(android.R.id.cut);
                 }
@@ -621,7 +619,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             }
 
             // 如果不是正好在反向替换后，那么就开始正常偿试替换的过程
-            int maxInputLength = dboper.getMaxInputLength(defaultMethodId);;// 表中最长的input的长度，用于在正向替换的时候，最长需要从光标前面取多长的文本
+            int maxInputLength = dboper.getMaxInputLength(defaultMethodId);
+            ;// 表中最长的input的长度，用于在正向替换的时候，最长需要从光标前面取多长的文本
             CharSequence candidateInput = mConnection.getTextBeforeCursor(maxInputLength + 1, 0);
 
             //如果不在最开头，或者词库中有条目
@@ -652,7 +651,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 for (int i = 0; i < rawAutotext.length(); i++) {
                     c = rawAutotext.charAt(i);
                     if (c == ConstantList.MACRO_MACROCHARACTER) {// 如果扫描到宏命令的字符%
-                        char nextC = rawAutotext.charAt(i+1);//因为在rawAutotext中预添加了一个空格，所以肯定这里不会出错，因为不可能最后一个字符是%
+                        char nextC = rawAutotext.charAt(i + 1);//因为在rawAutotext中预添加了一个空格，所以肯定这里不会出错，因为不可能最后一个字符是%
                         switch (nextC) {
                             case ConstantList.MACRO_DELETEBACK:// %b 在前面删除一个字符
                                 offsetBefore++;
@@ -663,7 +662,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                                 offsetBefore--;
                                 CharSequence tempS = mConnection.getTextBeforeCursor(candidateInput.length() + autotext.getAutotext().length() + 1, 0);
                                 //下面的条件是：上一次替换不成功，或者已经取到了最开头，或者上一次替换是一行的开头
-                                if(autotext.getStat() != Autotext.AFTER || tempS.length() != candidateInput.length() + autotext.getAutotext().length() + 1 || tempS.charAt(0) == '\n'){
+                                if (autotext.getStat() != Autotext.AFTER || tempS.length() != candidateInput.length() + autotext.getAutotext().length() + 1 || tempS.charAt(0) == '\n') {
                                     macroBnumber++;
                                 }
                                 i++;
@@ -698,27 +697,27 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                 // 接下来是替换过程
                 // 首先，根据前面的扫描结果，获得inputString 和  autotextString
                 inputString = mConnection.getTextBeforeCursor(offsetBefore, 0).toString();
-                if (autotextString.length() - macroBnumber < 0) macroBnumber = autotextString.length();
+                if (autotextString.length() - macroBnumber < 0)
+                    macroBnumber = autotextString.length();
                 autotextString.delete(autotextString.length() - macroBnumber, autotextString.length());
 
                 // 如果将要被替换的字串中有换行符，处理以换行符作为分隔的情况，相当于是换行符就是最开头
                 int j = inputString.lastIndexOf('\n');
-                if(j != -1)  inputString = inputString.substring(j + 1);
+                if (j != -1) inputString = inputString.substring(j + 1);
                 final int length = inputString.length();
 
 
                 // 第二，记录替换块的信息，不能放到后面记录，因为mAfterSubString会变，可能需要加上空格
                 autotext.update(mStart - length, mStart - length + autotextString.length(), inputString, autotextString.toString(), Autotext.AFTER);
                 undoAutotext.update(mStart - length, mStart - length + autotextString.length(), inputString, autotextString.toString(), Autotext.AFTER);
-                 // 第三，准备好了之后，最后才替换，同时强制更新光标位置
+                // 第三，准备好了之后，最后才替换，同时强制更新光标位置
                 mConnection.setSelection(Math.max(mEnd - inputString.length(), 0), mEnd);
                 mConnection.commitText(autotextString, 1);
 
                 return true;
             }
             // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
-        else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符，为"backspace"键
+        } else if (keyCode == ConstantList.SUBSTITUTION_TRIGGER_REVERSE) {// 触发反向替换的字符，为"backspace"键
             isSelectModel = false;
             //一进入输入状态的时候光标就处于选择模式的处理分为三部分
             // 第一部分，当输入空格的时候的处理
@@ -743,8 +742,8 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // 下面是反向替换过程
             // 先把autotext后面的空格删掉
             String tempA = autotext.getAutotext();
-            for(int i = 1; i <= tempA.length(); i++){
-                if(tempA.charAt(tempA.length() - i) != ' '){
+            for (int i = 1; i <= tempA.length(); i++) {
+                if (tempA.charAt(tempA.length() - i) != ' ') {
                     tempA = tempA.substring(0, tempA.length() - i + 1);
                     break;
                 }
@@ -752,9 +751,9 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
 
             if ((autotext.getStat() == Autotext.AFTER) &&
                     !TextUtils.isEmpty(autotext.getAutotext().replaceAll("[ \\t\\n\\x0B\\f\\r]", "")) &&
-                    mEnd == autotext.getEnd() - (autotext.getAutotext().length() - tempA.length())  &&
+                    mEnd == autotext.getEnd() - (autotext.getAutotext().length() - tempA.length()) &&
                     mConnection.getTextBeforeCursor(tempA.length(), 0).toString().equals(tempA)
-                    ) {
+            ) {
                 // 开始反向替换
                 mConnection.setSelection(mEnd - tempA.length(), mEnd);
                 mConnection.commitText(autotext.getInput(), 1);
@@ -766,35 +765,40 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                         tempA, autotext.getAutotext(), Autotext.REVERSE_AFTER);//注意：在上一行中，autotext的内容已经改变了
                 return true;
             } else {// 删除光标前一个字符
-                undoAutotext.update(mStart-1, mStart-1, mConnection.getTextBeforeCursor(1, 0).toString(), "", Autotext.DEL);
+                undoAutotext.update(mStart - 1, mStart - 1, mConnection.getTextBeforeCursor(1, 0).toString(), "", Autotext.DEL);
                 mConnection.deleteSurroundingText(1, 0);
                 return true;
             }
 
         }
         // ////////其他快捷键结束//////////////////
-        else if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
-            isSelectModel = false;
-            //如果是多行的输入框，刚回车表示换行
-            if ((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0) {
-                mConnection.commitText("\n", 1);
-            } else {//如果是单行的输入框，回车表示执行输入框定义的动作，比如go search等
-                mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
-            }
-            return true;
-        }
         else {
-            KeyCharacterMap kcm = event.getKeyCharacterMap();
-
+            if (keyCode == ConstantList.SUBSTITUTION_ENTER || keyCode == ConstantList.SUBSTITUTION_NUMPAD_ENTER) {// 如果输入回车健
+                isSelectModel = false;
+                //如果是多行的输入框，刚回车表示换行
+                if ((mEditInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0) {
+                    mConnection.commitText("\n", 1);
+                } else {//如果是单行的输入框，回车表示执行输入框定义的动作，比如go search等
+                    mConnection.performEditorAction(mEditInfo.imeOptions & EditorInfo.IME_MASK_ACTION);
+                }
+            }
+            else {
+                KeyCharacterMap kcm = event.getKeyCharacterMap();
                 char c;
-                if (event.getRepeatCount() == 0) {// 短按
-                    if (hasHardKeyboard == false)
-                        c = bbKeyboard.getCharactor(keyCode);
-                    else c = (char) kcm.get(keyCode, mMetaState);
-                } else if (event.getRepeatCount() == 1) {// 长按大写
-                    if (hasHardKeyboard == false)
-                        c = bbKeyboard.getCharactor(keyCode);
-                    else c = (char) kcm.get(keyCode, KeyEvent.META_CAPS_LOCK_ON);
+                if (event.getRepeatCount() == 0) {// 短按 的处理
+                    if (!hasHardKeyboard && bbKeyboard.getCharactor(keyCode, false, false) != '\0'){
+                        c = bbKeyboard.getCharactor(keyCode, false, false);
+                    }
+                    else if(hasHardKeyboard && kcm.isPrintingKey(keyCode)){
+                        c = (char) kcm.get(keyCode, mMetaState);
+                    }
+                } else if (event.getRepeatCount() == 1) {//长按 的处理
+                    if (!hasHardKeyboard && bbKeyboard.getCharactor(keyCode, false, true) != '\0') {
+                        c = bbKeyboard.getCharactor(keyCode, false, true);
+                    }
+                    else if(hasHardKeyboard && kcm.isPrintingKey(keyCode)){
+                        c = (char) kcm.get(keyCode, KeyEvent.META_CAPS_LOCK_ON);
+                    }
                     mConnection.deleteSurroundingText(1, 0);
                 } else {
                     return true;
@@ -809,7 +813,7 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
                     undoAutotext.update(mStart, mStart + 1, mConnection.getSelectedText(0).toString(), String.valueOf(c), Autotext.SELECT_DEL);
                 }
                 mConnection.commitText(String.valueOf(c), 1);
-                return true;
+            } return true;
         }
         //return super.onKeyDown(keyCode, event);
     }

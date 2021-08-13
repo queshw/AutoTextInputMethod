@@ -149,12 +149,11 @@ public class BBkeyboardMap {
         
         altKeys.add('0');
         altKeys.add('%');
-        
 
     }
     //根据按键 和 功能键的状态 来获取字符
     char getCharactor(int code, boolean isAltPressed, boolean isCapPressed){
-        char c ;
+        char c = '\0';
         if(isAltPressed){
             c = altKeys.get(keycode.indexOf(code));
         }else if(isCapPressed){
@@ -164,5 +163,4 @@ public class BBkeyboardMap {
         }
         return c;
     }
-
 }
