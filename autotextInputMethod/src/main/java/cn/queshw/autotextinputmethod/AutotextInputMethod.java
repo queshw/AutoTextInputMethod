@@ -402,55 +402,17 @@ public class AutotextInputMethod extends InputMethodService implements View.OnCl
             // ////////移动快捷键///////////////////
             else if (keyCode == ConstantList.EDIT_UP) {
                 // 向上
-                final CharSequence preLine2 = this.curOper.getPreLine(this.mFromWhichEnd);
-                if (!preLine2.toString().equals("")) {
-                    int tempNum = this.curOper.getInvisibleCharsNumber(preLine2);
-                    final int length7 = preLine2.length();
-                    final int length8 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
-                    if (this.mFromWhichEnd == this.FROMSTART) {
-                        if (length7 - tempNum < length8) {
-                            this.mStart = this.mStart - length8 - tempNum;
-                        } else {
-                            this.mStart -= length7;
-                        }
-                        this.mConnection.setSelection(this.mStart, this.mStart);
-                    } else if (this.mFromWhichEnd == this.FROMEND) {
-                        if (length7 - tempNum < length8) {
-                            this.mEnd = this.mEnd - length8 - tempNum;
-                        } else {
-                            this.mEnd -= length7;
-                        }
-                        this.mConnection.setSelection(this.mEnd, this.mEnd);
-                    }
-                }
-
+                KeyEvent moveupEvent = new KeyEvent(System.currentTimeMillis(), System.currentTimeMillis(), KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP, 0, mMetaState);
+                mConnection.sendKeyEvent(moveupEvent);
+                moveupEvent = new KeyEvent(System.currentTimeMillis(), System.currentTimeMillis(), KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP, 0, mMetaState);
+                mConnection.sendKeyEvent(moveupEvent);
                 return true;
             } else if (keyCode == ConstantList.EDIT_DOWN) {
                 // 向下
-                final CharSequence nextLine2 = this.curOper.getNextLine(this.mFromWhichEnd);
-                if (!nextLine2.toString().equals("")) {
-                    int tempNum = this.curOper.getInvisibleCharsNumber(nextLine2);
-                    final int length9 = nextLine2.length();
-                    final int length10 = this.curOper.getToLineEnd(this.mFromWhichEnd).length();
-                    final int length11 = this.curOper.getToLineStart(this.mFromWhichEnd).length();
-                    if (this.mFromWhichEnd == this.FROMEND) {
-                        if (length9 - tempNum < length11) {
-                            this.mEnd = this.mEnd + length10 + length9 - tempNum;
-                        } else {
-                            this.mEnd = this.mEnd + length10 + length11;
-                        }
-                        this.mConnection.setSelection(this.mEnd, this.mEnd);
-                    } else if (this.mFromWhichEnd == this.FROMSTART) {
-                        if (length9 - tempNum < length11) {
-                            this.mStart = this.mStart + length10 + length9 - tempNum;
-                        } else {
-                            this.mStart = this.mStart + length10 + length11;
-                        }
-                        this.mConnection.setSelection(this.mStart, this.mStart);
-                    }
-                }
-                this.mConnection.setSelection(this.mEnd, this.mEnd);
-
+                KeyEvent movedownEvent = new KeyEvent(System.currentTimeMillis(), System.currentTimeMillis(), KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN, 0, mMetaState);
+                mConnection.sendKeyEvent(movedownEvent);
+                movedownEvent = new KeyEvent(System.currentTimeMillis(), System.currentTimeMillis(), KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN, 0, mMetaState);
+                mConnection.sendKeyEvent(movedownEvent);
                 return true;
             } else if (keyCode == ConstantList.EDIT_BACK) {
                 // 向左移
