@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "cn.queshw.autotextinputmethod",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 123,
+      "versionName": "5.5.123",
+      "outputFile": "autotextInputMethod-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

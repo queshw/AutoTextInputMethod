@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AutoText</string>
+    <string name="method_name">名称：</string>
+    <string name="isdefault">默认：</string>
+    <string name="add">添加</string>
+    <string name="edit">修改</string>
+    <string name="delete">删除</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="settings">设置</string>
+    <string name="help">帮助</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="comma">, %</string>
+    <string name="up">向上</string>
+    <string name="msg1">这是目录名！</string>
+    <string name="msg2">文件已经存在，是否覆盖？</string>
+    <string name="msg3">没有读权限！</string>
+    <string name="msg4">没有写权限！</string>
+    <string name="msg5">文件不存在！</string>
+    <string name="msg6">还没有词库，请新增然后导入内容！</string>
+    <string name="msg7">还没有词库！</string>
+    <string name="loaded">成功加载数据！</string>
+    <string name="imported">导入完成！</string>
+    <string name="exported">导出完成！</string>
+    <string name="title">添加或修改</string>
+    <string name="setdefault">设为默认</string>
+    <string name="search">输入查询</string>
+    <string name="autotextitem">自动替换条目</string>
+    <string name="autotextimport">导入</string>
+    <string name="autotextexport">导出</string>
+    <string name="importdefault">导入自带词库</string>
+    <string name="input">把：</string>
+    <string name="autotext">替换为：</string>
+    
+    <string name="wubi_pinyin">五笔拼音</string>
+    <string name="yinwen">英文</string>
+    <string name="code_search">五笔编码查询</string>
+    
+    <string name="copyed">复制成功！</string>
+
+    <string name="ctrl_mode">命令模式</string>
+    <string name="select_mode">选择模式</string>
+    <string name="cap_mode">大写模式</string>
+    <string name="alt_mode">数字符号</string>
+
+
+
+
+</resources>

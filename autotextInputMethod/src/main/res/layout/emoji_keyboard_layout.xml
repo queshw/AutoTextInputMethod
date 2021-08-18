@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/emojikeyboardbackground"
+        android:clipToPadding="false"
+        android:padding="@dimen/sym_keyboard_leyout_tablepadding">
+
+        <TableRow>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/q_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Q"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/q_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:text="q"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/w_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="W"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/w_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="w"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/e_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="E"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/e_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="e"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/r_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="R"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/r_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="r"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/t_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="T"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/t_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="t"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/y_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Y"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/y_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="y"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/u_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="U"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/u_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="u"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/i_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="I"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/i_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="i"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/o_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="O"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/o_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="o"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/p_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="P"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/p_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="p"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+        </TableRow>
+
+        <TableRow>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/a_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="A"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/a_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="a"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/s_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="S"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/s_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="s"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/d_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="D"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/d_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="d"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/f_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="F"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/f_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="f"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/g_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="G"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/g_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="g"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/h_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="H"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/h_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="h"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/j_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="J"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/j_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="j"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/k_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="K"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/k_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="k"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/l_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="L"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/l_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="l"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeyboardbackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding"></RelativeLayout>
+        </TableRow>
+
+        <TableRow>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeyboardbackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding"></RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/z_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Z"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/z_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="z"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/x_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="X"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/x_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="x"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/c_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="C"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/c_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="c"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/v_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="V"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/v_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="v"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/b_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="B"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/b_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="b"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/n_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="N"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/n_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="n"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeybackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding">
+
+                <TextView
+                    android:id="@+id/m_sticker_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="M"
+                    android:textColor="@color/stickertextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_stickertextsize" />
+
+                <TextView
+                    android:id="@+id/m_key_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="m"
+                    android:textColor="@color/emojikeytextcolor"
+                    android:textSize="@dimen/sym_keyboard_leyout_keytextsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeyboardbackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sym_keyboard_key_height"
+                android:layout_marginStart="@dimen/sym_keyboard_leyout_margin"
+                android:layout_marginTop="@dimen/sym_keyboard_leyout_margin"
+                android:layout_weight="100"
+                android:background="@color/emojikeyboardbackground"
+                android:padding="@dimen/sym_keyboard_leyout_keypadding" />
+
+
+        </TableRow>
+
+    </TableLayout>

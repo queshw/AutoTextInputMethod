@@ -1,0 +1,62 @@
+package cn.queshw.autotextsetting;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.List;
+
+import cn.queshw.autotextinputmethod.R;
+
+public class RawAdapter extends ArrayAdapter<RawItem> {
+	int resource;
+	Context context;
+
+	public RawAdapter(Context context, int resourceId, List<RawItem> objects) {
+		super(context, resourceId, objects);
+		this.resource = resourceId;
+		this.context = context;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		RawItem item = getItem(position);
+		ViewHolder holder = new ViewHolder();
+		if (convertView == null) {
+			convertView = LayoutInflater.from(context).inflate(resource, null);
+			holder.linear = convertView.findViewById(R.id.rawitem_linear);
+			holder.codeTextView = convertView.findViewById(R.id.code_textview_rawitem);
+			holder.candidateTextView = convertView.findViewById(R.id.candidate_textview_rawitem);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+
+		// 设置背景颜色
+		if (item.getTwolevel() < 0) {
+			holder.linear.setBackgroundColor(Color.LTGRAY);
+			holder.candidateTextView.setText(item.getCandidate());
+			holder.codeTextView.setText("(" + item.getTwolevel() + ")" + item.getCode());
+		} else {
+			holder.linear.setBackgroundColor(Color.TRANSPARENT);
+			holder.candidateTextView.setText(item.getCandidate());
+			holder.codeTextView.setText(item.getCode());
+		}
+		// holder.inputTextView.setText(String.valueOf(item.getId()) + "."
+		// +item.getInput());
+		
+		return convertView;
+	}
+
+	private class ViewHolder {
+		LinearLayout linear;
+		TextView codeTextView;
+		TextView candidateTextView;
+	}
+
+}

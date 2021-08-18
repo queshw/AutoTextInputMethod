@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    
+    <dimen name="padding">10dp</dimen>
+    <dimen name="textsize">16sp</dimen>
+    
+    
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <dimen name="sym_keyboard_key_height">48dp</dimen>
+    <dimen name="sym_keyboard_leyout_tablepadding">2dp</dimen>
+    <dimen name="sym_keyboard_leyout_keypadding">2dp</dimen>
+    <dimen name="sym_keyboard_leyout_keytextsize">10sp</dimen>
+    <dimen name="sym_keyboard_leyout_stickertextsize">16sp</dimen>
+    <dimen name="sym_keyboard_leyout_margin">1dp</dimen>
+
+    <dimen name="bb_keyboard_key_height">48dp</dimen>
+    <dimen name="bb_keyboard_key_padding">5dp</dimen>
+    <dimen name="bb_keyboard_leyout_nomal_margin">2dp</dimen>
+    <dimen name="bb_keyboard_leyout_edge_margin">5dp</dimen>
+    <dimen name="bb_keyboard_key_space_height">90dp</dimen>
+
+    <dimen name="text_keyboard_key_height">48dp</dimen>
+    <dimen name="text_keyboard_key_padding">0dp</dimen>
+    <dimen name="text_keyboard_leyout_nomal_margin">2dp</dimen>
+    <dimen name="text_keyboard_leyout_edge_margin">5dp</dimen>
+    <dimen name="text_keyboard_key_space_height">90dp</dimen>
+    <dimen name="text_keyboard_leyout_keytextsize">10sp</dimen>
+    <dimen name="text_keyboard_leyout_smalltextsize">16sp</dimen>
+    <dimen name="text_keyboard_leyout_tablepadding">2dp</dimen>
+</resources>

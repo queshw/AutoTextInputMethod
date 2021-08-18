@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Spinner
+            android:id="@+id/path_spinner_layout_filepickeractivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:textSize="@dimen/textsize"
+            android:layout_gravity="center"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/parent_button_layout_filepickeractivity"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding"
+            android:text="@string/up"
+            android:layout_gravity="center"
+            android:textSize="@dimen/textsize" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/file_listView_layout_filepickeractivity"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </ListView>
+
+    <EditText
+        android:id="@+id/result_editText_layout_filepickeractivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/yes_button_layout_filepickeractivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/yes" />
+
+        <Button
+            android:id="@+id/no_button_layout_filepickeractivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/no" />
+    </LinearLayout>
+
+</LinearLayout>

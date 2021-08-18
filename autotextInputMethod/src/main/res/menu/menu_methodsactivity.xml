@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/add_menu_methodactivity"
+        android:icon="@drawable/add"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/add"/>
+    <item
+        android:id="@+id/loaddefault_menu_methodactivity"
+        android:icon="@drawable/loaddefault"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/importdefault"/>
+    <item
+        android:id="@+id/help_menu_methodactivity"
+        android:icon="@drawable/help"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/help"/>
+
+</menu>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mygreen">#00bb9c</color>
+    <color name="mygray">#a9b7b7</color>
+    <color name="myyellow">#f4c600</color>
+    <color name="lightred">#eb4f38</color>
+    <color name="lightgreen">#11cd6e</color>
+    <color name="lightGray">#dbdbdb</color>
+    <color name="lightblue">#6495ED</color>
+    <color name="emojikeyboardbackground">#a9b7b7</color>
+    <color name="emojikeybackground">#dbdbdb</color>
+    <color name="emojikeytextcolor">#000000</color>
+    <color name="stickertextcolor">#00bb9c</color>
+
+    <color name="textkeyboard_background">#dbdbdb</color>
+    <color name="textkeyboard_key_background">#a9b7b7</color>
+    <color name="textkeyboard_textcolor">#000000</color>
+    <color name="textkeybaord_smalltextcolor">#000000</color>
+
+</resources>
